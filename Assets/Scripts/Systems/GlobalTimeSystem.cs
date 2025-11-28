@@ -104,6 +104,7 @@ private const string SAVE_KEY_FIRST_START = "GlobalTimeSystem_FirstStart";
         OnTimeReset?.Invoke();
         OnPhaseChanged?.Invoke(CurrentPhase);
         OnNewCycle?.Invoke(CycleCount); // CycleCount=0
+        Debug.Log("[GlobalTimeSystem] Time reset.");
     }
 
     //获取格式化后的总时间字符串
