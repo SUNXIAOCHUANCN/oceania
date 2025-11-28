@@ -109,6 +109,42 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ebb3b27-e12f-494e-8315-a670d2251305"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""717c5b57-34a5-42ac-a1a8-9ea4a3320bdc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""281e66b9-1b71-4d1a-86a0-5e2ed978fad2"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""UnlockCursor"",
+                    ""type"": ""Button"",
+                    ""id"": ""034a46a4-ca88-4e90-8a0f-48948195e135"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -169,8 +205,8 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6430b44c-a09b-4fea-aa99-51c33249187b"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""c87f9ec8-0c5f-4a77-9b7b-ed0cdb25bdb9"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -180,12 +216,45 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c87f9ec8-0c5f-4a77-9b7b-ed0cdb25bdb9"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""id"": ""000fca26-0c2e-4ae4-8760-661b26812789"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseLook"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8cd9d43c-2714-4bd4-a84e-1c3fce68936b"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6578637a-57a6-4564-8b03-6bb091ed8bd3"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7443baf5-675e-4259-9a10-114e72fdffcd"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnlockCursor"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -226,6 +295,10 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
         m_player = asset.FindActionMap("player", throwIfNotFound: true);
         m_player_Move = m_player.FindAction("Move", throwIfNotFound: true);
         m_player_MouseLook = m_player.FindAction("MouseLook", throwIfNotFound: true);
+        m_player_Sprint = m_player.FindAction("Sprint", throwIfNotFound: true);
+        m_player_Jump = m_player.FindAction("Jump", throwIfNotFound: true);
+        m_player_Zoom = m_player.FindAction("Zoom", throwIfNotFound: true);
+        m_player_UnlockCursor = m_player.FindAction("UnlockCursor", throwIfNotFound: true);
         // boat
         m_boat = asset.FindActionMap("boat", throwIfNotFound: true);
         m_boat_Newaction = m_boat.FindAction("New action", throwIfNotFound: true);
@@ -312,6 +385,10 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_player_Move;
     private readonly InputAction m_player_MouseLook;
+    private readonly InputAction m_player_Sprint;
+    private readonly InputAction m_player_Jump;
+    private readonly InputAction m_player_Zoom;
+    private readonly InputAction m_player_UnlockCursor;
     /// <summary>
     /// Provides access to input actions defined in input action map "player".
     /// </summary>
@@ -331,6 +408,22 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "player/MouseLook".
         /// </summary>
         public InputAction @MouseLook => m_Wrapper.m_player_MouseLook;
+        /// <summary>
+        /// Provides access to the underlying input action "player/Sprint".
+        /// </summary>
+        public InputAction @Sprint => m_Wrapper.m_player_Sprint;
+        /// <summary>
+        /// Provides access to the underlying input action "player/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_player_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action "player/Zoom".
+        /// </summary>
+        public InputAction @Zoom => m_Wrapper.m_player_Zoom;
+        /// <summary>
+        /// Provides access to the underlying input action "player/UnlockCursor".
+        /// </summary>
+        public InputAction @UnlockCursor => m_Wrapper.m_player_UnlockCursor;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -363,6 +456,18 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
             @MouseLook.started += instance.OnMouseLook;
             @MouseLook.performed += instance.OnMouseLook;
             @MouseLook.canceled += instance.OnMouseLook;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @UnlockCursor.started += instance.OnUnlockCursor;
+            @UnlockCursor.performed += instance.OnUnlockCursor;
+            @UnlockCursor.canceled += instance.OnUnlockCursor;
         }
 
         /// <summary>
@@ -380,6 +485,18 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
             @MouseLook.started -= instance.OnMouseLook;
             @MouseLook.performed -= instance.OnMouseLook;
             @MouseLook.canceled -= instance.OnMouseLook;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @UnlockCursor.started -= instance.OnUnlockCursor;
+            @UnlockCursor.performed -= instance.OnUnlockCursor;
+            @UnlockCursor.canceled -= instance.OnUnlockCursor;
         }
 
         /// <summary>
@@ -530,6 +647,34 @@ public partial class @playerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMouseLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSprint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Zoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoom(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "UnlockCursor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUnlockCursor(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "boat" which allows adding and removing callbacks.

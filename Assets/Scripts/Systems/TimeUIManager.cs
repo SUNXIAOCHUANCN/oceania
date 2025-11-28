@@ -89,4 +89,9 @@ public class TimeUIManager : MonoBehaviour
     {
         RefreshMoonPhase();
     }
+
+    public void ButtonTest()
+    {
+        Debug.Log("Button Test");
+    }
 }

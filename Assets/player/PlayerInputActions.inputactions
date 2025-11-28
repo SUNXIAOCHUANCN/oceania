@@ -23,6 +23,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "6ebb3b27-e12f-494e-8315-a670d2251305",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "717c5b57-34a5-42ac-a1a8-9ea4a3320bdc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "281e66b9-1b71-4d1a-86a0-5e2ed978fad2",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "UnlockCursor",
+                    "type": "Button",
+                    "id": "034a46a4-ca88-4e90-8a0f-48948195e135",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -83,8 +119,8 @@
                 },
                 {
                     "name": "",
-                    "id": "6430b44c-a09b-4fea-aa99-51c33249187b",
-                    "path": "<Mouse>/position",
+                    "id": "c87f9ec8-0c5f-4a77-9b7b-ed0cdb25bdb9",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -94,12 +130,45 @@
                 },
                 {
                     "name": "",
-                    "id": "c87f9ec8-0c5f-4a77-9b7b-ed0cdb25bdb9",
-                    "path": "<Mouse>/delta",
+                    "id": "000fca26-0c2e-4ae4-8760-661b26812789",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseLook",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8cd9d43c-2714-4bd4-a84e-1c3fce68936b",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6578637a-57a6-4564-8b03-6bb091ed8bd3",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7443baf5-675e-4259-9a10-114e72fdffcd",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UnlockCursor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

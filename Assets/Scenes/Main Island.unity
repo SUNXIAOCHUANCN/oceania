@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 252350347}
   - component: {fileID: 252350350}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -357,11 +357,11 @@ Transform:
   m_GameObject: {fileID: 252350346}
   serializedVersion: 2
   m_LocalRotation: {x: 0.281648, y: -0, z: -0, w: 0.9595178}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3.93, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2075316007}
+  m_Father: {fileID: 938767309}
   m_LocalEulerAnglesHint: {x: 32.717, y: 0, z: 0}
 --- !u!114 &252350350
 MonoBehaviour:
@@ -733,9 +733,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 139402342}
-        m_TargetAssemblyTypeName: GlobalTimeSystem, Assembly-CSharp
-        m_MethodName: ResetTime
+      - m_Target: {fileID: 1543451312}
+        m_TargetAssemblyTypeName: TimeUIManager, Assembly-CSharp
+        m_MethodName: ButtonTest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -744,7 +744,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &813879419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -795,6 +795,7 @@ GameObject:
   - component: {fileID: 938767310}
   - component: {fileID: 938767311}
   - component: {fileID: 938767312}
+  - component: {fileID: 938767313}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -815,6 +816,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 252350349}
   - {fileID: 1623246469}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -830,9 +832,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 010eea11192bc3c4daba8f4c3f9dc86c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  speed: 5
-  isPC: 1
-  playerAnimator: {fileID: 1623246468}
+  speed: 3
+  runSpeed: 5
+  jumpForce: 10
+  sensitivity: 2
+  minPitch: -60
+  maxPitch: 90
+  cameraDistance: 4
+  minDistance: 3
+  maxDistance: 6
+  zoomSpeed: 0.5
+  cursorManager: {fileID: 938767313}
 --- !u!143 &938767311
 CharacterController:
   m_ObjectHideFlags: 0
@@ -872,7 +882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
   m_Actions: {fileID: -944628639613478452, guid: 3484c57d1b70d3f4a992db80deda5495, type: 3}
   m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 1088853832}
+  m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -895,90 +905,39 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 463f94df-b11e-4b1c-aad3-552afe653b8f
     m_ActionName: boat/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6ebb3b27-e12f-494e-8315-a670d2251305
+    m_ActionName: 'player/Sprint[/Keyboard/leftShift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 717c5b57-34a5-42ac-a1a8-9ea4a3320bdc
+    m_ActionName: 'player/Jump[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 281e66b9-1b71-4d1a-86a0-5e2ed978fad2
+    m_ActionName: 'player/Zoom[/Mouse/scroll]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 034a46a4-ca88-4e90-8a0f-48948195e135
+    m_ActionName: 'player/UnlockCursor[/Keyboard/leftAlt]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 252350348}
---- !u!1 &1088853831
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1088853834}
-  - component: {fileID: 1088853833}
-  - component: {fileID: 1088853832}
-  m_Layer: 0
-  m_Name: UI Input Module
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1088853832
+--- !u!114 &938767313
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1088853831}
+  m_GameObject: {fileID: 938767308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b08f13ecb18e9948b6ecc8a5718f510, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
-  m_SendPointerHoverToParent: 1
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
-  m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: 3484c57d1b70d3f4a992db80deda5495, type: 3}
-  m_PointAction: {fileID: 0}
-  m_MoveAction: {fileID: 0}
-  m_SubmitAction: {fileID: 0}
-  m_CancelAction: {fileID: 0}
-  m_LeftClickAction: {fileID: 0}
-  m_MiddleClickAction: {fileID: 0}
-  m_RightClickAction: {fileID: 0}
-  m_ScrollWheelAction: {fileID: 0}
-  m_TrackedDevicePositionAction: {fileID: 0}
-  m_TrackedDeviceOrientationAction: {fileID: 0}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
-  m_CursorLockBehavior: 0
-  m_ScrollDeltaPerTick: 6
---- !u!114 &1088853833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1088853831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &1088853834
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1088853831}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::CursorManager
 --- !u!1 &1189193311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,7 +1074,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Reset Time
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1660,8 +1619,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 3.93, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 252350349}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
@@ -1675,5 +1633,4 @@ SceneRoots:
   - {fileID: 1189193314}
   - {fileID: 938767309}
   - {fileID: 121075050}
-  - {fileID: 1088853834}
   - {fileID: 2075316007}
