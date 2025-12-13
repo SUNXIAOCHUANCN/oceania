@@ -16,13 +16,16 @@ public class ResourceScriptableObject : ScriptableObject
     public ResourceCategory category; // 分类
 
     [Header("生产属性")]
-    public int baseYield;        // 基础产量
+    public float baseYield;        // 基础产量
     public float growthTime;     // 生长/生产所需时间 (秒)
 
     [Header("退化属性")]
-    [Tooltip("每次收获后产量降低的百分比 (0-1)")]
-    public float degradationRate;     // 退化速度
-
-    [Header("价值属性")]
-    public float value;               // 贸易价值
+    [Tooltip("每月退化的百分比 (0-1)，按月累加。配合 ResourceManager.degradationIntervalInMonths 使用。")]
+    public float degradationRate;     // 退化速度（按月）
+    [Tooltip("最低效率下限 (0-1)，例如 0.1 表示至少保留 10% 产量")]
+    public float minEfficiency = 0.1f; // 最低保留百分比
+    
+    [Header("消耗属性（仅牲畜类适用）")]
+    [Tooltip("牲畜每周期（每月）需要的作物消耗量，单位与作物资源一致（例如 pc 单位）。仅在 ResourceCategory.Livestock 时有效。")]
+    public float baseConsumption = 0;
 }
