@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 17d2a5eaf95a01f4584a4a9a2d65a425
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174356
+  packageName: Fristy stylize Mobile
+  packageVersion: 1.0
+  assetPath: Assets/Fristy Mobile CG/Shaders/Foliage Alpha by distance 1.shader
+  uploadId: 383707
