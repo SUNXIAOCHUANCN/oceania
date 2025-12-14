@@ -20,6 +20,7 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Player")]
     [SerializeField]private PlayerController firstPlayerController;
+    [SerializeField] private Animator playerAnimator; // 玩家的动画控制器
     private Transform playerCamera;
 
     private int currentDialogueIndex = 0;
@@ -36,7 +37,16 @@ public class DialogueManager : MonoBehaviour
     {
         //Debug.Log("Call DialogueStrat");
         dialogueParent.SetActive(true);
-        firstPlayerController.enabled = false;
+        if (firstPlayerController != null)
+        {
+            firstPlayerController.enabled = false;
+        }
+        if (playerAnimator != null)
+        {
+            playerAnimator.Play("Idle");
+
+            playerAnimator.enabled = false;
+        }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -72,8 +82,9 @@ public class DialogueManager : MonoBehaviour
         option1Button.interactable = false;
         option2Button.interactable = false;
 
-        option1Button.GetComponentInChildren<TMP_Text>().text = "Click to end dialogue";
-        option2Button.GetComponentInChildren<TMP_Text>().text = "Click to end dialogue";
+        option1Button.GetComponentInChildren<TMP_Text>().text = "点击结束";
+        //option2Button.GetComponentInChildren<TMP_Text>().text = "Click to end dialogue";
+        option2Button.gameObject.SetActive(false);
     }
 
     private IEnumerator PrintDialogue()
@@ -87,6 +98,7 @@ public class DialogueManager : MonoBehaviour
             {
                 yield return StartCoroutine(TypeText(line.text));
                 option1Button.interactable = true;
+                option2Button.gameObject.SetActive(true);
                 option2Button.interactable = true;
 
                 option1Button.GetComponentInChildren<TMP_Text>().text = line.answerOption1;
@@ -144,8 +156,14 @@ public class DialogueManager : MonoBehaviour
         StopAllCoroutines();
         dialogueText.text = "";
         dialogueParent.SetActive(false);
-
-        firstPlayerController.enabled =true;
+        if (firstPlayerController != null)
+        {
+            firstPlayerController.enabled = true;
+        }
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
