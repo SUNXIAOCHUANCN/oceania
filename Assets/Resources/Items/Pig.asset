@@ -15,7 +15,8 @@ MonoBehaviour:
   resourceName: "\u732A"
   icon: {fileID: 0}
   category: 1
-  baseYield: 3
-  growthTime: 200
-  degradationRate: 0.03
-  Tradevalue: 0
+  baseYield: 4
+  growthTime: 40
+  degradationRate: 0.033
+  minEfficiency: 0.1
+  baseConsumption: 4

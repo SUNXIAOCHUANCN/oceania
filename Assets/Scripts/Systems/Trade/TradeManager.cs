@@ -70,7 +70,7 @@ public class TradeManager : MonoBehaviour
             return false; 
         }
 
-        bool reg = VariantManager.Instance.ApplyVariantToResource(variant.originalSpecies, variant);
+        bool reg = VariantManager.Instance.RegisterVariant(variant);
         if (!reg) 
         { 
             Debug.LogWarning("注册变种失败"); 

@@ -15,7 +15,8 @@ MonoBehaviour:
   resourceName: "\u85AF\u84E3"
   icon: {fileID: 0}
   category: 0
-  baseYield: 20
+  baseYield: 10
   growthTime: 40
-  degradationRate: 0.05
-  value: 10
+  degradationRate: 0.033
+  minEfficiency: 0.1
+  baseConsumption: 0

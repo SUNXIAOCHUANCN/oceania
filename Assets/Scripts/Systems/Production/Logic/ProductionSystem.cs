@@ -17,6 +17,7 @@ public class ProductionUnit : MonoBehaviour
     // 月时长（秒），用于建造/开垦的 1 个月判定
     private float monthSeconds => GlobalTimeSystem.Instance != null ? GlobalTimeSystem.Instance.phaseDuration * 4f : 120f;
 
+    private ProductionPanel productionPanel;
     private void Awake()
     {
         if (field == null) field = new List<ProductionUnitScriptableObject>();
@@ -31,6 +32,16 @@ public class ProductionUnit : MonoBehaviour
             Debug.LogError("未找到 GlobalTimeSystem! 请先从初始场景启动或将时间系统拖入场。");
             return;
         }
+
+#if UNITY_2023_2_OR_NEWER
+        productionPanel = Object.FindFirstObjectByType<ProductionPanel>();
+#else
+        productionPanel = FindObjectOfType<ProductionPanel>();
+#endif
+        if (productionPanel == null)
+        {
+            Debug.LogWarning("未找到 ProductionPanel! 生产系统无法通知 UI 刷新。");
+        }
     }
 
     private void Update()
@@ -38,6 +49,9 @@ public class ProductionUnit : MonoBehaviour
         if (GlobalTimeSystem.Instance == null) return;
         float now = GlobalTimeSystem.Instance.TotalElapsedTime;
 
+        CheckProductionCompletion(field, now);
+        CheckProductionCompletion(pasture, now);
+        CheckProductionCompletion(plantation, now);
         // --- 自动检查：若某单元处于建设状态（canProduction==false 且 workerAssignedStart 已设置），
         // 当分配工人数 >= requiredWorkers 且建设时长 >= 1 个月时，完成建设并允许生产。
         System.Action<List<ProductionUnitScriptableObject>> checkConstruction = (list) =>
@@ -194,10 +208,15 @@ public class ProductionUnit : MonoBehaviour
         if (index < 0 || index >= field.Count) return false;
         var unit = field[index];
         if (unit == null) return false;
-        if (!unit.canProduction) return false;
+        if (!unit.canProduction) 
+        {
+            Debug.Log($"当前生产单元 {unit.unitID} 无法进行生产！");
+            return false;
+        }
         unit.Resource = crop;
         unit.autoReplant = autoReplant;
         unit.ProductionStart = -1f;
+        Debug.Log($"当前生产单元 {unit.unitID} 已开始种植作物 {crop.resourceName}。");
         return true;
     }
 
@@ -392,6 +411,120 @@ public class ProductionUnit : MonoBehaviour
         unit.Manager.currentStatus = Person.Status.Free;
         unit.Manager = null;
         unit.hasFarmer = false;
+    }
+
+    private void CheckProductionCompletion(List<ProductionUnitScriptableObject> units, float currentTime)
+    {
+        bool needRefresh = false;
+    
+        // 从后往前遍历列表，以防未来需要移除元素
+        for(int i = units.Count - 1; i >= 0; i--)
+        {
+            var unit = units[i];
+        
+            // 确保单元在生产中
+            if (unit == null || unit.Resource == null || unit.ProductionStart <= 0f) continue;
+
+            float elapsedTime = currentTime - unit.ProductionStart;
+            float growthTime = unit.Resource.growthTime;
+
+            if (elapsedTime >= growthTime)
+            {
+                // --- 生产完成结算逻辑 ---
+            
+                // 1. 产出资源 (假设 ResourceManager.Instance 存在且产出逻辑放在这里)
+                if (ResourceManager.Instance != null)
+                {
+                    // TODO: 在此处实现实际的资源增加逻辑
+                    Debug.Log($"[{unit.category}] {unit.unitID} 生产完成，产出 {unit.Resource.resourceName}");
+                }
+
+                if (unit.autoReplant) {
+                
+                    // 自动生产: 立即重置时间，开始新一轮生产
+                    unit.ProductionStart = currentTime; 
+                    // 人员保持不变，资源保持不变
+                
+                    // 仅需确保 Manager/Worker 状态是 Working/Managing
+                    if (unit.Manager != null) unit.Manager.currentStatus = Person.Status.Working;
+                    if (unit.Worker != null) unit.Worker.currentStatus = Person.Status.Working;
+                
+                    needRefresh = true; // 状态变化，通知 UI
+                }
+                else
+                {
+                    // **解决问题 1 & 2：非自动生产，进行状态清理，解除锁定**
+                
+                    // 2. 清除数据
+                    unit.Resource = null;             // 清除资源
+                    unit.ProductionStart = 0f;        // 进度归零
+                
+                    // 3. 释放 Manager 和 Worker
+                    if (unit.Manager != null) 
+                    {
+                        unit.Manager.currentStatus = Person.Status.Free;
+                        unit.Manager = null;
+                    }
+                    if (unit.Worker != null) 
+                    {
+                        unit.Worker.currentStatus = Person.Status.Free;
+                        unit.Worker = null;
+                    }
+                
+                    needRefresh = true; // 状态变化，通知 UI
+                }
+            }
+        }
+    // 如果有任何单元状态发生变化，通知 UI 刷新
+        if (needRefresh && productionPanel != null)
+        {
+            productionPanel.RefreshSelectedList(); 
+        }
+    }
+
+    public bool StartConstruction(ProductionUnitScriptableObject unit, ProductionPanel.ViewCategory category)
+    {
+        if (unit == null) return false;
+        switch (category)
+        {
+            case ProductionPanel.ViewCategory.Field:
+                int index = 0;
+                for(int i = 0; i < field.Count; i++)
+                {
+                    if (field[i] == unit)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                StartBuildField(index);
+                break;
+            case ProductionPanel.ViewCategory.Pasture:
+                index = 0;
+                for(int i = 0; i < pasture.Count; i++)
+                {
+                    if (pasture[i] == unit)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                StartBuildPasture(index);
+                break;
+            case ProductionPanel.ViewCategory.Plantation:
+                index = 0;
+                for(int i = 0; i < plantation.Count; i++)
+                {
+                    if (plantation[i] == unit)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                StartBuildPlantation(index);
+                break;
+        }
+        return true;
     }
 
     

@@ -70,7 +70,7 @@ public class VariantManager : MonoBehaviour
         bool registered = RegisterVariant(wildVariant);
         if (registered)
         {
-            Debug.Log($"已成功驯化并注册变种: {tamed.resourceName}");
+            Debug.Log($"已成功驯化并注册变种: {wildVariant.resourceName}");
             return true;
         }
         Debug.LogWarning("驯化失败：注册变种失败");

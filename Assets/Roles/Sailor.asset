@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoleScriptableObject
   roleName: "\u6C34\u624B"
   description: 
-  recruitmentCostResourceName: 
-  recruitmentCostAmount: 0
+  count: 0
+  RecruitmentCosts: []
+  durationalConsumption: []
   canBringBackVariant: 0
-  sailingSpeedBonus: 0.1
-  resourceReturnRate: 0.1
-  stormReductionChance: 0
+  sailingTimeSave: 0.3
+  MonthlyPrayforResource: 0
   canPointoutDirection: 0
-  durationalFoodConsumption: 1
+  ManagementBonus: 0
