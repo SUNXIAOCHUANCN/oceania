@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 373942804cb2d9141ae94fe8a26852f3
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174356
+  packageName: Fristy stylize Mobile
+  packageVersion: 1.0
+  assetPath: Assets/Fristy Mobile CG/Shaders/Maps.shader
+  uploadId: 383707
