@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec571527bf469d4b863da6079960d4f, type: 3}
+  m_Name: Tamer
+  m_EditorClassIdentifier: Assembly-CSharp::RoleScriptableObject
+  roleName: "\u9A6F\u5316\u5E08"
+  description: 
+  recruitmentCostResourceName: 
+  recruitmentCostAmount: 0
+  canBringBackVariant: 1
+  sailingSpeedBonus: 0
+  resourceReturnRate: 0
+  stormReductionChance: 0
+  canPointoutDirection: 0
+  durationalFoodConsumption: 1

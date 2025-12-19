@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8aa69948b6230047bfd5f7977aed821, type: 3}
+  m_Name: Wild_Palm
+  m_EditorClassIdentifier: Assembly-CSharp::VariantScriptableObject
+  resourceName: "\u91CE\u68D5\u6988"
+  icon: {fileID: 0}
+  category: 2
+  baseYield: 7
+  growthTime: 80
+  degradationRate: 0.06
+  minEfficiency: 0.1
+  baseConsumption: 0
+  variantType: 1
+  originalSpecies: {fileID: 11400000, guid: ff0ee230c7c660d4698e8b72020eaec9, type: 2}
+  unlocked: 0
