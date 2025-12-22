@@ -14,6 +14,8 @@ public class ProductionUnit : MonoBehaviour
     [Tooltip("栽培林建造消耗的材料资源（如果留空则不消耗）")]
     public ResourceScriptableObject plantationBuildMaterial;
 
+    public System.Action OnProductionStatusChanged;
+
     // 月时长（秒），用于建造/开垦的 1 个月判定
     private float monthSeconds => GlobalTimeSystem.Instance != null ? GlobalTimeSystem.Instance.phaseDuration * 4f : 120f;
 
@@ -49,9 +51,6 @@ public class ProductionUnit : MonoBehaviour
         if (GlobalTimeSystem.Instance == null) return;
         float now = GlobalTimeSystem.Instance.TotalElapsedTime;
 
-        CheckProductionCompletion(field, now);
-        CheckProductionCompletion(pasture, now);
-        CheckProductionCompletion(plantation, now);
         // --- 自动检查：若某单元处于建设状态（canProduction==false 且 workerAssignedStart 已设置），
         // 当分配工人数 >= requiredWorkers 且建设时长 >= 1 个月时，完成建设并允许生产。
         System.Action<List<ProductionUnitScriptableObject>> checkConstruction = (list) =>
@@ -71,6 +70,8 @@ public class ProductionUnit : MonoBehaviour
                         Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 单元建设完成并允许生产。");
                         unit.Worker.currentStatus = Person.Status.Free;
                         unit.Worker = null;
+
+                        OnProductionStatusChanged?.Invoke();
                     }
                 }
             }
@@ -105,14 +106,20 @@ public class ProductionUnit : MonoBehaviour
                     float yield = slot.GetCurrentYield();
                     if (unit.hasFarmer) yield *= 1.2f;
                     ResourceManager.Instance.AddResource(crop.resourceName, yield);
-                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 田地单元 {i} 收获: {crop.resourceName} (+{yield})");
+                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 田地单元 {i+1} 种植 {crop.resourceName} ，收获: Crop +{yield}");
                 }
-
-                unit.ProductionStart = -1f;
                 
                 if(unit.autoReplant && crop != null)
                 {
                     unit.ProductionStart = now;
+                }
+                else
+                {
+                    unit.ProductionStart = -1f;
+                    unit.Resource = null;
+                    unit.Manager = null;
+
+                    OnProductionStatusChanged?.Invoke();
                 }
             }
         }
@@ -128,14 +135,14 @@ public class ProductionUnit : MonoBehaviour
             // 判断牧场单元是否有管理员存在
             if (unit.Manager == null) continue;    
 
-            float lastProduce = unit.lastProduce;
-            if (lastProduce < 0f) 
-            { 
-                unit.lastProduce = now; 
-                lastProduce = now; 
-            }
+            // float lastProduce = unit.lastProduce;
+            // if (lastProduce < 0f) 
+            //{ 
+                //unit.lastProduce = now; 
+                //lastProduce = now; 
+            //}
             
-            float since = now - lastProduce;
+            float since = now - unit.ProductionStart;
             if (since >= livestock.growthTime)
             {
                 var slot = ResourceManager.Instance.GetResourceSlot(livestock.resourceName);
@@ -151,17 +158,21 @@ public class ProductionUnit : MonoBehaviour
                 if (feedNeed > 0) hasFeed = ResourceManager.Instance.ConsumeResource(ResourceCategory.Crop, feedNeed);
                 if (!hasFeed)
                 {
-                    Debug.LogWarning($"牧场单元 {i}：饲料不足，跳过本次产出（需要 {feedNeed} 作物）");
+                    Debug.LogWarning($"牧场单元 {i+1}：饲料不足，跳过本次产出（需要 {feedNeed} 作物）");
                 }
                 else
                 {
                     float yield = slot.GetCurrentYield();
                     if (unit.hasFarmer) yield *= 1.2f;
                     ResourceManager.Instance.AddResource(livestock.resourceName, yield);
-                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 牧场单元产出: {livestock.resourceName} (+{yield}) 消耗饲料 {feedNeed}");
+                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 牧场单元 {i+1} 豢养 {livestock.resourceName} ，产出: Livestock +{yield}，消耗饲料 {feedNeed}");
                 }
 
-                unit.lastProduce = now;
+                unit.ProductionStart = -1f;
+                unit.Resource = null;
+                unit.Manager = null;
+
+                OnProductionStatusChanged?.Invoke();
             }
         }
 
@@ -174,18 +185,25 @@ public class ProductionUnit : MonoBehaviour
             var material = unit.Resource;
             if (material == null) continue;
 
-            float lastYield = unit.lastYield;
-            if (lastYield < 0f)
+            if (unit.currentPlantedResourceName != unit.Resource.resourceName)
             {
-                unit.lastYield = GlobalTimeSystem.Instance.TotalElapsedTime;
-                lastYield = GlobalTimeSystem.Instance.TotalElapsedTime;
+                unit.accumulatedPlantingTime = 0f;
+                unit.currentPlantedResourceName = unit.Resource.resourceName;
             }
 
-            float sinceLast = now - lastYield;
-            if (sinceLast >= monthSeconds)
+            if (unit.ProductionStart > 0)
             {
-                bool matured = true;
-                if (now - unit.ProductionStart < material.growthTime) matured = false;
+                unit.accumulatedPlantingTime += Time.deltaTime;
+            }
+
+            if (unit.lastYield < 0f)
+            {
+                unit.lastYield = GlobalTimeSystem.Instance.TotalElapsedTime;
+            }
+
+            if (now - unit.lastYield >= monthSeconds)
+            {
+                bool matured = unit.accumulatedPlantingTime >= unit.Resource.growthTime;
                 ResourceSlot slot = ResourceManager.Instance.GetResourceSlot(material.resourceName);
                 if (slot != null)
                 {
@@ -193,9 +211,12 @@ public class ProductionUnit : MonoBehaviour
                     if (!matured) yield *= 0.5f; 
                     if (unit.hasFarmer) yield *= 1.2f;
                     ResourceManager.Instance.AddResource(material.resourceName, yield);
-                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 栽培林单元产出: {material.resourceName} (+{yield}) {(matured?"成熟":"生长期")} ");
+                    Debug.Log($"[{GlobalTimeSystem.Instance.GetFormattedTotalTime()}] 栽培林单元 {i+1} 种植 {material.resourceName}，产出: Material +{yield} {(matured?"成熟":"生长期")} ");
                 }
-                unit.lastYield = now;
+
+                unit.ProductionStart = -1f;
+                unit.lastYield = -1f;
+                OnProductionStatusChanged?.Invoke();
             }
         }
     }
@@ -436,7 +457,7 @@ public class ProductionUnit : MonoBehaviour
                 if (ResourceManager.Instance != null)
                 {
                     // TODO: 在此处实现实际的资源增加逻辑
-                    Debug.Log($"[{unit.category}] {unit.unitID} 生产完成，产出 {unit.Resource.resourceName}");
+                    Debug.Log($"[{unit.category}] {unit.unitID} 生产 {unit.Resource.resourceName} 完成，产出 {unit.Resource.resourceName}");
                 }
 
                 if (unit.autoReplant) {
@@ -453,7 +474,7 @@ public class ProductionUnit : MonoBehaviour
                 }
                 else
                 {
-                    // **解决问题 1 & 2：非自动生产，进行状态清理，解除锁定**
+                    // 非自动生产，进行状态清理，解除锁定
                 
                     // 2. 清除数据
                     unit.Resource = null;             // 清除资源

@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a502aa26ceab147bd20bc2b5e4ca9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalTimeSystem
-  phaseDuration: 30
+  phaseDuration: 15
   isPaused: 0
 --- !u!4 &932701562
 Transform:
@@ -3533,8 +3533,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1516907265}
   m_HandleRect: {fileID: 1516907264}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.5714285
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3610,7 +3610,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 3.7673576}
+  m_AnchoredPosition: {x: 0, y: -0.000056266785}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1805516939

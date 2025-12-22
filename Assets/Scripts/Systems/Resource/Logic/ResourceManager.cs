@@ -81,7 +81,7 @@ public class ResourceManager : MonoBehaviour
             categoryInventory[category] = 0;
         }
         categoryInventory[category] += amount;
-        UnityEngine.Debug.Log($"获得资源(按类): {category} + {amount}, 当前: {categoryInventory[category]}");
+        UnityEngine.Debug.Log($"获得资源: {category} + {amount}, 当前: {categoryInventory[category]}");
         OnResourceChanged?.Invoke(); // 通知UI
     }
 

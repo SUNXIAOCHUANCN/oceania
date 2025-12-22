@@ -24,6 +24,6 @@ MonoBehaviour:
     currentStatus: 0
     dialogueLine: 
   hasFarmer: 0
-  autoReplant: 1
+  autoReplant: 0
   requiredWorkers: 1
   requiredMaterial: 1

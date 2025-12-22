@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionUnitScriptableObject
   unitID: "\u7267\u573A3"
   category: 1
-  canProduction: 0
+  canProduction: 1
   Resource: {fileID: 0}
   ProductionStart: -1
   Manager:
@@ -24,6 +24,8 @@ MonoBehaviour:
     currentStatus: 0
     dialogueLine: 
   hasFarmer: 0
-  autoReplant: 1
+  autoReplant: 0
   requiredWorkers: 1
   requiredMaterial: 1
+  accumulatedPlantingTime: 0
+  currentPlantedResourceName: 
