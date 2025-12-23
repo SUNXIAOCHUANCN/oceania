@@ -60,6 +60,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.ide.trae": {
+      "version": "https://github.com/dennyguotf/com.unity.ide.trae.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.9"
+      },
+      "hash": "0231d4b833feb294da5fc8fa7e04df85bd73773f"
+    },
     "com.unity.ide.visualstudio": {
       "version": "2.0.23",
       "depth": 0,
@@ -158,6 +167,16 @@
         "com.unity.render-pipelines.core": "17.2.0",
         "com.unity.searcher": "4.9.3"
       }
+    },
+    "com.unity.terrain-tools": {
+      "version": "5.3.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.terrain": "1.0.0",
+        "com.unity.modules.terrainphysics": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
       "version": "1.5.1",

@@ -15,8 +15,8 @@ MonoBehaviour:
   unitID: "\u683D\u57F9\u67971"
   category: 2
   canProduction: 1
-  Resource: {fileID: 0}
-  ProductionStart: -1
+  Resource: {fileID: 11400000, guid: ff0ee230c7c660d4698e8b72020eaec9, type: 2}
+  ProductionStart: 6243.479
   Manager:
     uniqueId: 
     personName: 
@@ -24,6 +24,6 @@ MonoBehaviour:
     currentStatus: 0
     dialogueLine: 
   hasFarmer: 0
-  autoReplant: 1
+  autoReplant: 0
   requiredWorkers: 1
   requiredMaterial: 1

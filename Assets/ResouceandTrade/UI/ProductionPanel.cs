@@ -12,6 +12,7 @@ public class ProductionPanel : MonoBehaviour
     {
         public ProductionUnitScriptableObject unit;
         public Text statusText;
+        public Slider progressSlider;
     }
 
     [Header("Layout")]
@@ -60,8 +61,26 @@ public class ProductionPanel : MonoBehaviour
     
     private void Start()
     {
+        if(productionSystem == null)
+        {
+            productionSystem = FindObjectOfType<ProductionUnit>();
+        }
+
+        if(productionSystem != null)
+        {
+            productionSystem.OnProductionStatusChanged += RefreshSelectedList;
+        }
+
         BuildSwitchButtonsIfNeeded();
         RefreshSelectedList();
+    }
+
+    private void OnDestroy()
+    {
+        if (productionSystem != null)
+        {
+            productionSystem.OnProductionStatusChanged -= RefreshSelectedList;
+        }
     }
 
     // --- 左侧切换栏逻辑  ---
@@ -196,6 +215,7 @@ public class ProductionPanel : MonoBehaviour
 
         Text nameTxt = FindComponentInChild<Text>(go, "UnitName"); 
         if (nameTxt != null) nameTxt.text = unit.unitID ?? $"Unit {index + 1}";
+        bool isProducing = unit.Resource != null && unit.ProductionStart > 0;
 
         // === 1. 资源下拉菜单 (使用暂存机制) ===
         Dropdown resDropdown = FindComponentInChild<Dropdown>(go, "ResourceName");
@@ -244,26 +264,41 @@ public class ProductionPanel : MonoBehaviour
         // === 2. 生产进度条 (更新 Update 跟踪列表) ===
         Slider progressSlider = FindComponentInChild<Slider>(go, "Slider");
         if (progressSlider != null)
-        {
-            bool isProducing = unit.Resource != null && unit.ProductionStart > 0;
-            
-            if (isProducing)
+        {   
+            //if(unit.category == ProdcutionUnitCategory.Field)
             {
-                activeProductionUnits.Add(new ProductionUnitDisplay { unit = unit, progressSlider = progressSlider });
-                if (GlobalTimeSystem.Instance != null)
+                if (isProducing)
                 {
-                    float elapsed = GlobalTimeSystem.Instance.TotalElapsedTime - unit.ProductionStart;
-                    progressSlider.value = Mathf.Clamp01(elapsed / unit.Resource.growthTime);
+                    activeProductionUnits.Add(new ProductionUnitDisplay { unit = unit, progressSlider = progressSlider });
+                    if (GlobalTimeSystem.Instance != null)
+                    {
+                        float elapsed = GlobalTimeSystem.Instance.TotalElapsedTime - unit.ProductionStart;
+                        progressSlider.value = Mathf.Clamp01(elapsed / unit.Resource.growthTime);
+                    }
+                }
+                else
+                {
+                    progressSlider.value = 0f;
                 }
             }
-            else
+            //else if(unit.category == ProdcutionUnitCategory.Pasture)
             {
-                progressSlider.value = 0f;
+                
             }
+            //else if(unit.category == ProdcutionUnitCategory.Plantation)
+            {
+                
+            }
+            
         }
         
         // === 3. 自动生产 Toggle ===
         Toggle autoToggle = FindComponentInChild<Toggle>(go, "Toggle");
+
+        if(unit.category != ProdcutionUnitCategory.Field)
+        {
+            autoToggle.gameObject.SetActive(false);
+        }
         if (autoToggle != null)
         {
             autoToggle.isOn = unit.autoReplant;
@@ -274,6 +309,8 @@ public class ProductionPanel : MonoBehaviour
         Dropdown mgrDropdown = FindComponentInChild<Dropdown>(go, "Manager");
         if (mgrDropdown != null && PopulationManager.Instance != null)
         {
+            mgrDropdown.interactable = !isProducing;
+
             mgrDropdown.ClearOptions();
             var availablePeople = PopulationManager.Instance.allPeople
                 .Where(p => p.currentStatus == Person.Status.Free || p == unit.Manager).ToList();
@@ -297,13 +334,11 @@ public class ProductionPanel : MonoBehaviour
                         unit.Manager.currentStatus = Person.Status.Free;
                         unit.Manager = null;
                     }
-
                     initialValue = 0;
-                        
                 }
             }
 
-            mgrDropdown.value = initialValue;;
+            mgrDropdown.value = initialValue;
 
             mgrDropdown.onValueChanged.RemoveAllListeners();
             mgrDropdown.onValueChanged.AddListener((val) => {
@@ -337,13 +372,13 @@ public class ProductionPanel : MonoBehaviour
             
             bool hasResource = targetResource != null;
             bool hasManager = unit.Manager != null;
-            bool isProducing = unit.Resource != null && unit.ProductionStart > 0; // 真正的生产状态
+            bool currentlyRunning = unit.ProductionStart > 0;
 
             bool canStart = false; // 默认不可开始
             string buttonText = "开始生产";
 
             // 2. 检查条件
-            if (isProducing)
+            if (currentlyRunning)
             {
                 buttonText = "生产中...";
             }
@@ -361,8 +396,8 @@ public class ProductionPanel : MonoBehaviour
             }
 
             // 3. 应用状态
-            startBtn.interactable = canStart; // 只有 canStart 为 true 时按钮才启用
             if (startBtnTxt != null) startBtnTxt.text = buttonText;
+            startBtn.interactable = canStart; // 只有 canStart 为 true 时按钮才启用
 
             // 4. 设置点击事件
             startBtn.onClick.RemoveAllListeners();
@@ -377,9 +412,9 @@ public class ProductionPanel : MonoBehaviour
                     }
                     
                     // B. 调用系统开始生产
+                    unit.ProductionStart = GlobalTimeSystem.Instance.TotalElapsedTime;
                     TryStartProduction(unit, list);
                     
-                    // C. 解决问题 1: 强制设置开始时间，让进度条立即滑动
                     if (GlobalTimeSystem.Instance != null)
                     {
                         unit.ProductionStart = GlobalTimeSystem.Instance.TotalElapsedTime;
@@ -407,8 +442,13 @@ public class ProductionPanel : MonoBehaviour
         Dropdown workerDropdown = FindComponentInChild<Dropdown>(go, "Worker");
         // 3. 建设按钮 (Button) 
         Button buildBtn = go.GetComponentInChildren<Button>(); 
+        Text buildBtnText = FindComponentInChild<Text>(go, "Button/Text");
+
+        Slider buildSlider = FindComponentInChild<Slider>(go, "Slider");
+        buildSlider.gameObject.SetActive(false);
+
         // 4. 建设状态文本 (Text)
-        Text statusTxt = FindComponentInChild<Text>(go, "ConstructionStatusText");
+        string text = "开始建设";
 
         // 检查是否处于建设状态 (工人已分配且开始时间已标记)
         bool isConstructing = unit.Worker != null && unit.workerAssignedStart > 0f;
@@ -419,20 +459,32 @@ public class ProductionPanel : MonoBehaviour
         if (isConstructing)
         {
             // 隐藏交互 UI
-            if (workerDropdown != null) workerDropdown.gameObject.SetActive(false);
-            if (buildBtn != null) buildBtn.gameObject.SetActive(false);
-            
-            // 显示状态文本
-            if (statusTxt != null) 
+            text = "建设中...";
+            if (workerDropdown != null) 
             {
-                statusTxt.gameObject.SetActive(true); // 此时显示
-                // 添加到计时列表，在 Update 中实时更新
-                activeConstructionUnits.Add(new ConstructionUnitDisplay 
+                workerDropdown.ClearOptions();
+                workerDropdown.AddOptions(new List<string> {unit.Worker.personName});
+                workerDropdown.value = 0;
+                workerDropdown.interactable = false;
+            }
+            if (buildBtn != null) 
+            {
+                // buildBtn.gameObject.SetActive(false);
+                buildBtnText.text = text;
+                buildBtn.interactable = false;
+            }
+            if(buildSlider != null)
+            {
+                buildSlider.gameObject.SetActive(true);
+                activeConstructionUnits.Add(new ConstructionUnitDisplay
                 {
                     unit = unit,
-                    statusText = statusTxt
+                    statusText = buildBtnText,
+                    progressSlider = buildSlider
                 });
-                statusTxt.text = "建设中..."; 
+
+                float elapsed = GlobalTimeSystem.Instance.TotalElapsedTime - unit.workerAssignedStart;
+                buildSlider.value = Mathf.Clamp01(elapsed/monthSeconds);
             }
         }
         // ------------------------------------
@@ -443,10 +495,6 @@ public class ProductionPanel : MonoBehaviour
             if (buildBtn != null) 
             {
                 buildBtn.gameObject.SetActive(true);
-            }
-            if (statusTxt != null)
-            {
-                statusTxt.gameObject.SetActive(false);
             }
             if (workerDropdown != null)
             {
@@ -553,6 +601,15 @@ public class ProductionPanel : MonoBehaviour
             var display = activeConstructionUnits[i];
             var unit = display.unit;
 
+            float elapsed = now - unit.workerAssignedStart;
+            float progress = Mathf.Clamp01(elapsed / monthSeconds);
+            float remaining = totalConstructionTime - elapsed;
+
+            if (display.progressSlider != null)
+            {
+                display.progressSlider.value = progress;
+            }
+
             // 检查 ProductionUnit 系统是否已将 canProduction 设为 true (建设完成)
             if (unit.canProduction)
             {
@@ -560,10 +617,7 @@ public class ProductionPanel : MonoBehaviour
                 activeConstructionUnits.RemoveAt(i);
                 RefreshSelectedList();
                 return; // 刷新后 UI 元素被销毁，必须停止迭代
-            }
-
-            float elapsed = now - unit.workerAssignedStart;
-            float remaining = totalConstructionTime - elapsed;
+            }   
 
             if (remaining > 0)
             {
@@ -581,6 +635,8 @@ public class ProductionPanel : MonoBehaviour
         }
 
         // 2. 更新生产进度
+        bool needRefresh = false;
+
         for (int i = activeProductionUnits.Count - 1; i >= 0; i--)
         {
             var display = activeProductionUnits[i];
@@ -592,13 +648,27 @@ public class ProductionPanel : MonoBehaviour
                 if(display.progressSlider != null) display.progressSlider.value = 0f;
                 // 生产完成或被外部停止，移除跟踪并刷新 UI
                 activeProductionUnits.RemoveAt(i);
+                needRefresh = true;
                 continue; // 刷新后 UI 元素可能被销毁，停止迭代
             }
 
             if(display.progressSlider != null)
             {
-                float elapsed = now - unit.ProductionStart;
-                float totalTime = unit.Resource.growthTime; // 从资源获取所需时间
+                float elapsed = 0f;
+                float totalTime = 1f;
+
+                if(currentCategory == ViewCategory.Plantation)
+                {
+                    float basePlantTime = unit.lastYield > 0 ? unit.lastYield : unit.ProductionStart;
+                    elapsed = now - basePlantTime;
+                    totalTime = monthSeconds;
+                }
+                else
+                {
+                    elapsed = now - unit.ProductionStart;
+                    totalTime = unit.Resource.growthTime; // 从资源获取所需时间
+                }
+
                 float progress = Mathf.Clamp01(elapsed / totalTime);
 
                 display.progressSlider.value = progress;
@@ -609,6 +679,11 @@ public class ProductionPanel : MonoBehaviour
                 }
             }
             
+        }
+
+        if (needRefresh)
+        {
+            RefreshSelectedList();
         }
     }
     

@@ -63,7 +63,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Deplacement: 0.5
+    - _Alpha: 1
+    - _Deplacement: 1
     - _Depth_Edge1: 0
     - _Depth_Edge2: 10.59
     - _FoamScale: 9.65

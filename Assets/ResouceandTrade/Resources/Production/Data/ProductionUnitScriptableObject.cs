@@ -18,7 +18,7 @@ public class ProductionUnitScriptableObject : ScriptableObject
     public ResourceScriptableObject Resource;       // 当前生产单元生产的资源（可为 null）
     public float ProductionStart = -1f;             // 生产开始时间（运行时可更新）
 
-    public Person Manager = null;                 // 是否有管理者      
+    public Person Manager = null;                   // 是否有管理者      
     public bool hasFarmer = false;                  // 是否有农民管理（+20%）
     public bool autoReplant = true;                 // 收获后是否自动生产
     
@@ -38,4 +38,6 @@ public class ProductionUnitScriptableObject : ScriptableObject
     public float lastProduce = -1f;                 // 最近一次产出时间（用于牧场）
     [System.NonSerialized]
     public float lastYield = -1f;                   // 最近一次月产时间（用于栽培林）
+    public float accumulatedPlantingTime;
+    public string currentPlantedResourceName;
 }
