@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
+  m_Name: banana
+  m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
+  speciesName: "\u9999\u8549"
+  speciesType: 0
+  speciesDescription: "\u666E\u901A\u7684\uFF0C\u5E73\u5E73\u65E0\u5947\u7684\u9999\u8549"
+  icon: {fileID: 21300000, guid: f814184ea0428694f9d520a981ab73ad, type: 3}
+  source: 0
+  state: 0
+  unlocked: 1
+  initialYield: 5
+  growthPhases: 5
+  decayPerPhase: 0.2
+  leastYield: 0
+  initialCropConsumption: 0
+  monthlyCropConsumption: 0
+  _nextPhaseYield: 5

@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - StickCanva
+  - VariableCanva
+  - cropName
+  - animalName
+  - personName
+  - From
+  - Introduction
+  - job
   layers:
   - Default
   - TransparentFX

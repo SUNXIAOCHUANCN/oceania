@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,37 +7,41 @@ using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogueParent;
-    [SerializeField] private TMP_Text dialogueText;
-    [SerializeField] private Button option1Button;
-    [SerializeField] private Button option2Button;
- 
-
-    [SerializeField] private float typingSpeed=0.05f;
+    [Header("Dialogue Canvas Controller")]
+    [SerializeField] private DialogueCanvasController dialogueCanvasController;
+    
+    [SerializeField] private float typingSpeed = 0.05f;
     [SerializeField] private float turnSpeed = 2f;
 
     private List<dialogueString> dialogueList;
 
     [Header("Player")]
-    [SerializeField]private PlayerController firstPlayerController;
+    [SerializeField] private PlayerController firstPlayerController;
     private Transform playerCamera;
 
     private int currentDialogueIndex = 0;
     private bool optionSelected = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        dialogueParent.SetActive(false);
         playerCamera = Camera.main.transform;
-        //firstPlayerController= GetComponent<PlayerController>();
+        // 确保对话开始时Canvas是隐藏的
+        if (dialogueCanvasController != null)
+        {
+            dialogueCanvasController.HideCanvas();
+        }
     }
 
     public void DialogueStart(List<dialogueString> textToPrint, Transform NPC)
     {
-        //playerRigidbody.useGravity = false;
-        //Debug.Log("Call DialogueStrat");
-        dialogueParent.SetActive(true);
+        if (dialogueCanvasController == null)
+        {
+            Debug.LogError("DialogueCanvasController not assigned!");
+            return;
+        }
+
+        // 显示对话Canvas
+        dialogueCanvasController.ShowCanvas();
         firstPlayerController.enabled = false;
 
         Cursor.lockState = CursorLockMode.None;
@@ -48,45 +51,34 @@ public class DialogueManager : MonoBehaviour
 
         dialogueList = textToPrint;
         currentDialogueIndex = 0;
+        optionSelected = false;
 
-        DisableButtons();
+        // 清空文本和按钮
+        dialogueCanvasController.ClearDialogueText();
+        dialogueCanvasController.HideOptionButtons();
+        dialogueCanvasController.ClearOptionButtonListeners();
 
         StartCoroutine(PrintDialogue());
-
     }
 
     private IEnumerator TurnCameraTowardsNPC(Transform NPC)
     {
         Quaternion startRotation = playerCamera.rotation;
-        Quaternion targetRotation = Quaternion.LookRotation(NPC.position-playerCamera.position);
+        Quaternion targetRotation = Quaternion.LookRotation(NPC.position - playerCamera.position);
 
         float elapsedTime = 0f;
         while (elapsedTime < 1f)
         {
-            playerCamera.rotation=Quaternion.Slerp(startRotation,targetRotation,  elapsedTime);
-            elapsedTime += Time.deltaTime*turnSpeed;
+            playerCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime);
+            elapsedTime += Time.deltaTime * turnSpeed;
             yield return null;
         }
-        playerCamera.rotation= targetRotation;
-    }
-
-    private void DisableButtons()
-    {
-        /*
-        option1Button.interactable = false;
-        option2Button.interactable = false;
-
-        option1Button.GetComponentInChildren<TMP_Text>().text = "Click to end dialogue";
-        option2Button.GetComponentInChildren<TMP_Text>().text = "Click to end dialogue";
-        */
-        option1Button.gameObject.SetActive(false);
-        option2Button.gameObject.SetActive(false);
-        
+        playerCamera.rotation = targetRotation;
     }
 
     private IEnumerator PrintDialogue()
     {
-        while (currentDialogueIndex <dialogueList.Count)
+        while (currentDialogueIndex < dialogueList.Count)
         {
             dialogueString line = dialogueList[currentDialogueIndex];
             line.startDialogueEvent?.Invoke();
@@ -94,17 +86,15 @@ public class DialogueManager : MonoBehaviour
             if (line.isQuestion)
             {
                 yield return StartCoroutine(TypeText(line.text));
-                option1Button.gameObject.SetActive(true);
-                option2Button.gameObject.SetActive(true);
                 
-                option1Button.interactable = true;
-                option2Button.interactable = true;
-
-                option1Button.GetComponentInChildren<TMP_Text>().text = line.answerOption1;
-                option2Button.GetComponentInChildren<TMP_Text>().text = line.answerOption2;
-
-                option1Button.onClick.AddListener(()=>HandleOptionSelected(line.option1IndexJump));
-                option2Button.onClick.AddListener(() => HandleOptionSelected(line.option2IndexJump));
+                // 通过CanvasController显示选项按钮
+                dialogueCanvasController.ShowOptionButtons(line.answerOption1, line.answerOption2);
+                
+                // 设置按钮监听器
+                dialogueCanvasController.SetOptionButtonListeners(
+                    () => HandleOptionSelected(line.option1IndexJump),
+                    () => HandleOptionSelected(line.option2IndexJump)
+                );
 
                 yield return new WaitUntil(() => optionSelected);
             }
@@ -112,60 +102,64 @@ public class DialogueManager : MonoBehaviour
             {
                 yield return StartCoroutine(TypeText(line.text));
             }
+            
             line.endDialogueEvent?.Invoke();
             optionSelected = false;
         }
+        
         DialogueStop();
     }
 
     private void HandleOptionSelected(int indexJump)
     {
-        optionSelected = true ;
-        DisableButtons();
-
-        option1Button.onClick.RemoveAllListeners();
-        option2Button.onClick.RemoveAllListeners();
-
+        optionSelected = true;
+        dialogueCanvasController.HideOptionButtons();
+        dialogueCanvasController.ClearOptionButtonListeners();
         currentDialogueIndex = indexJump;
     }
+
     private IEnumerator TypeText(string text)
     {
-        dialogueText.text = "";
+        dialogueCanvasController.ClearDialogueText();
+        string currentText = "";
+        
         foreach (char letter in text.ToCharArray())
         {
-            dialogueText.text += letter;
+            currentText += letter;
+            dialogueCanvasController.SetDialogueText(currentText);
             yield return new WaitForSeconds(typingSpeed);
         }
+        
         if (!dialogueList[currentDialogueIndex].isQuestion)
         {
-            //yield return new WaitUntil(()=>Input.GetMouseButtonDown(0));
             yield return new WaitUntil(() => Mouse.current?.leftButton.wasPressedThisFrame ?? false);
         }
+        
         currentDialogueIndex++;
-        if (dialogueList[currentDialogueIndex-1].isEnd)
+        
+        if (dialogueList[currentDialogueIndex - 1].isEnd)
         {
             DialogueStop();
             yield break;
         }
-        
     }
 
     private void DialogueStop()
     {
         StopAllCoroutines();
-        dialogueText.text = "";
-        dialogueParent.SetActive(false);
+        dialogueCanvasController.ClearDialogueText();
+        dialogueCanvasController.HideOptionButtons();
+        dialogueCanvasController.ClearOptionButtonListeners();
+        dialogueCanvasController.HideCanvas();
 
-        firstPlayerController.enabled =true;
-        //playerRigidbody.useGravity = true;
-
+        firstPlayerController.enabled = true;
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
     }
-    // Update is called once per frame
+
     void Update()
     {
-        
+        // 可以添加一些更新逻辑，但保持简单
     }
 }

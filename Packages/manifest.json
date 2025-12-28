@@ -3,6 +3,7 @@
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.8",
     "com.unity.collab-proxy": "2.10.2",
+    "com.unity.ide.qoder": "https://github.com/wweibp/com.unity.ide.qoder.git",
     "com.unity.ide.rider": "3.0.36",
     "com.unity.ide.trae": "https://github.com/dennyguotf/com.unity.ide.trae.git",
     "com.unity.ide.visualstudio": "2.0.23",
