@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
   speciesName: "\u68D5\u6988"
   speciesType: 2
-  speciesDescription: "\u672A\u6765\u65B9\u4FBF\u9762\u7684\u597D\u6750\u6599"
+  speciesDescription: "\u70ED\u5E26\u5730\u533A\u7684\u5E38\u89C1\u6811\u6728"
   icon: {fileID: 21300000, guid: 67a5f46cd4abd7044a8a776704b18f37, type: 3}
   source: 0
   state: 0

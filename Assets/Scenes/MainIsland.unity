@@ -12494,6 +12494,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3004281127215861153, guid: 87eb481d322ee504c9df65cd1e21b7da, type: 3}
   m_PrefabInstance: {fileID: 1694006102}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &889489448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 889489450}
+  - component: {fileID: 889489451}
+  m_Layer: 0
+  m_Name: SkyboxSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &889489450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889489448}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &889489451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889489448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123dc1b2b46cc204bae44db14a156b23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DayNightSystem
+  directionalLight: {fileID: 541082559}
+  transitionPhaseMappings:
+  - phaseName: C2UQ
+    fromPhase: 0
+    toPhase: 1
+    skyboxMaterial: {fileID: 2100000, guid: 1be05e8282c16a54089e31b06bd81973, type: 2}
+  - phaseName: UQ2F
+    fromPhase: 1
+    toPhase: 2
+    skyboxMaterial: {fileID: 2100000, guid: bd8f2efea9dd3d745b98844d25589b98, type: 2}
+  - phaseName: F2DQ
+    fromPhase: 2
+    toPhase: 3
+    skyboxMaterial: {fileID: 2100000, guid: a7bc9be2890766f4aba21f919bf0ebf4, type: 2}
+  - phaseName: DQ2C
+    fromPhase: 3
+    toPhase: 0
+    skyboxMaterial: {fileID: 2100000, guid: d600a33cea319014a952dc9cfe52e5ba, type: 2}
+  moonPhaseMappings:
+  - phaseName: C
+    moonPhase: 0
+    skyboxMaterial: {fileID: 2100000, guid: c1c961cbd00909b45b34d97fd7df5cbf, type: 2}
+  - phaseName: UQ
+    moonPhase: 1
+    skyboxMaterial: {fileID: 2100000, guid: 634447525c1419547bc8d38b43aecfac, type: 2}
+  - phaseName: F
+    moonPhase: 2
+    skyboxMaterial: {fileID: 2100000, guid: 50bf15468c19e0e40b5bf26662770a34, type: 2}
+  - phaseName: DQ
+    moonPhase: 3
+    skyboxMaterial: {fileID: 2100000, guid: 26ad1d5b3fb018b4fb81db8ea2e5c141, type: 2}
 --- !u!1 &892038136
 GameObject:
   m_ObjectHideFlags: 0
@@ -28540,3 +28615,4 @@ SceneRoots:
   - {fileID: 629432824}
   - {fileID: 1581262382}
   - {fileID: 107230640}
+  - {fileID: 889489450}
