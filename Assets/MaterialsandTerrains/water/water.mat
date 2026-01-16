@@ -67,8 +67,8 @@ Material:
     - _Deplacement: 1
     - _Depth_Edge1: 0
     - _Depth_Edge2: 10.59
-    - _FoamScale: 9.65
-    - _Foam_Position: 0.91
+    - _FoamScale: 4.48
+    - _Foam_Position: 0.82
     - _Metalic: 0
     - _Normal_Strength: 0.558
     - _QueueControl: 0
