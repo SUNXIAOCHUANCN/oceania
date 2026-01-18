@@ -11531,10 +11531,10 @@ MonoBehaviour:
       m_Calls: []
   hideAfterClick: 1
   interactionAction:
-    m_Name: Interaction
+    m_Name: 
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 0d7ca2ed-fcc3-4065-af4f-0b629127ec7b
+    m_Id: daeb5015-eb5b-43db-9bdc-96c9232aa8eb
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -49026,7 +49026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 138594d7f5f04df47a75296e8d0fdbd9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 156.5
+      value: 329
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 138594d7f5f04df47a75296e8d0fdbd9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -49034,7 +49034,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 138594d7f5f04df47a75296e8d0fdbd9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 223.5
+      value: 349
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 138594d7f5f04df47a75296e8d0fdbd9, type: 3}
       propertyPath: m_LocalRotation.w
