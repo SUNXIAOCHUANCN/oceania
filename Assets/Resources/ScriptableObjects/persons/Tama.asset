@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
+  m_Name: Tama
+  m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
+  personName: "\u5854\u739B"
+  profession: 1
+  avatar: {fileID: 21300000, guid: 6df28e1b8fff3064caa2d2b1f48a9c06, type: 3}
+  recruited: 1
+  professionDescription: "\u643A\u5E26tamer\u51FA\u6D77\u53EF\u4EE5\u91C7\u96C6\u91CE\u751F\u7684\u7269\u79CD"
+  status: 0
+  monthlyCropConsumption: 2
+  monthlyAniConsumption: 2
+  monthlyMatConsumption: 2
