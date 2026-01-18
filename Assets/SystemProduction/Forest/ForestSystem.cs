@@ -271,6 +271,42 @@ public class ForestSystem : MonoBehaviour
         OnCropConsumptionCalculated?.Invoke(totalCropConsumption);
         
         Debug.Log($"森林月相变化处理完成: 产量={finalProduction}, 消耗={totalCropConsumption}");
+        
+        // 检查新解锁的物种
+        CheckForNewlyUnlockedSpecies();
+    }
+
+    /// <summary>
+    /// 检查新解锁的材料物种并添加到数据库
+    /// </summary>
+    private void CheckForNewlyUnlockedSpecies()
+    {
+        if (SpeciesLoader.Instance == null)
+        {
+            Debug.LogError("SpeciesLoader.Instance 为空，无法检查新解锁物种");
+            return;
+        }
+
+        var unlockedMats = SpeciesLoader.Instance.GetUnlockedMatSpecies();
+        int addedCount = 0;
+        foreach (var species in unlockedMats)
+        {
+            // 检查物种是否已在数据库中
+            if (!forestDatabase.Any(s => s.speciesName == species.speciesName))
+            {
+                Debug.Log($"发现新解锁的材料物种: {species.speciesName}，添加到森林数据库");
+                AddSpeciesToDatabase(species, 0f);
+                addedCount++;
+            }
+        }
+        
+        if (addedCount > 0)
+        {
+            Debug.Log($"CheckForNewlyUnlockedSpecies: 添加了 {addedCount} 个新解锁的材料物种");
+            // 重新计算预计产量并更新UI
+            CalculateNextMonthExpectedYield();
+            UpdateUI();
+        }
     }
     
     /// <summary>
