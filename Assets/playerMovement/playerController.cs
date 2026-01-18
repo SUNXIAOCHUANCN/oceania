@@ -106,26 +106,24 @@ public class PlayerController : MonoBehaviour
         bool jumpTriggered=playerInput.actions.FindAction("Jump").triggered;
         bool isAltPressed = playerInput.actions.FindAction("UnlockCursor").IsPressed();
 
-        //摄像机距离
-        float screenInput=playerInput.actions.FindAction("Zoom").ReadValue<Vector2>().y;
+        // 摄像机距离
+        float screenInput = playerInput.actions.FindAction("Zoom").ReadValue<Vector2>().y;
         if(screenInput != 0)
         {
             cameraDistance -= screenInput * zoomSpeed*0.1f;
             cameraDistance = Mathf.Clamp(cameraDistance, minDistance, maxDistance);
         }
 
-        //光标控制
+        // 光标控制
+        // 调用外部接口
         if (isAltPressed != isCursorVisible)
         {
-            isCursorVisible = isAltPressed;
-            
-            // 调用外部接口
             if (cursorManager != null)
             {
-                cursorManager.SetCursorState(isCursorVisible);
+                cursorManager.UpdateCursorLogic(isAltPressed);
             }
         }
-
+    
         // 检测玩家是否在船上
         CheckIfOnRaft();
 
@@ -369,12 +367,12 @@ public class PlayerController : MonoBehaviour
         // 调试：每60帧输出一次检测信息
         if (enableDebugLogs && Time.frameCount % 60 == 0)
         {
-            Debug.Log($"检测附近物体: 找到 {nearbyColliders.Length} 个碰撞体，检测半径: {onRaftCheckRadius}, 玩家位置: {transform.position}");
+            //Debug.Log($"检测附近物体: 找到 {nearbyColliders.Length} 个碰撞体，检测半径: {onRaftCheckRadius}, 玩家位置: {transform.position}");
             foreach (Collider col in nearbyColliders)
             {
                 RaftController raft = col.GetComponent<RaftController>();
                 if (raft == null) raft = col.GetComponentInParent<RaftController>();
-                Debug.Log($"  - {col.name}, 距离: {Vector3.Distance(transform.position, col.transform.position):F2}, 有RaftController: {raft != null}");
+                //Debug.Log($"  - {col.name}, 距离: {Vector3.Distance(transform.position, col.transform.position):F2}, 有RaftController: {raft != null}");
             }
         }
         

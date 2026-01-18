@@ -14,7 +14,6 @@ public class CanvasController : MonoBehaviour
     
     [SerializeField] private CanvasType canvasType;
     [SerializeField] private bool startHidden = true;
-    
     public CanvasType Type => canvasType;
     
     private void Start()
@@ -44,6 +43,10 @@ public class CanvasController : MonoBehaviour
     public virtual void HideCanvas()
     {
         gameObject.SetActive(false);
+        //if (CursorManager.Instance != null)
+        //{
+            //CursorManager.Instance.RegisterInteractionPanel(false);
+        //}
     }
     
     /// <summary>

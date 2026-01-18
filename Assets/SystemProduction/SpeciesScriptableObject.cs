@@ -45,16 +45,11 @@ public class SpeciesScriptableObject : ScriptableObject
     // 只读属性：下个月相产量，初始时等于initialYield
     [Header("只读属性")]
     [SerializeField]
-    private float _nextPhaseYield;
-    
-    public float nextPhaseYield
-    {
-        get { return _nextPhaseYield; }
-    }
+    public float nextPhaseYield;
 
     private void OnEnable()
     {
-        // 在加载时设置_nextPhaseYield为initialYield
-        _nextPhaseYield = initialYield;
+        // 在加载时设置nextPhaseYield为initialYield
+        nextPhaseYield = initialYield;
     }
 }

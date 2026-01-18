@@ -97,8 +97,6 @@ public class RanchUIController : CanvasController
             aniNumbersText.text = $"{ranchSystem.CurrentTotalAmount}/{ranchSystem.MaxTotalAmount}";
         }
         
-
-        
         // 更新退化总量显示：所有动物减少量相加（decayPerPhase*amount）
         if (aniDecayText != null)
         {
@@ -172,7 +170,7 @@ public class RanchUIController : CanvasController
             Destroy(child.gameObject);
         }
         
-        // 获取所有已解锁的动物物种（根据你的描述，UI应该显示所有解锁的物种）
+        // 获取所有已解锁的动物物种
         List<SpeciesScriptableObject> unlockedAnis = SpeciesLoader.Instance?.GetUnlockedAniSpecies();
         if (unlockedAnis == null || unlockedAnis.Count == 0)
             return;
@@ -514,5 +512,10 @@ public class RanchUIController : CanvasController
     private void OnCloseRanchButtonClicked()
     {
         HideRanchUI();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(false);
+        }
     }
 }

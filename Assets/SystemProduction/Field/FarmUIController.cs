@@ -14,12 +14,14 @@ public class FarmUIController : CanvasController
     [SerializeField] private Transform workerList;
     [SerializeField] private GameObject adminManagerPanel;
     [SerializeField] private Button resetManagerButton;
+    [SerializeField] private Button closeFarmButton; 
     [SerializeField] private Transform managerList;
     [SerializeField] private TextMeshProUGUI currentProductionText;
     [SerializeField] private TextMeshProUGUI nextMonthProductionText;
     [SerializeField] private TextMeshProUGUI managerNameText;
     [SerializeField] private Image managerIcon;
     [SerializeField] private TextMeshProUGUI managerProfessionText;
+    
     private const string CROP_CHOICE_PREFAB_PATH = "UIprefabs/production/CropChoice";
     private const string PERSON_IN_CROP_PREFAB_PATH = "UIprefabs/Production/PersonInCrop";
     private const string ADMIN_PREFAB_PATH = "UIprefabs/Production/Admin";
@@ -63,6 +65,7 @@ public class FarmUIController : CanvasController
         // 初始化AdminManager UI
         if (adminManagerPanel != null) adminManagerPanel.SetActive(false);
         if (resetManagerButton != null) resetManagerButton.onClick.AddListener(OnResetManagerButtonClicked);
+        if (closeFarmButton != null) closeFarmButton.onClick.AddListener(OnCloseFarmButtonClicked);
         Debug.Log("ResetManagerButton initialized");
         
         // 获取农场系统
@@ -829,6 +832,27 @@ private void InitializeExistingFieldUIs()
         farmSystem.CalculateNextMonthExpectedYield();
         UpdateFarmInfo(production, farmSystem.NextMonthExpectedYield, farmSystem.Manager);
         UpdateFieldUI();
+    }
+
+    /// <summary>
+    /// 隐藏森林UI
+    /// </summary>
+    public void HideFarmUI()
+    {
+        HideCanvas();
+    }
+
+    /// <summary>
+    /// 关闭森林UI按钮点击事件
+    /// </summary>
+    private void OnCloseFarmButtonClicked()
+    {
+        HideFarmUI();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(false);
+        }
     }
     
     /// <summary>
