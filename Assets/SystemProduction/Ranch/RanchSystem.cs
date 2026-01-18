@@ -584,10 +584,11 @@ public class RanchSystem : MonoBehaviour
         
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
-        UpdateUI();
         UpdateTotalAmount(); // 更新总数量
+        UpdateUI();
         
         Debug.Log($"已增加物种数量: {speciesName} +1, 当前数量: {existingData.amount}");
+        Debug.Log($"currentTotalAmount：{currentTotalAmount}，CurrentTotalAmount：{CurrentTotalAmount}");
         return true;
     }
     
@@ -613,10 +614,11 @@ public class RanchSystem : MonoBehaviour
         
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
-        UpdateUI();
         UpdateTotalAmount(); // 更新总数量
+        UpdateUI();
         
         Debug.Log($"已减少物种数量: {speciesName} -1, 当前数量: {existingData.amount}");
+        Debug.Log($"currentTotalAmount：{currentTotalAmount}，CurrentTotalAmount：{CurrentTotalAmount}");
         return true;
     }
     

@@ -16,7 +16,7 @@ public class ForestUIController : CanvasController
     [SerializeField] private GameObject adminManagerPanel;
     [SerializeField] private Transform managerList;
     [SerializeField] private Button resetManagerButton;
-    [SerializeField] private Button closeForestButton; // 新增关闭按钮
+    [SerializeField] private Button closeForestButton; 
     
     [Header("材料总数显示")]
     [SerializeField] private Image materialsDisplayImage;
@@ -512,5 +512,10 @@ public class ForestUIController : CanvasController
     private void OnCloseForestButtonClicked()
     {
         HideForestUI();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(false);
+        }
     }
 }
