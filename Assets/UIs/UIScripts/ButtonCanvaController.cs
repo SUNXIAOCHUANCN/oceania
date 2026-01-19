@@ -19,18 +19,21 @@ public class ButtonCanvaController : CanvasController
     [SerializeField] private GameObject ranchButton;
     [SerializeField] private GameObject forestButton;
     [SerializeField] private GameObject pickButton;
+    [SerializeField] private GameObject populationButton;
     
     [Header("UI Controller References")]
     [SerializeField] private FarmUIController farmUIController;
     [SerializeField] private CanvasController ranchUIController;
     [SerializeField] private CanvasController forestUIController;
     [SerializeField] private CanvasController pickUIController;
+    [SerializeField] private CanvasController populationUIController;
     
     // 按钮组件引用
     private Button farmButtonComponent;
     private Button ranchButtonComponent;
     private Button forestButtonComponent;
     private Button pickButtonComponent;
+    private Button populationButtonComponent;
     
     // 用于跟踪当前显示的按钮
     private string currentActiveButton = "";
@@ -83,6 +86,9 @@ public class ButtonCanvaController : CanvasController
         
         // 设置拾取按钮监听器
         SetupButtonListener(pickButton, ref pickButtonComponent, OnPickButtonClicked, "Pick");
+
+        // 设置人口按钮监听器
+        SetupButtonListener(populationButton, ref populationButtonComponent, OnPopulationButtonClicked, "Population");
     }
     
     /// <summary>
@@ -152,6 +158,10 @@ public class ButtonCanvaController : CanvasController
                     case "Pick":
                         Debug.Log("Triggering Pick button action");
                         OnPickButtonClicked();
+                        break;
+                    case "Population":
+                        Debug.Log("Triggering Population button action");
+                        OnPopulationButtonClicked();
                         break;
                 }
             }
@@ -225,6 +235,18 @@ public class ButtonCanvaController : CanvasController
                     Debug.LogWarning("pickButton is null!");
                 }
                 break;
+            case "population":
+                if (populationButton != null)
+                {
+                    populationButton.SetActive(true);
+                    currentActiveButton = "Population";
+                    Debug.Log("Population button shown, currentActiveButton set to Population");
+                }
+                else
+                {
+                    Debug.LogWarning("populationButton is null!");
+                }
+                break;
             default:
                 Debug.LogWarning($"Unknown buttonType: {buttonType}");
                 break;
@@ -243,6 +265,7 @@ public class ButtonCanvaController : CanvasController
         if (ranchButton != null) ranchButton.SetActive(false);
         if (forestButton != null) forestButton.SetActive(false);
         if (pickButton != null) pickButton.SetActive(false);
+        if (populationButton != null) populationButton.SetActive(false);
         currentActiveButton = "";
         Debug.Log("All buttons hidden, currentActiveButton cleared");
     }
@@ -399,6 +422,32 @@ public class ButtonCanvaController : CanvasController
         {
             // 如果找不到直接引用，可以在这里添加默认行为
             Debug.Log("Pick UI controller not assigned, showing default pick UI");
+        }
+        
+        // 触发按钮点击事件
+        onButtonClicked?.Invoke();
+        
+        // 如果设置为点击后隐藏，则隐藏Canvas
+        if (hideAfterClick)
+        {
+            HideCanvas();
+        }
+    }
+
+    /// <summary>
+    /// 当人口按钮被点击时调用
+    /// </summary>
+    public void OnPopulationButtonClicked()
+    {
+        // 显示拾取UI
+        if (populationUIController != null)
+        {
+            populationUIController.ShowCanvas();
+        }
+        else
+        {
+            // 如果找不到直接引用，可以在这里添加默认行为
+            Debug.Log("Population UI controller not assigned, showing default pick UI");
         }
         
         // 触发按钮点击事件
