@@ -583,9 +583,9 @@ public class ForestSystem : MonoBehaviour
         existingData.amount += 1;
         
         // 重新计算预计产量
-        CalculateNextMonthExpectedYield();
-        UpdateUI();
+        CalculateNextMonthExpectedYield();        
         UpdateTotalAmount(); // 更新总数量
+        UpdateUI();
         
         Debug.Log($"已增加物种数量: {speciesName} +1, 当前数量: {existingData.amount}");
         return true;

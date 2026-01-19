@@ -514,5 +514,9 @@ public class RanchUIController : CanvasController
     private void OnCloseRanchButtonClicked()
     {
         HideRanchUI();
+        if (CursorManager.Instance != null)
+    {
+        CursorManager.Instance.RegisterInteractionPanel(false);
+    }
     }
 }

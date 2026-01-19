@@ -512,5 +512,9 @@ public class ForestUIController : CanvasController
     private void OnCloseForestButtonClicked()
     {
         HideForestUI();
+        if (CursorManager.Instance != null)
+    {
+        CursorManager.Instance.RegisterInteractionPanel(false);
+    }
     }
 }

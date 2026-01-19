@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -10,9 +11,8 @@ public class ButtonCanvaController : CanvasController
     
     [Header("Interaction Settings")]
     [SerializeField] private bool hideAfterClick = true;
+    private playerInputActions controls;
     
-    [Header("Input Settings")]
-    [SerializeField] private InputAction interactionAction;
     
     [Header("Button References")]
     [SerializeField] private GameObject farmButton;
@@ -35,37 +35,31 @@ public class ButtonCanvaController : CanvasController
     // 用于跟踪当前显示的按钮
     private string currentActiveButton = "";
     
-    private void Start()
+    // 是否使用传统输入系统作为备用
+    private bool useTraditionalInput = false;
+    
+    private void Awake()
     {
-        // 获取Interaction输入动作
-        if (interactionAction == null)
+        controls = new playerInputActions();
+    }
+
+    private void OnEnable()
+    {
+        if (controls != null)
         {
-            // 尝试从PlayerInput组件获取Interaction动作
-            var playerInput = FindObjectOfType<PlayerInput>();
-            if (playerInput != null)
-            {
-                var actions = playerInput.actions;
-                if (actions != null)
-                {
-                    interactionAction = actions.FindAction("Interaction");
-                }
-            }
+            controls.player.Enable();
         }
-        
-        // 如果找不到输入动作，尝试使用playerInputActions
-        if (interactionAction == null)
+    }
+
+    private void OnDisable()
+    {
+        if(controls != null)
         {
-            try
-            {
-                var playerInputActions = new playerInputActions();
-                interactionAction = playerInputActions.player.Interaction;
-            }
-            catch
-            {
-                // 忽略错误，如果无法获取输入动作则继续运行
-            }
+            controls.player.Disable();
         }
-        
+    }
+    private void Start()
+    {       
         // 初始化按钮状态
         HideAllButtons();
         
@@ -130,31 +124,44 @@ public class ButtonCanvaController : CanvasController
         buttonComponent.onClick.AddListener(callback);
         Debug.Log($"{buttonName} button listener added");
     }
-    
+
     private void Update()
     {
-        // 检查是否按下了F键（通过Interaction输入动作）
-        if (interactionAction != null && interactionAction.triggered)
+
+        if(controls == null) return;
+
+        if (controls.player.Interaction.WasPressedThisFrame())
         {
-            // 如果按钮Canvas是可见的，则触发对应按钮的点击事件
-            if (IsCanvasVisible())
+            if (IsCanvasVisible() && !string.IsNullOrEmpty(currentActiveButton))
             {
                 // 根据当前激活的按钮类型触发相应的操作
                 switch (currentActiveButton)
                 {
                     case "Farm":
+                        Debug.Log("Triggering Farm button action");
                         OnFarmButtonClicked();
                         break;
                     case "Ranch":
+                        Debug.Log("Triggering Ranch button action");
                         OnRanchButtonClicked();
                         break;
                     case "Forest":
+                        Debug.Log("Triggering Forest button action");
                         OnForestButtonClicked();
                         break;
                     case "Pick":
+                        Debug.Log("Triggering Pick button action");
                         OnPickButtonClicked();
                         break;
                 }
+            }
+            else if (!IsCanvasVisible())
+            {
+                Debug.LogWarning("Interaction key pressed but ButtonCanvas is not visible!");
+            }
+            else if (string.IsNullOrEmpty(currentActiveButton))
+            {
+                Debug.LogWarning("Interaction key pressed but no button is active!");
             }
         }
     }
@@ -164,6 +171,8 @@ public class ButtonCanvaController : CanvasController
     /// </summary>
     public void ShowButton(string buttonType)
     {
+        Debug.Log($"ShowButton called with buttonType: {buttonType}");
+        
         HideAllButtons();
         
         switch (buttonType.ToLower())
@@ -173,6 +182,11 @@ public class ButtonCanvaController : CanvasController
                 {
                     farmButton.SetActive(true);
                     currentActiveButton = "Farm";
+                    Debug.Log("Farm button shown, currentActiveButton set to Farm");
+                }
+                else
+                {
+                    Debug.LogWarning("farmButton is null!");
                 }
                 break;
             case "ranch":
@@ -180,6 +194,11 @@ public class ButtonCanvaController : CanvasController
                 {
                     ranchButton.SetActive(true);
                     currentActiveButton = "Ranch";
+                    Debug.Log("Ranch button shown, currentActiveButton set to Ranch");
+                }
+                else
+                {
+                    Debug.LogWarning("ranchButton is null!");
                 }
                 break;
             case "forest":
@@ -187,6 +206,11 @@ public class ButtonCanvaController : CanvasController
                 {
                     forestButton.SetActive(true);
                     currentActiveButton = "Forest";
+                    Debug.Log("Forest button shown, currentActiveButton set to Forest");
+                }
+                else
+                {
+                    Debug.LogWarning("forestButton is null!");
                 }
                 break;
             case "pick":
@@ -194,11 +218,20 @@ public class ButtonCanvaController : CanvasController
                 {
                     pickButton.SetActive(true);
                     currentActiveButton = "Pick";
+                    Debug.Log("Pick button shown, currentActiveButton set to Pick");
                 }
+                else
+                {
+                    Debug.LogWarning("pickButton is null!");
+                }
+                break;
+            default:
+                Debug.LogWarning($"Unknown buttonType: {buttonType}");
                 break;
         }
         
         ShowCanvas();
+        Debug.Log($"ButtonCanvas shown, IsCanvasVisible: {IsCanvasVisible()}");
     }
     
     /// <summary>
@@ -211,6 +244,7 @@ public class ButtonCanvaController : CanvasController
         if (forestButton != null) forestButton.SetActive(false);
         if (pickButton != null) pickButton.SetActive(false);
         currentActiveButton = "";
+        Debug.Log("All buttons hidden, currentActiveButton cleared");
     }
     
     /// <summary>
@@ -276,6 +310,11 @@ public class ButtonCanvaController : CanvasController
         
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(true);
+        }
         
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
@@ -302,6 +341,11 @@ public class ButtonCanvaController : CanvasController
         
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(true);
+        }
         
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
@@ -328,6 +372,11 @@ public class ButtonCanvaController : CanvasController
         
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(true);
+        }
         
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
@@ -425,4 +474,5 @@ public class ButtonCanvaController : CanvasController
     {
         onButtonClicked.RemoveAllListeners();
     }
+   
 }
