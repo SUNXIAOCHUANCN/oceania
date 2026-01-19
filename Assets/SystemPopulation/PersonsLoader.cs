@@ -77,6 +77,18 @@ public class PersonsLoader : MonoBehaviour
         }
         return recruitedPersons;
     }
+    public List<PersonScriptableObject> GetUnrecruitedPersons()
+    {
+        List<PersonScriptableObject> unrecruitedPersons = new List<PersonScriptableObject>();
+        foreach (var person in _persons)
+        {
+            if (!person.recruited)
+            {
+                unrecruitedPersons.Add(person);
+            }
+        }
+        return unrecruitedPersons;
+    }
 
     /// <summary>
     /// 获取所有人员

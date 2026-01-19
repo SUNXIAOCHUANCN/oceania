@@ -22,7 +22,7 @@ public class FarmUIController : CanvasController
     [SerializeField] private Image managerIcon;
     [SerializeField] private TextMeshProUGUI managerProfessionText;
     
-    private const string CROP_CHOICE_PREFAB_PATH = "UIprefabs/production/CropChoice";
+    private const string CROP_CHOICE_PREFAB_PATH = "UIprefabs/Production/CropChoice";
     private const string PERSON_IN_CROP_PREFAB_PATH = "UIprefabs/Production/PersonInCrop";
     private const string ADMIN_PREFAB_PATH = "UIprefabs/Production/Admin";
 
@@ -807,7 +807,6 @@ private void InitializeExistingFieldUIs()
                     case PersonProfession.sailor:
                         managerProfessionText.text = "水手";
                         break;
-
                     default:
                         managerProfessionText.text = "平民";
                         break;
