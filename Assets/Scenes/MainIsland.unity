@@ -21466,6 +21466,7 @@ GameObject:
   m_Component:
   - component: {fileID: 712289893}
   - component: {fileID: 712289894}
+  - component: {fileID: 712289895}
   m_Layer: 5
   m_Name: Secret
   m_TagString: Untagged
@@ -21502,6 +21503,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712289892}
   m_CullTransparentMesh: 1
+--- !u!114 &712289895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712289892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6384c0718d6ef4bada1f89daa65cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SecretDisplay
+  secretTitleText: {fileID: 2073033501}
+  secretDescriptionText: {fileID: 1129196591}
+  lockedTitle: "\u79D8\u5BC6"
+  lockedDescription: ???
+  unlockedTitleColor: {r: 1, g: 1, b: 1, a: 1}
+  lockedTitleColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.8}
+  unlockedDescriptionColor: {r: 1, g: 1, b: 1, a: 1}
+  lockedDescriptionColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.8}
 --- !u!1001 &715581090
 PrefabInstance:
   m_ObjectHideFlags: 0
