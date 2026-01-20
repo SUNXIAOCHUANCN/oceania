@@ -13,6 +13,8 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private Transform NPCTransform;
     private bool hasSpoken = false;
 
+    [SerializeField] private bool requireAllPlotPoints = false;
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Call OnTriggerEnter");
@@ -22,6 +24,14 @@ public class DialogueTrigger : MonoBehaviour
         }
         if (other.CompareTag("Player") ){
             Debug.Log("Try to call DialogueStart");
+            if (requireAllPlotPoints && PlotProgressManager.Instance != null)
+            {
+                if (!PlotProgressManager.Instance.AreAllPlotPointsTriggered())
+                {
+                    Debug.Log("Not all PlotPoints have been triggered yet. Cannot start dialogue.");
+                    return;
+                }
+            }
             other.gameObject.GetComponent<DialogueManager>().DialogueStart(dialogueStrings, NPCTransform);
         }
     }
