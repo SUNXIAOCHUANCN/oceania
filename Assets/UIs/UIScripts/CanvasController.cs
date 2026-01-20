@@ -5,11 +5,12 @@ public class CanvasController : MonoBehaviour
     public enum CanvasType
     {
         SystemCanvas,
-        ProductionCanvas,
         ButtonCanvas,
         DialogueCanvas,
         FieldProductionCanvas,
-        RanchProductionCanvas
+        RanchProductionCanvas,
+        ForestProductionCanvas,
+        PopulationCanvas
     }
     
     [SerializeField] private CanvasType canvasType;
