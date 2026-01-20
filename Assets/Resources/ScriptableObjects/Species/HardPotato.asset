@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
-  m_Name: RoyalChicken
+  m_Name: HardPotato
   m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
-  speciesName: "\u7687\u51A0\u9E21"
-  speciesType: 1
-  speciesDescription: "\u4E00\u53EA\u6709\u6D6A\u6F2B\u6545\u4E8B\u7684\u9E21"
-  icon: {fileID: 21300000, guid: 03b39607120b04041a375a3fb48e3f68, type: 3}
+  speciesName: "\u786C\u6839\u85AF"
+  speciesType: 0
+  speciesDescription: "\u4E0D\u597D\u6316\uFF0C\u4E0D\u597D\u5403\u3002"
+  icon: {fileID: 21300000, guid: 09181003140ea124da2b5a2de42f7207, type: 3}
   source: 0
   state: 1
   unlocked: 0
-  initialYield: 8
+  initialYield: 0
   growthPhases: 0
-  decayPerPhase: 0.5
-  leastYield: 1
+  decayPerPhase: 0
+  leastYield: 0
   initialCropConsumption: 0
-  monthlyCropConsumption: 4
-  _nextPhaseYield: 8
+  monthlyCropConsumption: 0
+  _nextPhaseYield: 0

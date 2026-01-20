@@ -195,6 +195,33 @@ public class ProgressTableManager : MonoBehaviour
         return totalItems > 0 ? (float)unlockedItems / totalItems : 0f;
     }
 
+    /// <summary>
+    /// 检查岛屿是否已完成（所有物种、线索、秘密均已解锁）
+    /// </summary>
+    public bool IsIslandComplete()
+    {
+        // 检查所有物种是否解锁
+        foreach (var species in dataTable.boundSpecies)
+        {
+            if (!species.unlocked)
+                return false;
+        }
+
+        // 检查所有线索是否解锁
+        foreach (var clue in dataTable.boundClues)
+        {
+            if (!clue.isUnlocked)
+                return false;
+        }
+
+        // 检查秘密是否解锁（如果存在秘密）
+        if (dataTable.boundSecret != null && !dataTable.boundSecret.isUnlocked)
+            return false;
+
+        // 所有条件满足
+        return true;
+    }
+
     #endregion
 
     #region 解锁接口（供外部系统调用）

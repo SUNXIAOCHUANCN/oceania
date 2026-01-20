@@ -7,6 +7,8 @@ public class TokenScriptableObject : ScriptableObject
     public string tokenName;          // 信物名称
     public SpeciesSource relatedIsland; // 信物所属岛屿
     public Sprite icon;               // 信物图标
+    [TextArea(2, 5)]
+    public string tokenDescription;   // 信物描述
     
     [Header("状态信息")]
     public bool isUnlocked = false;   // 信物是否解锁
