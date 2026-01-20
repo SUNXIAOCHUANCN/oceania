@@ -42,11 +42,11 @@ public class PopulationUIController : CanvasController
 
     private void InitializeUI()
     {
-        InitializeNowpopulationPanel();
-        InitializeNewpopulationPanel();    
+        UpdateNowpopulationPanel();
+        UpdateNewpopulationPanel();    
     }
 
-    private void InitializeNowpopulationPanel()
+    private void UpdateNowpopulationPanel()
     {
         foreach (Transform child in RecruitedPersonList)
         {
@@ -95,7 +95,7 @@ public class PopulationUIController : CanvasController
         }
     }
 
-    private void InitializeNewpopulationPanel()
+    private void UpdateNewpopulationPanel()
     {
         foreach (Transform child in UnrecruitedPersonList)
         {
