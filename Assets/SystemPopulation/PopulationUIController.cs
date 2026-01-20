@@ -27,8 +27,9 @@ public class PopulationUIController : CanvasController
 
     void Start()
     {
+        base.Start();
         // 初始化UI
-        InitializeUI();
+        UpdateUI();
 
         // 绑定关闭按钮事件
         if (closePopualtionButton != null)
@@ -40,13 +41,13 @@ public class PopulationUIController : CanvasController
         // HideCanvas();
     }
 
-    private void InitializeUI()
+    private void UpdateUI()
     {
-        InitializeNowpopulationPanel();
-        InitializeNewpopulationPanel();    
+        UpdateNowpopulationPanel();
+        UpdateNewpopulationPanel();    
     }
 
-    private void InitializeNowpopulationPanel()
+    private void UpdateNowpopulationPanel()
     {
         foreach (Transform child in RecruitedPersonList)
         {
@@ -84,7 +85,7 @@ public class PopulationUIController : CanvasController
             {
                 avatar.sprite = person.avatar;
             }
-            
+
             // 添加解雇按钮事件
             Transform dismissButtonTransform = recruitedPerson.transform.Find("Delete");
             if (dismissButtonTransform != null && dismissButtonTransform.TryGetComponent<Button>(out Button dismissButton))
@@ -95,7 +96,7 @@ public class PopulationUIController : CanvasController
         }
     }
 
-    private void InitializeNewpopulationPanel()
+    private void UpdateNewpopulationPanel()
     {
         foreach (Transform child in UnrecruitedPersonList)
         {
@@ -139,7 +140,7 @@ public class PopulationUIController : CanvasController
             {
                 avatar.sprite = person.avatar;
             }
-            
+
             // 添加雇佣按钮事件（避免闭包捕获循环变量问题）
             PersonScriptableObject currentPerson = person;
             Transform recruitButtonTransform = unrecruitedPerson.transform.Find("Recruit");
@@ -177,19 +178,6 @@ public class PopulationUIController : CanvasController
         
     }
 
-    private void OnDismissPersonClicked(PersonScriptableObject person)
-    {
-        Debug.Log($"解雇按钮触发: {person.personName}");
-        if (person != null)
-        {
-            // 调用PersonManager的解雇方法
-            PersonManager.Instance.DismissPerson(person);
-            Debug.Log($"已解雇：{person.personName}");
-            // 刷新UI显示
-            InitializeUI();
-        }
-    }
-
     private void OnRecruitPersonClicked(PersonScriptableObject person)
     {
         Debug.Log($"雇佣按钮触发: {person.personName}");
@@ -198,14 +186,40 @@ public class PopulationUIController : CanvasController
             // 调用PersonManager的招募方法
             PersonManager.Instance.RecruitPerson(person);
             Debug.Log($"已雇佣：{person.personName}");
+            
             // 刷新UI显示
-            InitializeUI();
+            UpdateUI();
         }
     }
 
-    private void OnClosePopulationButtonClicked()
+    private void OnDismissPersonClicked(PersonScriptableObject person)
+    {
+        Debug.Log($"解雇按钮触发: {person.personName}");
+        if (person != null)
+        {
+            // 调用PersonManager的解雇方法
+            PersonManager.Instance.DismissPerson(person);
+            Debug.Log($"已解雇：{person.personName}");
+            
+            // 刷新UI显示
+            UpdateUI();
+        }
+    }
+    
+    // <summary>
+    // 隐藏人口簿UI
+    // </summary>
+    private void HidePopulationUI()
     {
         HideCanvas();
+    }
+
+    // <summary>
+    // 关闭人口簿UI按钮点击事件
+    // </summary>
+    private void OnClosePopulationButtonClicked()
+    {
+        HidePopulationUI();
 
         if(CursorManager.Instance != null)
         {

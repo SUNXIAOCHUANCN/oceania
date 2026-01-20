@@ -5,11 +5,12 @@ public class CanvasController : MonoBehaviour
     public enum CanvasType
     {
         SystemCanvas,
-        ProductionCanvas,
         ButtonCanvas,
         DialogueCanvas,
         FieldProductionCanvas,
-        RanchProductionCanvas
+        RanchProductionCanvas,
+        ForestProductionCanvas,
+        PopulationCanvas
     }
     
     [SerializeField] private CanvasType canvasType;
@@ -17,7 +18,7 @@ public class CanvasController : MonoBehaviour
     
     public CanvasType Type => canvasType;
     
-    private void Start()
+    protected virtual void Start()
     {
         // 根据设置初始化显示状态
         if (startHidden)

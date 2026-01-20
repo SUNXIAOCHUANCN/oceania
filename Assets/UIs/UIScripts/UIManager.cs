@@ -8,11 +8,12 @@ public class UIManager : MonoBehaviour
     
     // Canvas控制器引用
     private CanvasController systemCanvas;
-    private CanvasController productionCanvas;
     private CanvasController buttonCanvas;
     private CanvasController dialogueCanvas;
     private CanvasController fieldProductionCanvas;
     private CanvasController ranchProductionCanvas;
+    private CanvasController forestProductionCanvas;
+    private CanvasController populationCanvas;
     
     // 存储所有Canvas的字典，便于快速访问
     private Dictionary<CanvasController.CanvasType, CanvasController> canvasDictionary 
@@ -60,9 +61,6 @@ public class UIManager : MonoBehaviour
                 case CanvasController.CanvasType.SystemCanvas:
                     systemCanvas = controller;
                     break;
-                case CanvasController.CanvasType.ProductionCanvas:
-                    productionCanvas = controller;
-                    break;
                 case CanvasController.CanvasType.ButtonCanvas:
                     buttonCanvas = controller;
                     break;
@@ -74,7 +72,13 @@ public class UIManager : MonoBehaviour
                     break;
                 case CanvasController.CanvasType.RanchProductionCanvas:
                     ranchProductionCanvas = controller;
-                    break;    
+                    break;   
+                case CanvasController.CanvasType.ForestProductionCanvas:
+                    forestProductionCanvas = controller;
+                    break; 
+                case CanvasController.CanvasType.PopulationCanvas:
+                    populationCanvas = controller;
+                    break;  
                 default:
                     Debug.LogWarning($"未知的Canvas类型: {controller.Type}，游戏对象: {controller.gameObject.name}");
                     break;
@@ -92,10 +96,11 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("=== Canvas初始化状态 ===");
         Debug.Log($"SystemCanvas: {(systemCanvas != null ? "已找到" : "未找到")}");
-        Debug.Log($"ProductionCanvas: {(productionCanvas != null ? "已找到" : "未找到")}");
         Debug.Log($"ButtonCanvas: {(buttonCanvas != null ? "已找到" : "未找到")}");
         Debug.Log($"DialogueCanvas: {(dialogueCanvas != null ? "已找到" : "未找到")}");
         Debug.Log($"FieldProductionCanvas: {(fieldProductionCanvas != null ? "已找到" : "未找到")}");
+        Debug.Log($"ForestProductionCanvas: {(forestProductionCanvas != null ? "已找到" : "未找到")}");
+        Debug.Log($"PopulationCanvas: {(populationCanvas != null ? "已找到" : "未找到")}");
         Debug.Log($"总计找到Canvas数量: {canvasDictionary.Count}");
         Debug.Log("========================");
     }
@@ -106,11 +111,6 @@ public class UIManager : MonoBehaviour
     public void HideSystemCanvas() => systemCanvas?.HideCanvas();
     public void ToggleSystemCanvas() => systemCanvas?.ToggleCanvas();
     public bool IsSystemCanvasVisible() => systemCanvas?.IsCanvasVisible() ?? false;
-    
-    public void ShowProductionCanvas() => productionCanvas?.ShowCanvas();
-    public void HideProductionCanvas() => productionCanvas?.HideCanvas();
-    public void ToggleProductionCanvas() => productionCanvas?.ToggleCanvas();
-    public bool IsProductionCanvasVisible() => productionCanvas?.IsCanvasVisible() ?? false;
     
     public void ShowButtonCanvas() => buttonCanvas?.ShowCanvas();
     public void HideButtonCanvas() => buttonCanvas?.HideCanvas();
@@ -131,6 +131,16 @@ public class UIManager : MonoBehaviour
     public void HideRanchProductionCanvas() => ranchProductionCanvas?.HideCanvas();
     public void ToggleRanchProductionCanvas() => ranchProductionCanvas?.ToggleCanvas();
     public bool IsRanchProductionCanvasVisible() => ranchProductionCanvas?.IsCanvasVisible() ?? false;
+
+    public void ShowForestProductionCanvas() => forestProductionCanvas?.ShowCanvas();
+    public void HideForestProductionCanvas() => forestProductionCanvas?.HideCanvas();
+    public void ToggleForestProductionCanvas() => forestProductionCanvas?.ToggleCanvas();
+    public bool IsForestProductionCanvasVisible() => forestProductionCanvas?.IsCanvasVisible() ?? false;
+
+    public void ShowPopulationCanvas() => populationCanvas?.ShowCanvas();
+    public void HidePopulationCanvas() => populationCanvas?.HideCanvas();
+    public void TogglePopulationCanvas() => populationCanvas?.ToggleCanvas();
+    public bool IsPopulationCanvasVisible() => populationCanvas?.IsCanvasVisible() ?? false;
     
     /// <summary>
     /// 获取指定类型的Canvas控制器

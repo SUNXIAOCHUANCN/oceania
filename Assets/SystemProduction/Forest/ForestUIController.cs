@@ -33,6 +33,7 @@ public class ForestUIController : CanvasController
     
     private void Start()
     {
+        base.Start();
         // 获取ForestSystem引用
         forestSystem = FindObjectOfType<ForestSystem>();
         if (forestSystem == null)

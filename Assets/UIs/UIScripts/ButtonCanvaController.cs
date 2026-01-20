@@ -426,6 +426,11 @@ public class ButtonCanvaController : CanvasController
         
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(true);
+        }
         
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
@@ -452,6 +457,11 @@ public class ButtonCanvaController : CanvasController
         
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RegisterInteractionPanel(true);
+        }
         
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
@@ -481,6 +491,10 @@ public class ButtonCanvaController : CanvasController
         else if (currentActiveButton == "Pick")
         {
             OnPickButtonClicked();
+        }
+        else if (currentActiveButton == "Population")
+        {
+            OnPopulationButtonClicked();
         }
     }
     

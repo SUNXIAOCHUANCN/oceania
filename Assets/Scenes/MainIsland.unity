@@ -2087,7 +2087,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   NPCTransform: {fileID: 344299119}
-  requireAllPlotPoints: 1
+  requireAllPlotPoints: 0
 --- !u!65 &73341428
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12702,12 +12702,12 @@ MonoBehaviour:
   ranchButton: {fileID: 1865431068}
   forestButton: {fileID: 695623420}
   pickButton: {fileID: 1218244693}
-  populationButton: {fileID: 0}
+  populationButton: {fileID: 1365659639}
   farmUIController: {fileID: 733567567}
   ranchUIController: {fileID: 1649782110}
   forestUIController: {fileID: 338874092}
   pickUIController: {fileID: 733567567}
-  populationUIController: {fileID: 0}
+  populationUIController: {fileID: 932935802}
 --- !u!1 &423757281
 GameObject:
   m_ObjectHideFlags: 0
@@ -14436,7 +14436,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 519392846}
-  - component: {fileID: 519392847}
   m_Layer: 0
   m_Name: TheCamp
   m_TagString: Untagged
@@ -14466,18 +14465,6 @@ Transform:
   - {fileID: 1580526379}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519392847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519392845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a858f4ec1fd70aa429867fce4741e94b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PersonManager
 --- !u!1 &519407496
 GameObject:
   m_ObjectHideFlags: 0
@@ -23527,6 +23514,76 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794427946}
   m_CullTransparentMesh: 1
+--- !u!1 &794830776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 794830779}
+  - component: {fileID: 794830778}
+  - component: {fileID: 794830777}
+  m_Layer: 0
+  m_Name: PopulationTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &794830777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794830776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a38d154decdf2e64ea40758a5aca5420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PopulationTrigger
+  buttonCanvasController: {fileID: 422872950}
+  showOnEnter: 1
+  hideOnExit: 1
+  targetTag: Player
+--- !u!135 &794830778
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794830776}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 6.9
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &794830779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794830776}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 193.51, y: 9.44, z: 487.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &796381859
 GameObject:
   m_ObjectHideFlags: 0
@@ -26857,7 +26914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f6184f406315a4f9e56238a2283be8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopulationUIController
-  canvasType: 0
+  canvasType: 6
   startHidden: 1
   nowPopulationPanel: {fileID: 1027168810}
   newPopulationPanel: {fileID: 794427946}
@@ -61527,6 +61584,7 @@ SceneRoots:
   - {fileID: 519392846}
   - {fileID: 1543641231}
   - {fileID: 1096948920}
+  - {fileID: 794830779}
   - {fileID: 4782822050511164868}
   - {fileID: 1413000921}
   - {fileID: 528806626}

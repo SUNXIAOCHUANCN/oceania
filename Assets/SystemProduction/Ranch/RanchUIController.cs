@@ -33,6 +33,7 @@ public class RanchUIController : CanvasController
     
     private void Start()
     {
+        base.Start();
         // 获取RanchSystem引用
         ranchSystem = FindObjectOfType<RanchSystem>();
         if (ranchSystem == null)
