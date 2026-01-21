@@ -30,6 +30,9 @@ public class ProgressTableUIController : CanvasController
         // 初始化按钮监听
         InitializeButtonListeners();
         
+        // 订阅解锁事件
+        SubscribeToUnlockEvents();
+        
         // 初始显示startPage
         ShowStartPage();
     }
@@ -54,6 +57,21 @@ public class ProgressTableUIController : CanvasController
             crossIslandExitButton.onClick.AddListener(ShowStartPage);
     }
 
+    private void SubscribeToUnlockEvents()
+    {
+        if (mainIslandManager != null)
+            mainIslandManager.OnAnyItemUnlocked += OnAnyItemUnlocked;
+
+        if (crossIslandManager != null)
+            crossIslandManager.OnAnyItemUnlocked += OnAnyItemUnlocked;
+    }
+
+    private void OnAnyItemUnlocked()
+    {
+        // 当任何项目被解锁时，刷新当前岛屿页面
+        RefreshCurrentIslandPage();
+    }
+
     private void ShowStartPage()
     {
         // 隐藏当前页面
@@ -63,6 +81,8 @@ public class ProgressTableUIController : CanvasController
         // 显示startPage
         startPage.SetActive(true);
         currentActivePage = startPage;
+        
+        Debug.Log("已切换到开始页面");
     }
 
     private void ShowIslandPage(GameObject islandPage, ProgressTableManager manager)
@@ -77,9 +97,11 @@ public class ProgressTableUIController : CanvasController
 
         // 更新岛屿页面内容
         UpdateIslandPage(islandPage, manager);
+        
+        Debug.Log($"已切换到岛屿页面: {islandPage.name}");
     }
 
-    private void UpdateIslandPage(GameObject islandPage, ProgressTableManager manager)
+    public void UpdateIslandPage(GameObject islandPage, ProgressTableManager manager)
     {
         if (manager == null)
         {
@@ -92,10 +114,30 @@ public class ProgressTableUIController : CanvasController
         if (pageController != null)
         {
             pageController.UpdatePageContent(manager);
+            Debug.Log($"岛屿页面 {islandPage.name} 更新完成");
         }
         else
         {
             Debug.LogWarning($"岛屿页面 {islandPage.name} 上未找到IslandPageController组件");
+        }
+    }
+
+    // 公共方法，允许外部系统更新岛屿页面
+    public void RefreshCurrentIslandPage()
+    {
+        if (currentActivePage != null && currentActivePage != startPage)
+        {
+            ProgressTableManager manager = null;
+            
+            if (currentActivePage == mainIslandPage)
+                manager = mainIslandManager;
+            else if (currentActivePage == crossIslandPage)
+                manager = crossIslandManager;
+                
+            if (manager != null)
+            {
+                UpdateIslandPage(currentActivePage, manager);
+            }
         }
     }
 
@@ -107,14 +149,22 @@ public class ProgressTableUIController : CanvasController
 
     public override void ShowCanvas()
     {
+        // 确保在显示画布之前先设置好页面状态
+        if (startPage != null)
+        {
+            ShowStartPage();
+        }
         base.ShowCanvas();
-        // 显示时重置到startPage
-        ShowStartPage();
     }
 
     public override void HideCanvas()
     {
+        // 隐藏所有页面
+        if (startPage != null) startPage.SetActive(false);
+        if (mainIslandPage != null) mainIslandPage.SetActive(false);
+        if (crossIslandPage != null) crossIslandPage.SetActive(false);
+        
+        currentActivePage = null;
         base.HideCanvas();
-        // 可选：清理资源或重置状态
     }
 }

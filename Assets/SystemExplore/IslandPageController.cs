@@ -1,140 +1,113 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 
 public class IslandPageController : MonoBehaviour
 {
-    [Header("手动绑定的物种展示（固定5个）")]
-    [SerializeField] private SpeciesDisplay[] manualSpeciesDisplays = new SpeciesDisplay[5];
+    [Header("物种UI元素 - 最多5个")]
+    public SpeciesDisplayItem speciesSlot1;
+    public SpeciesDisplayItem speciesSlot2;
+    public SpeciesDisplayItem speciesSlot3;
+    public SpeciesDisplayItem speciesSlot4;
+    public SpeciesDisplayItem speciesSlot5;
 
-    [Header("手动绑定的秘密展示（固定1个）")]
-    [SerializeField] private SecretDisplay manualSecretDisplay;
+    [Header("秘密UI元素")]
+    public SecretDisplayItem secretSlot;
 
-    [Header("手动绑定的信物展示（固定1个）")]
-    [SerializeField] private TokenDisplay manualTokenDisplay;
+    [Header("信物UI元素")]
+    public TokenDisplayItem tokenSlot;
 
-    [Header("默认显示内容")]
-    [SerializeField] private Sprite defaultSpeciesSprite;
-    [SerializeField] private string lockedSpeciesNamePrefix = "???";
-    [SerializeField] private string lockedSpeciesDescription = "???";
-
-    private ProgressTableManager currentManager;
+    private ProgressTableManager manager;
 
     public void UpdatePageContent(ProgressTableManager manager)
     {
-        if (manager == null)
-        {
-            Debug.LogError("IslandPageController: 传入的ProgressTableManager为空");
-            return;
-        }
-
-        currentManager = manager;
-
-        // 更新物种展示
-        UpdateSpeciesDisplays();
-
-        // 更新秘密展示
-        UpdateSecretDisplay();
-
-        // 更新信物展示
-        UpdateTokenDisplay();
-    }
-
-    private void UpdateSpeciesDisplays()
-    {
-        if (currentManager == null) return;
-
-        // 获取绑定的物种列表
-        List<SpeciesScriptableObject> boundSpecies = currentManager.GetBoundSpecies();
-        if (boundSpecies == null || boundSpecies.Count == 0)
-        {
-            Debug.LogWarning("IslandPageController: 没有绑定的物种");
-            // 隐藏所有手动绑定的显示项
-            for (int i = 0; i < manualSpeciesDisplays.Length; i++)
-            {
-                if (manualSpeciesDisplays[i] != null)
-                {
-                    manualSpeciesDisplays[i].gameObject.SetActive(false);
-                }
-            }
-            return;
-        }
-
-        // 更新手动绑定的物种展示项
-        for (int i = 0; i < manualSpeciesDisplays.Length; i++)
-        {
-            SpeciesDisplay display = manualSpeciesDisplays[i];
-            if (display == null)
-            {
-                Debug.LogWarning($"IslandPageController: manualSpeciesDisplays[{i}] 未绑定");
-                continue;
-            }
-
-            if (i < boundSpecies.Count)
-            {
-                // 有对应的物种数据
-                SpeciesScriptableObject species = boundSpecies[i];
-                display.Initialize(species, defaultSpeciesSprite, lockedSpeciesNamePrefix, lockedSpeciesDescription);
-                display.gameObject.SetActive(true);
-            }
-            else
-            {
-                // 没有对应的物种数据，隐藏该显示项
-                display.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    private void UpdateSecretDisplay()
-    {
-        SecretScriptableObject secret = currentManager?.GetBoundSecret();
-        
-        if (manualSecretDisplay == null)
-        {
-            Debug.LogError("IslandPageController: manualSecretDisplay 未绑定");
-            return;
-        }
-
-        if (secret == null)
-        {
-            // 没有秘密，隐藏秘密显示项
-            manualSecretDisplay.gameObject.SetActive(false);
-            return;
-        }
-
-        // 初始化秘密显示项
-        manualSecretDisplay.Initialize(secret);
-        manualSecretDisplay.gameObject.SetActive(true);
-    }
-
-    private void UpdateTokenDisplay()
-    {
-        TokenScriptableObject token = currentManager?.GetBoundToken();
-        
-        if (manualTokenDisplay == null)
-        {
-            Debug.LogError("IslandPageController: manualTokenDisplay 未绑定");
-            return;
-        }
-
-        if (token == null)
-        {
-            // 没有信物，隐藏信物显示项
-            manualTokenDisplay.gameObject.SetActive(false);
-            return;
-        }
-
-        // 初始化信物显示项
-        manualTokenDisplay.Initialize(token, currentManager);
-        manualTokenDisplay.gameObject.SetActive(true);
+        this.manager = manager;
+        RefreshDisplay();
     }
 
     public void RefreshDisplay()
     {
-        if (currentManager != null)
+        if (manager == null) return;
+
+        // 显示物种
+        DisplaySpecies();
+
+        // 显示秘密
+        DisplaySecret();
+
+        // 显示信物
+        DisplayToken();
+    }
+
+    private void DisplaySpecies()
+    {
+        var speciesList = manager.GetBoundSpecies();
+        
+        // 分别更新每个物种槽位
+        UpdateSpeciesSlot(speciesSlot1, GetSpeciesByIndex(speciesList, 0));
+        UpdateSpeciesSlot(speciesSlot2, GetSpeciesByIndex(speciesList, 1));
+        UpdateSpeciesSlot(speciesSlot3, GetSpeciesByIndex(speciesList, 2));
+        UpdateSpeciesSlot(speciesSlot4, GetSpeciesByIndex(speciesList, 3));
+        UpdateSpeciesSlot(speciesSlot5, GetSpeciesByIndex(speciesList, 4));
+    }
+
+    private SpeciesScriptableObject GetSpeciesByIndex(List<SpeciesScriptableObject> speciesList, int index)
+    {
+        if (index >= 0 && index < speciesList.Count)
         {
-            UpdatePageContent(currentManager);
+            return speciesList[index];
+        }
+        return null;
+    }
+
+    private void UpdateSpeciesSlot(SpeciesDisplayItem slot, SpeciesScriptableObject species)
+    {
+        if (slot != null)
+        {
+            if (species != null)
+            {
+                bool isUnlocked = manager.IsSpeciesUnlocked(species.speciesName);
+                slot.UpdateDisplay(species, isUnlocked);
+            }
+            else
+            {
+                // 如果没有物种，则显示空白或隐藏
+                slot.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void DisplaySecret()
+    {
+        var secret = manager.GetBoundSecret();
+        if (secretSlot != null)
+        {
+            if (secret != null)
+            {
+                bool isUnlocked = manager.IsSecretUnlocked();
+                secretSlot.UpdateDisplay(secret, isUnlocked);
+            }
+            else
+            {
+                secretSlot.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void DisplayToken()
+    {
+        var token = manager.GetBoundToken();
+        if (tokenSlot != null)
+        {
+            if (token != null)
+            {
+                bool isUnlocked = manager.IsTokenUnlocked();
+                tokenSlot.UpdateDisplay(token, isUnlocked);
+            }
+            else
+            {
+                tokenSlot.gameObject.SetActive(false);
+            }
         }
     }
 }
