@@ -195,7 +195,7 @@ public class RanchSystem : MonoBehaviour
         float totalProduction = 0f;
         float totalCropConsumption = 0f;
         float totalDecay = 0f; // 所有动物的总退化量
-        
+
         // 计算生产和消耗
         foreach (RanchSpeciesData speciesData in ranchDatabase)
         {
@@ -206,32 +206,32 @@ public class RanchSystem : MonoBehaviour
                 Debug.LogWarning($"找不到物种: {speciesData.speciesName}");
                 continue;
             }
-            
+
             // 保护机制：检查物种类型和解锁状态
             if (species.speciesType != validSpeciesType || !species.unlocked)
             {
                 continue;
             }
-            
+
             // 计算产量：nextPhaseYield * amount
             float speciesProduction = speciesData.nextPhaseYield * speciesData.amount;
             totalProduction += speciesProduction;
-            
+
             // 计算消耗：monthlyCropConsumption * amount (仅对动物类型)
             if (species.speciesType == SpeciesType.Ani)
             {
                 float speciesConsumption = species.monthlyCropConsumption * speciesData.amount;
                 totalCropConsumption += speciesConsumption;
             }
-            
+
             // 作物退化：nextPhaseYield扣除decayPerPhase，但不低于leastYield
             float newNextPhaseYield = speciesData.nextPhaseYield - species.decayPerPhase;
             speciesData.nextPhaseYield = Mathf.Max(newNextPhaseYield, species.leastYield);
-            
+
             // 累加退化量：decayPerPhase * amount
             totalDecay += species.decayPerPhase * speciesData.amount;
         }
-        
+
         // 应用管理者加成
         float finalProduction = totalProduction;
         if (Manager != null && Manager.profession == PersonProfession.farmer)
@@ -242,36 +242,24 @@ public class RanchSystem : MonoBehaviour
         {
             finalProduction *= noManagerMultiplier;
         }
-        
-        // 更新资源管理器
-        if (finalProduction > 0)
-        {
-            ResourceManager.Instance.AddCrop(finalProduction);
-        }
-        
-        // 消耗作物资源
-        if (totalCropConsumption > 0)
-        {
-            ResourceManager.Instance.AutoConsumeCrop(totalCropConsumption);
-        }
-        
+
         // 保存当前月的生产和消耗数据
         CurrentMonthProduction = finalProduction;
         CurrentMonthCropConsumption = totalCropConsumption;
         CurrentMonthDecay = totalDecay; // 保存本月退化量
-        
+
         // 重新计算下月预计产量
         CalculateNextMonthExpectedYield();
-        
+
         // 更新UI
         UpdateUI();
-        
-        // 触发事件
+
+        // 触发事件（通知 ResourceManagerCalculator 进行资源修改）
         OnProductionCalculated?.Invoke(finalProduction);
         OnCropConsumptionCalculated?.Invoke(totalCropConsumption);
-        
+
         Debug.Log($"牧场月相变化处理完成: 产量={finalProduction}, 消耗={totalCropConsumption}");
-        
+
         // 检查新解锁的物种
         CheckForNewlyUnlockedSpecies();
     }

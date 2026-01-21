@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
+  m_Name: pointsBird
+  m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
+  speciesName: "\u6591\u70B9\u9E1F"
+  speciesType: 1
+  speciesDescription: "\u4E0D\u662F\u6591\u9A6C"
+  icon: {fileID: 21300000, guid: e4117e82fa6650f4cab92704ce8f9e62, type: 3}
+  source: 1
+  state: 1
+  unlocked: 0
+  initialYield: 0
+  growthPhases: 0
+  decayPerPhase: 0
+  leastYield: 0
+  initialCropConsumption: 0
+  monthlyCropConsumption: 0
+  _nextPhaseYield: 0

@@ -195,6 +195,33 @@ public class ProgressTableManager : MonoBehaviour
         return totalItems > 0 ? (float)unlockedItems / totalItems : 0f;
     }
 
+    /// <summary>
+    /// 检查岛屿是否已完成（所有物种、线索、秘密均已解锁）
+    /// </summary>
+    public bool IsIslandComplete()
+    {
+        // 检查所有物种是否解锁
+        foreach (var species in dataTable.boundSpecies)
+        {
+            if (!species.unlocked)
+                return false;
+        }
+
+        // 检查所有线索是否解锁
+        foreach (var clue in dataTable.boundClues)
+        {
+            if (!clue.isUnlocked)
+                return false;
+        }
+
+        // 检查秘密是否解锁（如果存在秘密）
+        if (dataTable.boundSecret != null && !dataTable.boundSecret.isUnlocked)
+            return false;
+
+        // 所有条件满足
+        return true;
+    }
+
     #endregion
 
     #region 解锁接口（供外部系统调用）
@@ -309,15 +336,18 @@ public class ProgressTableManager : MonoBehaviour
 
     #region 事件回调（供外部监听）
 
+    // 定义委托和事件
+    public delegate void ItemUnlockedHandler();
+    public event ItemUnlockedHandler OnAnyItemUnlocked;
+
     /// <summary>
     /// 物种解锁时的回调
     /// </summary>
     private void OnSpeciesUnlocked(SpeciesScriptableObject species)
     {
-        // 可以在这里触发UI更新或其他逻辑
         Debug.Log($"物种解锁回调: {species.speciesName}");
-        // 示例：通知UI系统更新显示
-        // UIManager.Instance.UpdateSpeciesDisplay(species);
+        // 触发解锁事件，通知UI更新
+        OnAnyItemUnlocked?.Invoke();
     }
 
     /// <summary>
@@ -325,10 +355,9 @@ public class ProgressTableManager : MonoBehaviour
     /// </summary>
     private void OnClueUnlocked(ClueScriptableObject clue)
     {
-        // 可以在这里触发UI更新或其他逻辑
         Debug.Log($"线索解锁回调: {clue.clueName}");
-        // 示例：通知UI系统更新显示
-        // UIManager.Instance.UpdateClueDisplay(clue);
+        // 触发解锁事件，通知UI更新
+        OnAnyItemUnlocked?.Invoke();
     }
 
     /// <summary>
@@ -336,10 +365,9 @@ public class ProgressTableManager : MonoBehaviour
     /// </summary>
     private void OnSecretUnlocked(SecretScriptableObject secret)
     {
-        // 可以在这里触发UI更新或其他逻辑
         Debug.Log($"秘密解锁回调: {secret.secretName}");
-        // 示例：通知UI系统更新显示
-        // UIManager.Instance.UpdateSecretDisplay(secret);
+        // 触发解锁事件，通知UI更新
+        OnAnyItemUnlocked?.Invoke();
     }
 
     /// <summary>
@@ -347,10 +375,9 @@ public class ProgressTableManager : MonoBehaviour
     /// </summary>
     private void OnTokenUnlocked(TokenScriptableObject token)
     {
-        // 可以在这里触发UI更新或其他逻辑
         Debug.Log($"信物解锁回调: {token.tokenName}");
-        // 示例：通知UI系统更新显示
-        // UIManager.Instance.UpdateTokenDisplay(token);
+        // 触发解锁事件，通知UI更新
+        OnAnyItemUnlocked?.Invoke();
     }
 
     #endregion

@@ -18,6 +18,6 @@ MonoBehaviour:
   recruited: 1
   professionDescription: "\u643A\u5E26tamer\u51FA\u6D77\u53EF\u4EE5\u91C7\u96C6\u91CE\u751F\u7684\u7269\u79CD"
   status: 0
-  monthlyCropConsumption: 0
-  monthlyAniConsumption: 0
-  monthlyMatConsumption: 0
+  monthlyCropConsumption: 5
+  monthlyAniConsumption: 5
+  monthlyMatConsumption: 5

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0872d773b5c1021479d477ea968a28de, type: 3}
+  m_Name: MIprogressTable
+  m_EditorClassIdentifier: Assembly-CSharp::ProgressTableScriptableObject
+  island: 0
+  boundSpecies:
+  - {fileID: 11400000, guid: 06a5711deafd2784eb19dce8ce400c5b, type: 2}
+  - {fileID: 11400000, guid: 0ca41f1a53525d8458f96d3a3f1aa9fc, type: 2}
+  - {fileID: 11400000, guid: 9f59160d90f496a44ae67a5c4edb8e6d, type: 2}
+  - {fileID: 11400000, guid: 8721da5998850fb4ea4e5facaecaaaa9, type: 2}
+  - {fileID: 11400000, guid: d6ab59d4f59821943a93baeefdf30e52, type: 2}
+  boundSecret: {fileID: 11400000, guid: e419bba14b62f594b8afc2bef4a72273, type: 2}
+  boundClues:
+  - {fileID: 11400000, guid: 34ea419c426a37e4ea6fbbc6be7c08f8, type: 2}
+  - {fileID: 11400000, guid: 4cf0808fb2417bb4ebdd0f4166f7b75c, type: 2}
+  - {fileID: 11400000, guid: b4e9504c17e7252448dca71b5c10de82, type: 2}
+  boundToken: {fileID: 11400000, guid: 36a4764fff3d9d64ea90de020dd39c90, type: 2}
+  islandColor: {r: 1, g: 1, b: 1, a: 1}
+  islandIcon: {fileID: 21300000, guid: 71880bbefae447c459c092b151a2bebd, type: 3}

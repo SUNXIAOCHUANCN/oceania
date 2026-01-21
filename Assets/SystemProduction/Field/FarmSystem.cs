@@ -81,7 +81,7 @@ public class FarmSystem : MonoBehaviour
     {
         // 第一阶段：获取本月产量
         CurrentMonthProduction = 0;
-        
+
         foreach (FieldUnit field in fields)
         {
             field.HandlePhaseChange();
@@ -90,24 +90,21 @@ public class FarmSystem : MonoBehaviour
             CurrentMonthProduction += yield;
             field.UpdateNPY();
         }
-        
+
         // 应用管理者加成
         float finalProduction = CurrentMonthProduction;
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             finalProduction *= 1.2f;
         }
-        
-        // 更新资源管理器
-        ResourceManager.Instance.AddCrop(finalProduction);
-        
+
         // 第二阶段：获取下月预计产量
         CalculateNextMonthExpectedYield();
-        
+
         // 通知UI更新
         UpdateUI();
-        
-        // 触发生产事件
+
+        // 触发生产事件（通知 ResourceManagerCalculator 进行资源修改）
         OnProductionCalculated?.Invoke(finalProduction);
     }
     

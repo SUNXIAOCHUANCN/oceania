@@ -1,12 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
+/// <summary>
+/// 人口资源消耗数据结构
+/// </summary>
+[System.Serializable]
+public class PopulationConsumptionData
+{
+    public float cropConsumption;
+    public float aniConsumption;
+    public float matConsumption;
+
+    public PopulationConsumptionData(float crop, float ani, float mat)
+    {
+        cropConsumption = crop;
+        aniConsumption = ani;
+        matConsumption = mat;
+    }
+}
 
 public class PersonManager : MonoBehaviour
 {
     private static PersonManager _instance;
-    
+
     // 存储所有人员的列表
     private List<PersonScriptableObject> _allPersons = new List<PersonScriptableObject>();
+
+    /// <summary>
+    /// 人口资源消耗事件 - 通知 ResourceManagerCalculator
+    /// </summary>
+    public UnityEvent<PopulationConsumptionData> OnPopulationConsumptionCalculated = new UnityEvent<PopulationConsumptionData>();
     
     public static PersonManager Instance
     {
@@ -33,17 +57,24 @@ public class PersonManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        
+
         // 安全地订阅人员加载完成事件
         PersonsLoader loader = PersonsLoader.Instance;
         if (loader != null)
         {
             loader.OnPersonsLoaded += OnPersonsLoaded;
         }
-        
+
+        // 订阅时间系统的月相变化事件（每个月相触发一次）
+        GlobalTimeSystem timeSystem = GlobalTimeSystem.Instance;
+        if (timeSystem != null)
+        {
+            timeSystem.OnPhaseChangedWithTotalPhases += OnPhaseChangedWithTotalPhases;
+        }
+
         // 从PersonsLoader加载所有人员
         LoadAllPersons();
     }
@@ -53,6 +84,15 @@ public class PersonManager : MonoBehaviour
         // 当人员加载完成后，重新加载一次数据
         LoadAllPersons();
         Debug.Log("PersonManager: 人员数据加载完成");
+    }
+
+    /// <summary>
+    /// 月相变化时触发的人口资源消耗（每个月相触发一次）
+    /// </summary>
+    private void OnPhaseChangedWithTotalPhases(GlobalTimeSystem.MoonPhase phase, int totalPhases)
+    {
+        Debug.Log($"[PersonManager] 月相变化 (阶段: {phase}, 总月相数: {totalPhases})，开始扣除人口资源消耗");
+        ConsumeMonthlyResources();
     }
 
     /// <summary>
@@ -193,21 +233,52 @@ public class PersonManager : MonoBehaviour
     public void CheckResourceConsumption()
     {
         if (ResourceManager.Instance == null) return;
-        
+
         var recruitedPersons = GetRecruitedPersons();
         float totalCropConsumption = 0;
         float totalAniConsumption = 0;
         float totalMatConsumption = 0;
-        
+
         foreach (var person in recruitedPersons)
         {
             totalCropConsumption += person.monthlyCropConsumption;
             totalAniConsumption += person.monthlyAniConsumption;
             totalMatConsumption += person.monthlyMatConsumption;
         }
-        
+
         // 这里可以实现资源消耗逻辑，例如每月消耗资源
         Debug.Log($"已招募人员总数: {recruitedPersons.Count}, 每月总消耗 - Crop: {totalCropConsumption}, Ani: {totalAniConsumption}, Mat: {totalMatConsumption}");
+    }
+
+    /// <summary>
+    /// 执行每月的人口资源消耗计算（不直接扣除资源，而是通过事件通知）
+    /// </summary>
+    private void ConsumeMonthlyResources()
+    {
+        var recruitedPersons = GetRecruitedPersons();
+        if (recruitedPersons.Count == 0)
+        {
+            Debug.Log("[PersonManager] 当前没有已招募人员，跳过资源消耗");
+            return;
+        }
+
+        // 计算总消耗
+        float totalCropConsumption = 0;
+        float totalAniConsumption = 0;
+        float totalMatConsumption = 0;
+
+        foreach (var person in recruitedPersons)
+        {
+            totalCropConsumption += person.monthlyCropConsumption;
+            totalAniConsumption += person.monthlyAniConsumption;
+            totalMatConsumption += person.monthlyMatConsumption;
+        }
+
+        // 触发事件，通知 ResourceManagerCalculator 进行资源扣除
+        PopulationConsumptionData consumptionData = new PopulationConsumptionData(totalCropConsumption, totalAniConsumption, totalMatConsumption);
+        OnPopulationConsumptionCalculated?.Invoke(consumptionData);
+
+        Debug.Log($"[PersonManager] 本月人口资源消耗计算完成 - 人数: {recruitedPersons.Count}, Crop: -{totalCropConsumption}, Ani: -{totalAniConsumption}, Mat: -{totalMatConsumption}");
     }
 
     /// <summary>
@@ -269,6 +340,13 @@ public class PersonManager : MonoBehaviour
         if (loader != null)
         {
             loader.OnPersonsLoaded -= OnPersonsLoaded;
+        }
+
+        // 取消订阅时间系统
+        GlobalTimeSystem timeSystem = GlobalTimeSystem.Instance;
+        if (timeSystem != null)
+        {
+            timeSystem.OnPhaseChangedWithTotalPhases -= OnPhaseChangedWithTotalPhases;
         }
     }
 }

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
   m_Name: brownPalm
   m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
-  speciesName: "\u7EFF\u68D5\u6988"
+  speciesName: "\u68D5\u68D5\u6988"
   speciesType: 2
-  speciesDescription: 
-  icon: {fileID: 21300000, guid: 17451d29459fc8f459e3e4984020eeae, type: 3}
+  speciesDescription: "\u6CE8\u610F\uFF1A\u7B2C\u4E00\u4E2A\u68D5\u6307\u989C\u8272\uFF0C\u7B2C\u4E8C\u4E2A\u68D5\u662F\u4E13\u6709\u540D\u8BCD\u7684\u4E00\u90E8\u5206"
+  icon: {fileID: 21300000, guid: 67a5f46cd4abd7044a8a776704b18f37, type: 3}
   source: 0
-  state: 0
+  state: 1
   unlocked: 0
   initialYield: 0
   growthPhases: 0

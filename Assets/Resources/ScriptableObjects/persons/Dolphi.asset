@@ -18,6 +18,6 @@ MonoBehaviour:
   recruited: 0
   professionDescription: "\u5728\u6D77\u4E0A\u822A\u884C\u65F6\u53EF\u4EE5\u8FA8\u8BA4\u4E1C\u5357\u897F\u5317"
   status: 0
-  monthlyCropConsumption: 0
-  monthlyAniConsumption: 0
-  monthlyMatConsumption: 0
+  monthlyCropConsumption: 5
+  monthlyAniConsumption: 5
+  monthlyMatConsumption: 5
