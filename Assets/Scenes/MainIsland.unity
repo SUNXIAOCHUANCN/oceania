@@ -2947,6 +2947,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a858f4ec1fd70aa429867fce4741e94b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PersonManager
+  OnPopulationConsumptionCalculated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &111297324
 GameObject:
   m_ObjectHideFlags: 0
@@ -9307,8 +9310,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -33180,6 +33183,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b8397d140125aa74d9942576e36efd1f, type: 3}
   m_PrefabInstance: {fileID: 1134043553}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1136735472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1136735474}
+  - component: {fileID: 1136735473}
+  m_Layer: 0
+  m_Name: ResourceCalculator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1136735473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136735472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cce3c32d02593243995ed231d7b26a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceManagerCalculator
+  farmSystem: {fileID: 1198848506}
+  forestSystem: {fileID: 1543641232}
+  ranchSystem: {fileID: 1925473823}
+  personManager: {fileID: 107230641}
+--- !u!4 &1136735474
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136735472}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1137448484
 GameObject:
   m_ObjectHideFlags: 0
@@ -39770,8 +39821,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -41115,8 +41166,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -41253,6 +41304,7 @@ GameObject:
   - component: {fileID: 1432391538}
   - component: {fileID: 1432391541}
   - component: {fileID: 1432391540}
+  - component: {fileID: 1432391542}
   m_Layer: 5
   m_Name: Resources
   m_TagString: Untagged
@@ -41321,6 +41373,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1432391537}
   m_CullTransparentMesh: 1
+--- !u!114 &1432391542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432391537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 211c88cf9d3352d459ff8664c6b1b93b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceSummaryUI
+  currentCropText: {fileID: 1428940281}
+  currentAnimalText: {fileID: 1385028987}
+  currentMaterialText: {fileID: 329681402}
+  currentMonthCropText: {fileID: 1769049015}
+  currentMonthAnimalText: {fileID: 1967354722}
+  currentMonthMaterialText: {fileID: 1686591169}
+  monthOverMonthCropText: {fileID: 130494560}
+  monthOverMonthAnimalText: {fileID: 724560406}
+  monthOverMonthMaterialText: {fileID: 58122710}
+  positiveColor: {r: 0.4065859, g: 0.8867924, b: 0.4065859, a: 1}
+  negativeColor: {r: 0.9411765, g: 0.5019608, b: 0.5019608, a: 1}
+  neutralColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1435550819 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c1316dfb5e833c346bdadbaf2fd74df8, type: 3}
@@ -63285,3 +63361,4 @@ SceneRoots:
   - {fileID: 607145209}
   - {fileID: 575683398}
   - {fileID: 1830168721}
+  - {fileID: 1136735474}
