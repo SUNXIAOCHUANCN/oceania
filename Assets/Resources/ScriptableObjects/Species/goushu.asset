@@ -16,8 +16,8 @@ MonoBehaviour:
   speciesType: 2
   speciesDescription: "\u70ED\u5E26\u5730\u533A\u5236\u8863\u7684\u5E38\u89C1\u6750\u6599"
   icon: {fileID: 21300000, guid: 832fa6527b5a16a43a249f367a786836, type: 3}
-  source: 0
-  state: 1
+  source: 1
+  state: 0
   unlocked: 0
   initialYield: 0
   growthPhases: 0

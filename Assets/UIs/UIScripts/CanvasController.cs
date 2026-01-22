@@ -11,7 +11,9 @@ public class CanvasController : MonoBehaviour
         RanchProductionCanvas,
         ForestProductionCanvas,
         PopulationCanvas,
-        ExploreCanvas
+        ExploreCanvas,
+        VoyageCanvas,
+        InteractCanvas
     }
     
     [SerializeField] private CanvasType canvasType;

@@ -22,9 +22,12 @@ public class InteractableObject : MonoBehaviour
 
     [Header("解锁配置")]
     [SerializeField] private ObjectCategory objectCategory;
-    
-    [Tooltip("要解锁的物种或线索的名称，必须与ScriptableObject中的名称完全一致")]
-    [SerializeField] private string unlockTargetName;
+
+    [Tooltip("直接引用要解锁的物种ScriptableObject")]
+    [SerializeField] private SpeciesScriptableObject speciesTarget;
+
+    [Tooltip("直接引用要解锁的线索ScriptableObject")]
+    [SerializeField] private ClueScriptableObject clueTarget;
 
     [Header("状态")]
     [SerializeField] private bool isPickedUp = false;
@@ -32,8 +35,12 @@ public class InteractableObject : MonoBehaviour
     [Header("交互设置")]
     [SerializeField] private float interactionRadius = 2.0f;
     [SerializeField] private bool destroyOnPickup = true;
-    [SerializeField] private GameObject pickupEffectPrefab;
     [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private bool requireManualInteraction = true; // 是否需要手动交互
+
+    [Header("UI引用（手动配置）")]
+    [SerializeField] private InteractUIController speciesUIController;
+    [SerializeField] private ClueUIController clueUIController;
 
     // 缓存的ProgressTableManager引用
     private ProgressTableManager targetManager;
@@ -114,18 +121,42 @@ public class InteractableObject : MonoBehaviour
         {
             // 标记为已捡起
             isPickedUp = true;
-            
-            // 播放效果
-            PlayPickupEffects();
-            
+
+            // 播放音效
+            PlayPickupSound();
+
+            // 显示UI
+            ShowPickupUI();
+
             // 处理物体状态
             HandlePostPickup();
 
-            Debug.Log($"成功捡起物体 {objectName}，解锁了：{unlockTargetName}");
+            // 获取解锁目标的名称用于日志
+            string targetNameForLog = GetTargetDisplayName();
+            Debug.Log($"成功捡起物体 {objectName}，解锁了：{targetNameForLog}");
         }
         else
         {
-            Debug.LogWarning($"捡起物体 {objectName} 但解锁失败，目标：{unlockTargetName}");
+            string targetNameForLog = GetTargetDisplayName();
+            Debug.LogWarning($"捡起物体 {objectName} 但解锁失败，目标：{targetNameForLog}");
+        }
+    }
+
+    /// <summary>
+    /// 获取解锁目标的显示名称
+    /// </summary>
+    private string GetTargetDisplayName()
+    {
+        switch (objectCategory)
+        {
+            case ObjectCategory.Crop:
+            case ObjectCategory.Animal:
+            case ObjectCategory.Material:
+                return speciesTarget != null ? speciesTarget.speciesName : "未设置";
+            case ObjectCategory.Clue:
+                return clueTarget != null ? clueTarget.clueName : "未设置";
+            default:
+                return "未知";
         }
     }
 
@@ -134,23 +165,45 @@ public class InteractableObject : MonoBehaviour
     /// </summary>
     private bool PerformUnlock()
     {
-        if (string.IsNullOrEmpty(unlockTargetName))
-        {
-            Debug.LogError($"物体 {objectName} 的解锁目标名称未设置");
-            return false;
-        }
-
         switch (objectCategory)
         {
             case ObjectCategory.Crop:
             case ObjectCategory.Animal:
             case ObjectCategory.Material:
-                // 解锁物种
-                return targetManager.UnlockSpecies(unlockTargetName);
+                if (speciesTarget != null)
+                {
+                    string targetName = speciesTarget.speciesName;
+                    bool success = targetManager.UnlockSpecies(targetName);
+
+                    if (success)
+                    {
+                        Debug.Log($"成功通过 ScriptableObject 引用解锁物种: {targetName}");
+                    }
+                    return success;
+                }
+                else
+                {
+                    Debug.LogError($"物体 {objectName}: 未设置物种 ScriptableObject 引用");
+                    return false;
+                }
 
             case ObjectCategory.Clue:
-                // 解锁线索
-                return targetManager.UnlockClue(unlockTargetName);
+                if (clueTarget != null)
+                {
+                    string targetName = clueTarget.clueName;
+                    bool success = targetManager.UnlockClue(targetName);
+
+                    if (success)
+                    {
+                        Debug.Log($"成功通过 ScriptableObject 引用解锁线索: {targetName}");
+                    }
+                    return success;
+                }
+                else
+                {
+                    Debug.LogError($"物体 {objectName}: 未设置线索 ScriptableObject 引用");
+                    return false;
+                }
 
             default:
                 Debug.LogError($"未知的物体类别: {objectCategory}");
@@ -159,20 +212,48 @@ public class InteractableObject : MonoBehaviour
     }
 
     /// <summary>
-    /// 播放捡拾效果
+    /// 显示捡拾UI
     /// </summary>
-    private void PlayPickupEffects()
+    private void ShowPickupUI()
     {
-        // 播放音效
+        switch (objectCategory)
+        {
+            case ObjectCategory.Crop:
+            case ObjectCategory.Animal:
+            case ObjectCategory.Material:
+                // 显示物种UI
+                if (speciesTarget != null && speciesUIController != null)
+                {
+                    speciesUIController.ShowSpecies(speciesTarget.speciesName, speciesTarget.icon);
+                }
+                else if (speciesTarget != null && speciesUIController == null)
+                {
+                    Debug.LogWarning($"物体 {objectName}: 未配置 SpeciesUIController，请在 Inspector 中手动拖拽配置");
+                }
+                break;
+
+            case ObjectCategory.Clue:
+                // 显示线索UI
+                if (clueTarget != null && clueUIController != null)
+                {
+                    clueUIController.ShowClue(clueTarget.clueName, clueTarget.clueText);
+                }
+                else if (clueTarget != null && clueUIController == null)
+                {
+                    Debug.LogWarning($"物体 {objectName}: 未配置 ClueUIController，请在 Inspector 中手动拖拽配置");
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 播放捡拾音效
+    /// </summary>
+    private void PlayPickupSound()
+    {
         if (pickupSound != null)
         {
             AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-        }
-
-        // 实例化粒子效果
-        if (pickupEffectPrefab != null)
-        {
-            Instantiate(pickupEffectPrefab, transform.position, Quaternion.identity);
         }
     }
 
@@ -208,7 +289,40 @@ public class InteractableObject : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            OnInteract();
+            if (requireManualInteraction)
+            {
+                // 显示交互提示UI
+                var promptUI = FindObjectOfType<InteractionPromptUI>();
+                if (promptUI != null)
+                {
+                    promptUI.ShowPrompt(this);
+                }
+                else
+                {
+                    Debug.LogWarning("未找到 InteractionPromptUI，请确保场景中有该组件");
+                }
+            }
+            else
+            {
+                // 自动捡起
+                OnInteract();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 玩家离开触发器范围
+    /// </summary>
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // 隐藏交互提示UI
+            var promptUI = FindObjectOfType<InteractionPromptUI>();
+            if (promptUI != null)
+            {
+                promptUI.HidePrompt();
+            }
         }
     }
 
@@ -234,7 +348,8 @@ public class InteractableObject : MonoBehaviour
     public string ObjectName => objectName;
     public SpeciesSource RelatedIsland => relatedIsland;
     public ObjectCategory Category => objectCategory;
-    public string UnlockTargetName => unlockTargetName;
+    public SpeciesScriptableObject SpeciesTarget => speciesTarget;
+    public ClueScriptableObject ClueTarget => clueTarget;
     public bool IsPickedUp => isPickedUp;
     public float InteractionRadius => interactionRadius;
 

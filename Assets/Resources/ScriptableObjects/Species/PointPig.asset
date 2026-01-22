@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
+  m_Name: PointPig
+  m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
+  speciesName: "\u661F\u6591\u732A"
+  speciesType: 1
+  speciesDescription: "\u8089\u98DF\u3001\u796D\u54C1\u90FD\u5B8C\u7F8E\u80DC\u4EFB"
+  icon: {fileID: 21300000, guid: 77b22dafc2aa201488e04bf4c1cccdae, type: 3}
+  source: 1
+  state: 0
+  unlocked: 0
+  initialYield: 0
+  growthPhases: 0
+  decayPerPhase: 0
+  leastYield: 0
+  initialCropConsumption: 0
+  monthlyCropConsumption: 0
+  _nextPhaseYield: 0

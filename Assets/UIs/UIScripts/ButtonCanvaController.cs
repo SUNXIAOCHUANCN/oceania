@@ -413,7 +413,15 @@ public class ButtonCanvaController : CanvasController
     /// </summary>
     public void OnPickButtonClicked()
     {
-        // 显示拾取UI
+        // 首先检查是否有待交互的物体
+        var interactionPrompt = FindObjectOfType<InteractionPromptUI>();
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.OnInteract();
+            return;
+        }
+
+        // 原有的逻辑：显示拾取UI
         if (pickUIController != null)
         {
             pickUIController.ShowCanvas();
@@ -423,7 +431,7 @@ public class ButtonCanvaController : CanvasController
             // 如果找不到直接引用，可以在这里添加默认行为
             Debug.Log("Pick UI controller not assigned, showing default pick UI");
         }
-        
+
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
 
@@ -431,7 +439,7 @@ public class ButtonCanvaController : CanvasController
         {
             CursorManager.Instance.RegisterInteractionPanel(true);
         }
-        
+
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
         {
