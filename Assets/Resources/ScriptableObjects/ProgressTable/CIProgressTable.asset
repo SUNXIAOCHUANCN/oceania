@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: CIProgressTable
   m_EditorClassIdentifier: Assembly-CSharp::ProgressTableScriptableObject
   island: 1
-  boundSpecies: []
+  boundSpecies:
+  - {fileID: 11400000, guid: 59a9b241799847948ae4872dd24a0090, type: 2}
+  - {fileID: 11400000, guid: 35981ac6d976f0b4d85e923ca00cdf09, type: 2}
+  - {fileID: 11400000, guid: 6a33a387bd86cd24d939477c3a0d933a, type: 2}
+  - {fileID: 11400000, guid: a9291a26de6b5f54c949969b3eaea20c, type: 2}
+  - {fileID: 11400000, guid: 7ed2ba0d09a7518499350d81ebff02f2, type: 2}
   boundSecret: {fileID: 0}
   boundClues: []
   boundToken: {fileID: 0}

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f985b7bd353fd4699eef5bb1fecc76, type: 3}
+  m_Name: IronPalm
+  m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
+  speciesName: "\u661F\u94C1\u6728"
+  speciesType: 2
+  speciesDescription: "\u575A\u786C\u5982\u94C1\u7684\u786C\u68D5\u6988\u6728\uFF0C\u88AB\u7528\u4E8E\u51E0\u4E4E\u6240\u6709\u7684\u5236\u9020\u573A\u5408"
+  icon: {fileID: 21300000, guid: 4e16cee75524e184a97d44bff197bb23, type: 3}
+  source: 1
+  state: 1
+  unlocked: 0
+  initialYield: 0
+  growthPhases: 0
+  decayPerPhase: 0
+  leastYield: 0
+  initialCropConsumption: 0
+  monthlyCropConsumption: 0
+  _nextPhaseYield: 0

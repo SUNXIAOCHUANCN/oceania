@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     //记录摄像机当前的欧拉角
     private float cameraYaw = 0f;   // 水平旋转角度 (Y轴)
     private float cameraPitch = 0f; // 垂直旋转角度 (X轴)
+    private float raftCameraDistance;//航海时的摄像机距离
+    public float raftMinDistance = 4f;
+    public float raftMaxDistance = 20f;
 
     // 摄像机距离
     public float cameraDistance = 4f; // 摄像机距离
@@ -54,6 +57,17 @@ public class PlayerController : MonoBehaviour
     public float dismountPushDistance = 2f;
     public float dismountUpOffset = 0.5f;
     public Key dismountKey = Key.F; // 按键下船
+
+    [Header("航海颠簸效果（驾驶时）")]
+    public bool enableSeaBobbing = true;
+    public float bobFrequency = 1.2f;          // 上下起伏频率
+    public float bobAmplitude = 0.06f;         // 上下起伏幅度（米）
+    public float swayFrequency = 0.9f;         // 左右/前后轻微漂移频率
+    public float swayAmplitude = 0.04f;        // 漂移幅度（米）
+    public float rollAmplitudeDeg = 1.5f;      // 左右横滚（度）
+    public float pitchAmplitudeDeg = 1.0f;     // 前后俯仰（度）
+    public float speedInfluence = 0.08f;       // 船速对颠簸强度的影响
+    public float maxIntensity = 2.0f;          // 强度上限
 
     private PlayerInput playerInput;
     private RaftController currentRaft; // 当前所在的船
@@ -107,11 +121,19 @@ public class PlayerController : MonoBehaviour
         bool isAltPressed = playerInput.actions.FindAction("UnlockCursor").IsPressed();
 
         //摄像机距离
-        float screenInput=playerInput.actions.FindAction("Zoom").ReadValue<Vector2>().y;
-        if(screenInput != 0)
+        float screenInput = playerInput.actions.FindAction("Zoom").ReadValue<Vector2>().y;
+        if (screenInput != 0)
         {
-            cameraDistance -= screenInput * zoomSpeed*0.1f;
-            cameraDistance = Mathf.Clamp(cameraDistance, minDistance, maxDistance);
+            if (isControllingRaft)
+            {
+                raftCameraDistance -= screenInput * zoomSpeed * 0.1f;
+                raftCameraDistance = Mathf.Clamp(raftCameraDistance, raftMinDistance, raftMaxDistance);
+            }
+            else
+            {
+                cameraDistance -= screenInput * zoomSpeed * 0.1f;
+                cameraDistance = Mathf.Clamp(cameraDistance, minDistance, maxDistance);
+            }
         }
 
         //光标控制
@@ -303,10 +325,50 @@ public class PlayerController : MonoBehaviour
         {
             if(!isCursorVisible)
             {
-                rotateCamera(mouseLook, sensitivity, cameraDistance);
+                float targetDistance = isControllingRaft ? raftCameraDistance : cameraDistance;
+                rotateCamera(mouseLook, sensitivity, targetDistance);
             }
+
+            ApplySeaBobbingToCamera();
             
         }
+    }
+
+    private void ApplySeaBobbingToCamera()
+    {
+        if (!enableSeaBobbing) return;
+        if (!isControllingRaft || currentRaft == null) return;
+        if (cameraObject == null) return;
+
+        float speed = 0f;
+        Rigidbody rb = currentRaft.raftRigidbody != null ? currentRaft.raftRigidbody : currentRaft.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            speed = rb.linearVelocity.magnitude;
+        }
+
+        float intensity = Mathf.Clamp(1f + speed * speedInfluence, 0f, maxIntensity);
+        float t = Time.time;
+
+        // 用 Perlin + 正弦做更自然的海浪感
+        float n1 = Mathf.PerlinNoise(t * 0.37f, 0.13f) * 2f - 1f;
+        float n2 = Mathf.PerlinNoise(0.21f, t * 0.41f) * 2f - 1f;
+
+        float bob = Mathf.Sin(t * bobFrequency * Mathf.PI * 2f) * bobAmplitude * intensity + n1 * (bobAmplitude * 0.35f) * intensity;
+        float swayX = Mathf.Sin(t * swayFrequency * Mathf.PI * 2f + 1.3f) * swayAmplitude * intensity;
+        float swayZ = Mathf.Cos(t * (swayFrequency * 0.8f) * Mathf.PI * 2f + 0.7f) * swayAmplitude * 0.6f * intensity;
+
+        // 以 rotateCamera 计算后的姿态为基准，叠加世界空间位移与姿态
+        var camTransform = cameraObject.transform;
+        Vector3 basePos = camTransform.position;
+        Quaternion baseRot = camTransform.rotation;
+
+        Vector3 offset = camTransform.right * swayX + Vector3.up * bob + camTransform.forward * swayZ;
+        camTransform.position = basePos + offset;
+
+        float roll = n2 * rollAmplitudeDeg * intensity;
+        float pitch = n1 * pitchAmplitudeDeg * intensity;
+        camTransform.rotation = baseRot * Quaternion.Euler(pitch, 0f, -roll);
     }
 
     // ---------------------- 补全的核心函数 ----------------------
@@ -556,6 +618,15 @@ public class PlayerController : MonoBehaviour
         }
 
         velocity = Vector3.zero;
+
+        if (cameraObject != null)
+        {
+            raftCameraDistance = 20f; // 上船后距离设为10f（更靠后）
+            cameraPitch = 15f;    // 上船后抬头15度（视角更高）
+            cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
+            // 强制刷新相机位置
+            rotateCamera(Vector2.zero, sensitivity, cameraDistance);
+        }
     }
 
     void DetachFromRaft()
@@ -575,6 +646,7 @@ public class PlayerController : MonoBehaviour
         timeOnRaft = 0f;
         isControllingRaft = false;
         velocity = Vector3.zero;
+        cameraDistance = raftCameraDistance; // 恢复默认距离
     }
 
     void HandleDismountInput()
@@ -625,5 +697,35 @@ public class PlayerController : MonoBehaviour
 
         DetachFromRaft();
         transform.position = exitPosition;
+    }
+
+    /// <summary>
+    /// 供外部（航海触发器）调用：强制让玩家上指定的船并立即进入控制模式
+    /// </summary>
+    public void ForceBoardRaft(RaftController raft)
+    {
+        if (raft == null) return;
+
+        currentRaft = raft;
+        timeOnRaft = switchToRaftControlDelay;
+        isControllingRaft = true;
+        AttachPlayerToRaft();
+        Debug.Log($"ForceBoardRaft: 已上船并进入控制模式 -> {raft.name}");
+    }
+    
+    /// <summary>
+    /// 检查玩家是否在船上
+    /// </summary>
+    public bool IsOnRaft()
+    {
+        return currentRaft != null;
+    }
+    
+    /// <summary>
+    /// 检查玩家是否正在控制船
+    /// </summary>
+    public bool IsControllingRaft()
+    {
+        return isControllingRaft && currentRaft != null;
     }
 }

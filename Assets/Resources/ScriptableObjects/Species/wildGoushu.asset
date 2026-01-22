@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeciesScriptableObject
   speciesName: "\u91CE\u6784\u6811"
   speciesType: 2
-  speciesDescription: 
+  speciesDescription: "\u5176\u5B9E\u5C31\u662F\u6784\u6811"
   icon: {fileID: 21300000, guid: 832fa6527b5a16a43a249f367a786836, type: 3}
-  source: 0
+  source: 1
   state: 1
-  unlocked: 1
+  unlocked: 0
   initialYield: 0
   growthPhases: 0
   decayPerPhase: 0
