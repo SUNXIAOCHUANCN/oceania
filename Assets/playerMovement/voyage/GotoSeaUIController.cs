@@ -16,7 +16,6 @@ public class GotoSeaUIController : CanvasController
     [SerializeField] private Button closeButton; // 关闭按钮（拖入你的CloseButton即可）
 
     [Header("生成设置")]
-    [SerializeField] private Transform spawnPoint; // 港口生成点
     [SerializeField] private float spawnOffsetY = 0f; // Y轴偏移
 
     private PlayerController playerController;
@@ -96,6 +95,16 @@ public class GotoSeaUIController : CanvasController
     }
 
     // 选船逻辑（不变）
+    private Transform spawnPoint; // 从voyagetrigger获取的生成点
+
+    /// <summary>
+    /// 设置生成点
+    /// </summary>
+    public void SetSpawnPoint(Transform selectedSpawnPoint)
+    {
+        spawnPoint = selectedSpawnPoint;
+    }
+    
     private void OnShipSelected(int shipType)
     {
         GameObject selectedPrefab = shipType switch
@@ -139,7 +148,7 @@ public class GotoSeaUIController : CanvasController
         HideCanvas();
     }
 
-    // 获取生成位置（不变）
+    // 获取生成位置（从voyagetrigger获取的生成点）
     private Vector3 GetSpawnPosition()
     {
         if (spawnPoint != null) return spawnPoint.position + Vector3.up * spawnOffsetY;
