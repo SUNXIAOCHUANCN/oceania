@@ -49,13 +49,7 @@ public class FarmSystem : MonoBehaviour
         // 取消订阅月相变化事件
         GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
     }
-    
-    private void OnApplicationQuit()
-    {
-        // 游戏退出时保存数据
-        FarmSaveSystem.Instance.SaveFarmData(this);
-    }
-    
+
     /// <summary>
     /// 初始化田地列表
     /// </summary>

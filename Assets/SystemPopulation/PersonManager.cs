@@ -327,11 +327,6 @@ public class PersonManager : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        SavePersonStates();
-    }
-
     private void OnDestroy()
     {
         SavePersonStates();

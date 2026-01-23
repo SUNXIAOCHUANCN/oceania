@@ -185,6 +185,23 @@ public class PlayerStateManager : MonoBehaviour
         return File.Exists(fullPath);
     }
     
+    /// <summary>
+    /// 删除存档文件
+    /// </summary>
+    public void DeleteSaveFile()
+    {
+        string fullPath = Path.Combine(Application.persistentDataPath, SAVE_FILE_NAME);
+        if (File.Exists(fullPath))
+        {
+            File.Delete(fullPath);
+            Debug.Log($"玩家状态存档已删除: {fullPath}");
+        }
+        else
+        {
+            Debug.Log("没有找到玩家状态存档文件，无需删除");
+        }
+    }
+    
     public PlayerLocationState CurrentLocation => currentLocation;
     
     public void SetCurrentLocation(PlayerLocationState location)
