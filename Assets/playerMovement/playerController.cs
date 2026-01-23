@@ -697,6 +697,10 @@ public class PlayerController : MonoBehaviour
 
         DetachFromRaft();
         transform.position = exitPosition;
+        if (PlayerModeManager.Instance != null)
+        {
+            PlayerModeManager.Instance.OnLeaveRaft();
+        }
     }
 
     /// <summary>
@@ -710,6 +714,10 @@ public class PlayerController : MonoBehaviour
         timeOnRaft = switchToRaftControlDelay;
         isControllingRaft = true;
         AttachPlayerToRaft();
+        if (PlayerModeManager.Instance != null)
+        {
+            PlayerModeManager.Instance.OnBoardRaft();
+        }
         Debug.Log($"ForceBoardRaft: 已上船并进入控制模式 -> {raft.name}");
     }
     
