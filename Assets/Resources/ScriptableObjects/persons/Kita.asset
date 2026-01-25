@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
   m_Name: Kita
   m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
-  personName: "\u5409\u5854"
+  personName: "\u62C9\u62C9"
   profession: 2
-  avatar: {fileID: 21300000, guid: 7d2a3e4d6503a524b9fc74bbf0fd0b92, type: 3}
+  avatar: {fileID: 21300000, guid: a44b81a2df0b03743bfe7310deb0fc38, type: 3}
   recruited: 1
   professionDescription: "\u5728\u519C\u573A\u3001\u7267\u573A\u3001\u683D\u57F9\u6797\u7BA1\u7406\u65F6\uFF0C\u751F\u4EA7\u589E\u52A020%"
   status: 4

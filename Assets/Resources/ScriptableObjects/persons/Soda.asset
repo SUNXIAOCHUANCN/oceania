@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
   m_Name: Soda
   m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
-  personName: "\u82CF\u8FBE"
+  personName: "\u5E93\u62C9"
   profession: 3
-  avatar: {fileID: 21300000, guid: 6df28e1b8fff3064caa2d2b1f48a9c06, type: 3}
+  avatar: {fileID: 21300000, guid: ca6171a5b8e7fd946bcd6b10b3fb9c47, type: 3}
   recruited: 0
   professionDescription: "\u822A\u884C\u65F6\u901F\u5EA6\u589E\u52A020%"
   status: 0

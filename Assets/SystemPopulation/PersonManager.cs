@@ -31,6 +31,11 @@ public class PersonManager : MonoBehaviour
     /// 人口资源消耗事件 - 通知 ResourceManagerCalculator
     /// </summary>
     public UnityEvent<PopulationConsumptionData> OnPopulationConsumptionCalculated = new UnityEvent<PopulationConsumptionData>();
+
+    /// <summary>
+    /// 人口数据加载完成事件
+    /// </summary>
+    public System.Action OnPopulationDataLoaded;
     
     public static PersonManager Instance
     {
@@ -282,54 +287,101 @@ public class PersonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 保存人员状态到PersonsLoader
+    /// 保存人员状态到PersonsLoader（已弃用，现在由存档系统统一管理）
     /// </summary>
     private void SavePersonStates()
     {
-        // 人员状态已经通过PersonsLoader的Update方法实时更新
-        // 这里可以添加额外的保存逻辑，如保存到PlayerPrefs
-        SaveToPlayerPrefs();
+        // 人员状态现在由 GlobalSaveManager 统一保存
+        // 这个方法保留为向后兼容
     }
 
     /// <summary>
-    /// 将人员状态保存到PlayerPrefs
+    /// 导出人口数据到存档结构
     /// </summary>
-    private void SaveToPlayerPrefs()
+    public PopulationSaveData ExportToSaveData()
     {
-        // 保存每个人员的招募状态和状态
-        for (int i = 0; i < _allPersons.Count; i++)
+        PopulationSaveData saveData = new PopulationSaveData();
+
+        Debug.Log($"[PersonManager] 导出人口数据，共 {_allPersons.Count} 个人员");
+
+        foreach (var person in _allPersons)
         {
-            PlayerPrefs.SetInt($"Person_{i}_Recruited", _allPersons[i].recruited ? 1 : 0);
-            PlayerPrefs.SetString($"Person_{i}_Status", _allPersons[i].status.ToString());
+            PersonSaveData personData = new PersonSaveData(
+                person.personName,
+                person.recruited,
+                person.status
+            );
+            saveData.personsData.Add(personData);
         }
-        PlayerPrefs.Save();
+
+        int recruitedCount = 0;
+        foreach (var personData in saveData.personsData)
+        {
+            if (personData.isRecruited) recruitedCount++;
+        }
+
+        Debug.Log($"[PersonManager] 导出完成：{saveData.personsData.Count} 个人员，{recruitedCount} 个已招募");
+        return saveData;
     }
 
     /// <summary>
-    /// 从PlayerPrefs加载人员状态
+    /// 从存档加载数据到 PersonManager
     /// </summary>
-    private void LoadFromPlayerPrefs()
+    public void LoadFromSaveData(PopulationSaveData saveData)
     {
-        for (int i = 0; i < _allPersons.Count; i++)
+        if (saveData == null)
         {
-            if (PlayerPrefs.HasKey($"Person_{i}_Recruited"))
+            Debug.LogWarning("[PersonManager] 存档数据为空，跳过加载");
+            return;
+        }
+
+        if (saveData.personsData.Count == 0)
+        {
+            Debug.Log("[PersonManager] 存档为空（首次运行），将从 ScriptableObject 加载初始数据");
+            return;
+        }
+
+        Debug.Log($"[PersonManager] 开始加载人口数据，包含 {saveData.personsData.Count} 个人员");
+
+        int loadedCount = 0;
+        int recruitedCount = 0;
+
+        foreach (var personData in saveData.personsData)
+        {
+            PersonScriptableObject person = FindPersonByName(personData.personName);
+            if (person != null)
             {
-                _allPersons[i].recruited = PlayerPrefs.GetInt($"Person_{i}_Recruited") == 1;
-            }
-            if (PlayerPrefs.HasKey($"Person_{i}_Status"))
-            {
-                string statusStr = PlayerPrefs.GetString($"Person_{i}_Status");
-                if (System.Enum.TryParse(statusStr, out PersonStatus status))
+                // 恢复招募状态
+                person.recruited = personData.isRecruited;
+                if (person.recruited) recruitedCount++;
+
+                // 恢复人员状态
+                if (System.Enum.TryParse(personData.statusName, out PersonStatus status))
                 {
-                    _allPersons[i].status = status;
+                    person.status = status;
                 }
+                else
+                {
+                    Debug.LogWarning($"[PersonManager] 无法解析状态: {personData.statusName}，使用默认状态");
+                    person.status = PersonStatus.rest;
+                }
+
+                loadedCount++;
+            }
+            else
+            {
+                Debug.LogWarning($"[PersonManager] 未找到人员 '{personData.personName}'");
             }
         }
+
+        Debug.Log($"[PersonManager] 人口数据加载完成，成功加载 {loadedCount}/{saveData.personsData.Count} 个人员，{recruitedCount} 个已招募");
+
+        // 触发加载完成事件
+        OnPopulationDataLoaded?.Invoke();
     }
 
     private void OnDestroy()
     {
-        SavePersonStates();
         // 取消订阅，防止内存泄漏
         PersonsLoader loader = PersonsLoader.Instance;
         if (loader != null)

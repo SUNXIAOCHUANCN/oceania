@@ -15,6 +15,7 @@ public class GlobalSaveManager : MonoBehaviour
     [SerializeField] private FarmSaveSystem farmSaveSystem;
     [SerializeField] private RanchSaveSystem ranchSaveSystem;
     [SerializeField] private ExploreSaveSystem exploreSaveSystem;
+    [SerializeField] private PersonSaveSystem personSaveSystem;
 
     [Header("生产系统引用")]
     [SerializeField] private ForestSystem forestSystem;
@@ -23,6 +24,9 @@ public class GlobalSaveManager : MonoBehaviour
 
     [Header("探索系统引用")]
     [SerializeField] private ExploreSystem exploreSystem;
+
+    [Header("人口系统引用")]
+    [SerializeField] private PersonManager personManager;
 
     // 加载完成事件
     public System.Action OnAllDataLoaded;
@@ -119,6 +123,14 @@ public class GlobalSaveManager : MonoBehaviour
         if (exploreSystem == null)
             exploreSystem = ExploreSystem.Instance;
         Debug.Log($"  ExploreSystem: {(exploreSystem != null ? "✓" : "✗")}");
+
+        if (personSaveSystem == null)
+            personSaveSystem = PersonSaveSystem.Instance;
+        Debug.Log($"  PersonSaveSystem: {(personSaveSystem != null ? "✓" : "✗")}");
+
+        if (personManager == null)
+            personManager = PersonManager.Instance;
+        Debug.Log($"  PersonManager: {(personManager != null ? "✓" : "✗")}");
     }
 
     /// <summary>
@@ -169,6 +181,14 @@ public class GlobalSaveManager : MonoBehaviour
             ExploreSaveData exploreData = exploreSystem.ExportToSaveData();
             exploreSaveSystem.SaveExploreData(exploreData);
             Debug.Log("  ✓ 探索数据已保存");
+        }
+
+        // 7. 保存人口数据
+        if (personSaveSystem != null && personManager != null)
+        {
+            PopulationSaveData populationData = personManager.ExportToSaveData();
+            personSaveSystem.SavePopulationData(populationData);
+            Debug.Log("  ✓ 人口数据已保存");
         }
 
         Debug.Log("[GlobalSaveManager] 所有数据保存完成！");
@@ -257,6 +277,14 @@ public class GlobalSaveManager : MonoBehaviour
             Debug.Log($"  ✓ 探索数据已加载 ({exploreData.islandsExploreData.Count} 个岛屿)");
         }
 
+        // 7. 加载人口数据
+        if (personSaveSystem != null && personManager != null)
+        {
+            PopulationSaveData populationData = personSaveSystem.LoadPopulationData();
+            personManager.LoadFromSaveData(populationData);
+            Debug.Log($"  ✓ 人口数据已加载 ({populationData.personsData.Count} 个人员)");
+        }
+
         Debug.Log("[GlobalSaveManager] 所有数据加载完成！");
 
         isLoading = false;
@@ -282,6 +310,7 @@ public class GlobalSaveManager : MonoBehaviour
             (farmSaveSystem != null && farmSaveSystem.SaveExists()) ||
             (ranchSaveSystem != null && ranchSaveSystem.SaveExists()) ||
             (exploreSaveSystem != null && exploreSaveSystem.SaveExists()) ||
+            (personSaveSystem != null && personSaveSystem.SaveExists()) ||
             PlayerPrefs.HasKey("GlobalTimeSystem_TotalElapsedTime");
 
         return hasSave;
@@ -297,11 +326,12 @@ public class GlobalSaveManager : MonoBehaviour
         if (playerStateManager != null)
             playerStateManager.DeleteSaveFile();
 
-        // 森林、农场、牧场、探索的存档文件需要手动删除
+        // 森林、农场、牧场、探索、人口的存档文件需要手动删除
         string forestSavePath = System.IO.Path.Combine(Application.persistentDataPath, "forest_save.dat");
         string farmSavePath = System.IO.Path.Combine(Application.persistentDataPath, "farm_save.dat");
         string ranchSavePath = System.IO.Path.Combine(Application.persistentDataPath, "ranch_save.dat");
         string exploreSavePath = System.IO.Path.Combine(Application.persistentDataPath, "explore_save.dat");
+        string populationSavePath = System.IO.Path.Combine(Application.persistentDataPath, "population_save.dat");
 
         if (System.IO.File.Exists(forestSavePath))
             System.IO.File.Delete(forestSavePath);
@@ -314,6 +344,9 @@ public class GlobalSaveManager : MonoBehaviour
 
         if (System.IO.File.Exists(exploreSavePath))
             System.IO.File.Delete(exploreSavePath);
+
+        if (System.IO.File.Exists(populationSavePath))
+            System.IO.File.Delete(populationSavePath);
 
         // 删除 PlayerPrefs 的时间存档
         PlayerPrefs.DeleteKey("GlobalTimeSystem_TotalElapsedTime");

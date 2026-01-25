@@ -1,0 +1,486 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3554771699054903374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1809865758032002122}
+  - component: {fileID: 5178916088231827963}
+  - component: {fileID: 3930536221973740265}
+  - component: {fileID: 5316581148656324705}
+  m_Layer: 0
+  m_Name: NPC4-TalkwithMalay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1809865758032002122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554771699054903374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 240.77602, y: 11.11, z: 433.32822}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2212585031835230614}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5178916088231827963
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554771699054903374}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3930536221973740265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554771699054903374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6101cc697a2ac419c085dd72cad93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
+  dialogueStrings:
+  - text: "\uFF08\u4E3E\u8D77\u624B\u4E2D\u6E7F\u6F09\u6F09\u7684\u7FBD\u6BDB\uFF0C\u6C34\u73E0\u5728\u9633\u5149\u4E0B\u95EA\u70C1\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u57FA\u8BFA\u65CF\u957F\uFF01\u4F60\u770B\uFF0C\u521A\u6361\u5230\u7684\u957F\u5C3E\u9E1F\u7FBD\u6BDB\uFF0C\u8FD8\u662F\u65B0\u9C9C\u7684\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\uFF08\u63A5\u8FC7\u7FBD\u6BDB\u4ED4\u7EC6\u89C2\u770B\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u771F\u7F8E\u3002\u5B83\u79BB\u5F00\u4E86\u9E1F\u513F\uFF0C\u989C\u8272\u8FD8\u4F1A\u53D8\u5417\uFF1F"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\uFF08\u5E26\u7740\u884C\u5BB6\u7684\u53E3\u543B\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u4F1A\u3002\u65F6\u95F4\u8D8A\u4E45\uFF0C\u5149\u6CFD\u8D8A\u6C89\uFF0C\u4F1A\u6CDB\u51FA\u53E4\u94DC\u8272\uFF0C\u50CF\u88AB\u5C81\u6708\u9540\u8FC7\u4E00\u6837\u3002\u4E00\u9876\u989C\u8272\u6DF1\u6C89\u7684\u7FBD\u51A0\uFF0C\u53EF\u80FD\u548C\u8FD9\u5EA7\u5C9B\u7684\u5386\u53F2\u4E00\u6837\u53E4\u8001\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\uFF08\u505C\u987F\u4E00\u4E0B\uFF0C\u795E\u60C5\u53D8\u5F97\u8BA4\u771F\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u5176\u5B9E\uFF0C\u4E0D\u53EA\u662F\u7FBD\u6BDB\u4F1A\u53D8\u2026\u2026\u6211\u4EEC\u7684\u4F5C\u7269\u548C\u7272\u755C\u4E5F\u4E00\u6837\u3002\u5982\u679C\u603B\u662F\u5728\u540C\u4E00\u7247\u571F\u5730\u79CD\u690D\u540C\u6837\u7684\u4F5C\u7269\uFF0C\u517B\u540C\u6837\u7684\u7272\u755C\uFF0C\u5B83\u4EEC\u7684\u4EA7\u91CF\u4F1A\u8D8A\u6765\u8D8A\u4F4E\uFF0C\u54C1\u8D28\u4E5F\u4F1A\u53D8\u5DEE\u2014\u2014\u8FD9\u5C31\u662F\u9000\u5316\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\uFF08\u51DD\u89C6\u7FBD\u6BDB\uFF0C\u82E5\u6709\u6240\u601D\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u65F6\u95F4\u4E0D\u4F1A\u9A97\u4EBA\uFF0C\u9000\u5316\u4E5F\u65E0\u6CD5\u907F\u514D\u2026\u2026\u90A3\u6211\u4EEC\u8BE5\u600E\u4E48\u529E\uFF1F"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u5C31\u50CF\u7FBD\u6BDB\u9700\u8981\u4E0D\u540C\u7684\u5149\u7EBF\u624D\u80FD\u5C55\u73B0\u4E0D\u540C\u8272\u5F69\uFF0C\u4F5C\u7269\u548C\u7272\u755C\u4E5F\u9700\u8981\u65B0\u7684\u53D8\u79CD\u6765\u4FDD\u6301\u6D3B\u529B\u3002\u57FA\u8BFA\u65CF\u957F\uFF0C\u4F60\u5E94\u8BE5\u51FA\u6D77\u53BB\u5BFB\u627E\u5176\u4ED6\u5C9B\u5C7F\u7684\u65B0\u54C1\u79CD\u4E86\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\uFF08\u5C06\u7FBD\u6BDB\u63E1\u5728\u624B\u4E2D\uFF0C\u671B\u5411\u8FDC\u5904\u7684\u6E2F\u53E3\u7801\u5934\uFF0C\u8BED\u6C14\u575A\u5B9A\uFF09"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u4F60\u8BF4\u5F97\u5BF9\u3002\u5B88\u7740\u65E7\u7684\u4E00\u5207\u53EA\u4F1A\u6162\u6162\u8870\u8D25\u3002\u6211\u8FD9\u5C31\u53BB\u6E2F\u53E3\u7801\u5934\u51C6\u5907\u51FA\u6D77\uFF0C\u51C6\u5907\u597D\u8239\u53EA\u548C\u7269\u8D44\uFF0C\u53BB\u5BFB\u627E\u65B0\u7684\u79CD\u5B50\u548C\u7272\u755C\u3002\u53EA\u6709\u4ECE\u6D77\u4E0A\u5E26\u56DE\u65B0\u7684\u5E0C\u671B\uFF0C\u6211\u4EEC\u7684\u90E8\u843D\u624D\u80FD\u7EE7\u7EED\u751F\u5B58\u4E0B\u53BB\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6211\u8BB0\u5F97\u4F20\u8BF4\u4E2D\u5728\u6211\u4EEC\u5C9B\u5C7F\u7684\u897F\u5357\u4FA7\uFF0C\u6709\u4E00\u4E2A\u5C9B\u5C7F\uFF0C\u4F60\u53EF\u4EE5\u5411\u897F\u5357\u4FA7\u822A\u884C"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u4F7F\u7528\u592A\u9633\u548C\u6708\u4EAE\u6765\u5B9A\u4F4D"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u8BB0\u5F97\u51FA\u6D77\u7684\u65F6\u5019\u5E26\u4E0A\u9A6F\u5316\u5E08\uFF0C\u8FD9\u6837\u4F60\u624D\u53EF\u4EE5\u6361\u8D77\u6765\u91CE\u751F\u7684\u7269\u79CD\uFF01"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u739B\u83B1"
+  - text: "\u968F\u7740\u65F6\u95F4\u7684\u589E\u957F\uFF0C\u7269\u79CD\u4F1A\u9000\u5316\uFF0C\u9000\u5316\u540E\u7684\u7269\u79CD\u4EA7\u91CF\u51CF\u5C11\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u4F60\u9700\u8981\u5BFB\u627E\u7269\u79CD\u6765\u91CD\u65B0\u79CD\u690D\uFF0C\u51CF\u7F13\u4F5C\u7269\u9000\u5316"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6253\u5F00\u6D77\u56FE\u5FD7\uFF0C\u4F60\u53EF\u4EE5\u67E5\u770B\u7269\u79CD\u7684\u4F4D\u7F6E"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u4F60\u53EF\u4EE5\u5728\u672C\u5C9B\u6216\u8005\u5176\u4ED6\u5C9B\u5C7F\u5BFB\u627E\u7269\u79CD"
+    isEnd: 1
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  NPCTransform: {fileID: 2212585031835230614}
+  image: {fileID: 0}
+  characterMapping: {fileID: 11400000, guid: 4f0dd1aeae659914e8d446d0ac4a3cf7, type: 2}
+  plotPointID: 
+  requiredPlotPoints: []
+--- !u!114 &5316581148656324705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554771699054903374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b785a10603c8949acda5840177861b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCAnimationController
+  animator: {fileID: 6764565814290061343}
+  autoFindAnimatorInChildren: 1
+  animatorObjectName: "NPC\u6A21\u578B"
+  gestureATrigger: A
+  gestureBTrigger: B
+  gestureCTrigger: C
+  playGestureOnDialogue: 1
+  minDelayBetweenGestures: 0.5
+  randomGesture: 1
+  showDebugLog: 0
+--- !u!1001 &1818916727444981373
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1809865758032002122}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9071114
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.42089066
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -49.782
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      propertyPath: m_Name
+      value: Idle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6764565814290061343}
+  m_SourcePrefab: {fileID: 100100000, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+--- !u!1 &1585125169613175596 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+  m_PrefabInstance: {fileID: 1818916727444981373}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6764565814290061343
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585125169613175596}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5ac1a5249e7386344ace5e6de1298f38, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &2212585031835230614 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5b8e0cac3fc8a7f46a14177d91ecad84, type: 3}
+  m_PrefabInstance: {fileID: 1818916727444981373}
+  m_PrefabAsset: {fileID: 0}

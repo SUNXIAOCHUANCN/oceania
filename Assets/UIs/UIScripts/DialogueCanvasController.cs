@@ -7,8 +7,14 @@ public class DialogueCanvasController : CanvasController
 {
     [Header("Dialogue UI Elements")]
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private TMP_Text speakerNameText;  // 角色名称文本
+    [SerializeField] private Image image;
     [SerializeField] private Button option1Button;
     [SerializeField] private Button option2Button;
+
+    [Header("Default Image Settings")]
+    [SerializeField] private Sprite defaultImage; // 可选的默认图片
+    [SerializeField] private string defaultImageName = "example"; // 默认查找的图片名字
 
     private UnityAction onOption1Selected;
     private UnityAction onOption2Selected;
@@ -34,6 +40,89 @@ public class DialogueCanvasController : CanvasController
             dialogueText.text = "";
         }
     }
+
+    /// <summary>
+    /// 设置说话者的名字
+    /// </summary>
+    public void SetSpeakerName(string speakerName)
+    {
+        if (speakerNameText != null)
+        {
+            speakerNameText.text = speakerName;
+        }
+    }
+
+    /// <summary>
+    /// 清空说话者的名字
+    /// </summary>
+    public void ClearSpeakerName()
+    {
+        if (speakerNameText != null)
+        {
+            speakerNameText.text = "";
+        }
+    }
+
+    /// <summary>
+    /// 设置对话图片
+    /// </summary>
+    public void SetDialogueImage(Sprite image)
+    {
+        if (this.image == null)
+        {
+            Debug.LogError("DialogueImage is not assigned in DialogueCanvasController!");
+            return;
+        }
+        if (image != null)
+        {
+            this.image.sprite = image;
+            this.image.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// 设置默认对话图片
+    /// </summary>
+    public void SetDefaultDialogueImage()
+    {
+        if (image != null)
+        {
+            // 如果有预设的默认图片，使用它
+            if (defaultImage != null)
+            {
+                image.sprite = defaultImage;
+                image.gameObject.SetActive(true);
+                return;
+            }
+
+            // 否则在Resources文件夹中查找名为"example"的图片
+            Sprite foundImage = Resources.Load<Sprite>(defaultImageName);
+            if (foundImage != null)
+            {
+                image.sprite = foundImage;
+                image.gameObject.SetActive(true);
+            }
+            else
+            {
+                // 如果找不到任何图片，隐藏图片组件
+                image.gameObject.SetActive(false);
+                Debug.LogWarning($"Default image '{defaultImageName}' not found in Resources folder.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 清空对话图片
+    /// </summary>
+    public void ClearDialogueImage()
+    {
+        if (image != null)
+        {
+            image.sprite = null;
+            image.gameObject.SetActive(false);
+        }
+    }
+
 
     /// <summary>
     /// 显示选项按钮
