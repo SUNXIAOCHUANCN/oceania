@@ -23312,7 +23312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daa2dd81e60d2dd4cbd3d32542673e55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButtonSoundManager
-  buttonClickSound: {fileID: 8300000, guid: a809c9499e162e14fb91565b2286f2f1, type: 3}
+  buttonClickSound: {fileID: 8300000, guid: 47ce918bdb647d44b83a9413492e0aa1, type: 3}
   volume: 1
 --- !u!4 &643555254
 Transform:
@@ -27466,7 +27466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00002445653}
+  m_AnchoredPosition: {x: 0, y: 0.0006986283}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &734876153
@@ -33916,6 +33916,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930268987}
   m_CullTransparentMesh: 1
+--- !u!1 &930319361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 930319362}
+  - component: {fileID: 930319363}
+  m_Layer: 0
+  m_Name: BGM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &930319362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930319361}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &930319363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930319361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 233875ce626c32949bdff757972c6c93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoonPhaseMusicController
+  crescentMusic: {fileID: 8300000, guid: eab6d892e17c3dd47958d2efccd7c927, type: 3}
+  upQuarterMusic: {fileID: 0}
+  fullMoonMusic: {fileID: 8300000, guid: f98c08c1355343c43824897a9693e71c, type: 3}
+  downQuarterMusic: {fileID: 8300000, guid: d26e2ba62ad0c4d439223ce7c8292c91, type: 3}
+  musicVolume: 0.7
+  fadeDuration: 10
+  waitDuration: 10
+  musicPlayDuration: 60
 --- !u!1 &932935797
 GameObject:
   m_ObjectHideFlags: 0
@@ -68447,7 +68499,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1888065782}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999684
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -78432,6 +78484,7 @@ SceneRoots:
   - {fileID: 279827220}
   - {fileID: 352789106}
   - {fileID: 643555254}
+  - {fileID: 930319362}
   - {fileID: 107230640}
   - {fileID: 1581262382}
   - {fileID: 607145209}
