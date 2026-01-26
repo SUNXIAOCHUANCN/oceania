@@ -123,29 +123,28 @@ public class GotoSeaUIController : CanvasController
 
         // 生成位置
         Vector3 spawnPosition = GetSpawnPosition();
-        GameObject shipInstance = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
 
-        // 获取船的控制器
-        RaftController raftController = shipInstance.GetComponentInChildren<RaftController>();
-        if (raftController == null)
+        // 调用VoyageSystemManager生成船只并上船
+        bool success = false;
+        if (VoyageSystemManager.Instance != null)
         {
-            Debug.LogError($"生成的船 {shipInstance.name} 没有 RaftController 组件！");
-            return;
-        }
-
-        // 玩家上船
-        if (playerController != null)
-        {
-            playerController.ForceBoardRaft(raftController);
-            Debug.Log($"已生成船类型 {shipType}，玩家已上船");
+            success = VoyageSystemManager.Instance.TrySpawnAndBoardRaft(
+                shipType,
+                selectedPrefab,
+                spawnPosition,
+                playerController
+            );
         }
         else
         {
-            Debug.LogError("PlayerController 未设置！");
+            Debug.LogError("[GotoSeaUIController] VoyageSystemManager 不存在！请确保场景中有 VoyageSystemManager 对象！");
         }
 
-        // 选船后关闭UI
-        HideCanvas();
+        if (success)
+        {
+            // 选船后关闭UI
+            HideCanvas();
+        }
     }
 
     // 获取生成位置（从voyagetrigger获取的生成点）

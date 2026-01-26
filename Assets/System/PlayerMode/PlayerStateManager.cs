@@ -46,19 +46,22 @@ public class PlayerStateManager : MonoBehaviour
         if (playerController != null)
         {
             Transform playerTransform = playerController.transform;
-            saveData.playerPosition = playerTransform.position;
-            saveData.playerRotation = playerTransform.rotation;
-            
+
             // 检查玩家是否在船上
             saveData.isOnRaft = playerController.IsOnRaft();
-            if (saveData.isOnRaft)
+
+            if (!saveData.isOnRaft)
             {
-                // 这里需要获取当前船只名称，可能需要访问RaftController
-                RaftController currentRaft = GetPlayerCurrentRaft();
-                if (currentRaft != null)
-                {
-                    saveData.currentRaftName = currentRaft.name;
-                }
+                // 不在船上，正常保存位置
+                saveData.playerPosition = playerTransform.position;
+                saveData.playerRotation = playerTransform.rotation;
+            }
+            else
+            {
+                // 在船上时，保存特殊标记（zero表示需要重生到安全点）
+                saveData.playerPosition = Vector3.zero;
+                saveData.playerRotation = Quaternion.identity;
+                Debug.Log("[PlayerStateManager] 玩家在船上退出，保存重生标记");
             }
         }
         
@@ -156,13 +159,41 @@ public class PlayerStateManager : MonoBehaviour
             }
             
             // 如果玩家在船上，需要特殊处理
-            if (saveData.isOnRaft && !string.IsNullOrEmpty(saveData.currentRaftName))
+            if (saveData.isOnRaft)
             {
-                // 查找对应的船只并让玩家上船
-                RaftController raft = FindRaftByName(saveData.currentRaftName);
-                if (raft != null && playerController != null)
+                // 传送到安全点（因为船会被销毁）
+                if (VoyageSystemManager.Instance != null)
                 {
-                    playerController.ForceBoardRaft(raft);
+                    Transform respawnPoint = VoyageSystemManager.Instance.GetSafeRespawnPoint();
+                    if (respawnPoint != null && playerController != null)
+                    {
+                        playerController.transform.position = respawnPoint.position;
+                        playerController.transform.rotation = respawnPoint.rotation;
+                        Debug.Log("[PlayerStateManager] 玩家之前在船上，已传送到安全点");
+                    }
+                    else if (playerController != null)
+                    {
+                        // 如果没有配置安全点，保持当前位置
+                        Debug.LogWarning("[PlayerStateManager] VoyageSystemManager的安全点未配置，玩家位置未重置");
+                    }
+                }
+                else if (playerController != null)
+                {
+                    // 如果VoyageSystemManager不存在，保持原位置不变
+                    Debug.LogWarning("[PlayerStateManager] VoyageSystemManager不存在，玩家位置未重置");
+                }
+
+                // 清空VoyageSystemManager的船只状态
+                VoyageSystemManager.Instance?.ClearCurrentRaft();
+            }
+            else
+            {
+                // 不在船上，正常恢复位置
+                if (playerController != null)
+                {
+                    Transform playerTransform = playerController.transform;
+                    playerTransform.position = saveData.playerPosition;
+                    playerTransform.rotation = saveData.playerRotation;
                 }
             }
             

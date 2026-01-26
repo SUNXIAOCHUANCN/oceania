@@ -12,6 +12,10 @@ public class RaftController : MonoBehaviour
     [Header("物理设置")]
     public Rigidbody raftRigidbody; // 船的Rigidbody组件
 
+    [SerializeField] private bool useWaterHeight = false;
+    [SerializeField] private float waterHeight = 0f;
+    [SerializeField] private Transform waterSurface;
+
     [Header("玩家站位")]
     public Transform standPoint; // 角色被绑定时的默认站位
     
@@ -41,6 +45,22 @@ public class RaftController : MonoBehaviour
         // 确保船是Kinematic或者有合适的物理设置
         raftRigidbody.isKinematic = false;
         raftRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
+
+        if (useWaterHeight)
+        {
+            if (waterSurface != null)
+            {
+                waterHeight = waterSurface.position.y;
+            }
+            else if (Mathf.Approximately(waterHeight, 0f))
+            {
+                waterHeight = transform.position.y;
+            }
+
+            Vector3 pos = transform.position;
+            pos.y = waterHeight;
+            transform.position = pos;
+        }
     }
     
     void FixedUpdate()
@@ -66,7 +86,7 @@ public class RaftController : MonoBehaviour
     public void SetTargetPosition(Vector3 target)
     {
         targetPosition = target;
-        targetPosition.y = transform.position.y; // 保持Y轴不变（水面高度）
+        targetPosition.y = useWaterHeight ? waterHeight : transform.position.y;
         hasTarget = true;
     }
     
@@ -227,4 +247,3 @@ public class RaftController : MonoBehaviour
         return isOnRaft;
     }
 }
-

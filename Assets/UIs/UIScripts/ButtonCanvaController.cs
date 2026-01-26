@@ -20,6 +20,8 @@ public class ButtonCanvaController : CanvasController
     [SerializeField] private GameObject forestButton;
     [SerializeField] private GameObject pickButton;
     [SerializeField] private GameObject populationButton;
+    [SerializeField] private GameObject leaveRaftButton;
+    [SerializeField] private GameObject voyageButton;
     
     [Header("UI Controller References")]
     [SerializeField] private FarmUIController farmUIController;
@@ -27,6 +29,7 @@ public class ButtonCanvaController : CanvasController
     [SerializeField] private CanvasController forestUIController;
     [SerializeField] private CanvasController pickUIController;
     [SerializeField] private CanvasController populationUIController;
+    [SerializeField] private GotoSeaUIController gotoSeaUIController;
     
     // 按钮组件引用
     private Button farmButtonComponent;
@@ -34,6 +37,8 @@ public class ButtonCanvaController : CanvasController
     private Button forestButtonComponent;
     private Button pickButtonComponent;
     private Button populationButtonComponent;
+    private Button leaveRaftButtonComponent;
+    private Button voyageButtonComponent;
     
     // 用于跟踪当前显示的按钮
     private string currentActiveButton = "";
@@ -89,6 +94,12 @@ public class ButtonCanvaController : CanvasController
 
         // 设置人口按钮监听器
         SetupButtonListener(populationButton, ref populationButtonComponent, OnPopulationButtonClicked, "Population");
+
+        // 设置下船按钮监听器
+        SetupButtonListener(leaveRaftButton, ref leaveRaftButtonComponent, OnLeaveRaftButtonClicked, "LeaveRaft");
+
+        // 设置出海按钮监听器
+        SetupButtonListener(voyageButton, ref voyageButtonComponent, OnVoyageButtonClicked, "Voyage");
     }
     
     /// <summary>
@@ -247,6 +258,30 @@ public class ButtonCanvaController : CanvasController
                     Debug.LogWarning("populationButton is null!");
                 }
                 break;
+            case "leaveraft":
+                if (leaveRaftButton != null)
+                {
+                    leaveRaftButton.SetActive(true);
+                    currentActiveButton = "LeaveRaft";
+                    Debug.Log("LeaveRaft button shown, currentActiveButton set to LeaveRaft");
+                }
+                else
+                {
+                    Debug.LogWarning("leaveRaftButton is null!");
+                }
+                break;
+            case "voyage":
+                if (voyageButton != null)
+                {
+                    voyageButton.SetActive(true);
+                    currentActiveButton = "Voyage";
+                    Debug.Log("Voyage button shown, currentActiveButton set to Voyage");
+                }
+                else
+                {
+                    Debug.LogWarning("voyageButton is null!");
+                }
+                break;
             default:
                 Debug.LogWarning($"Unknown buttonType: {buttonType}");
                 break;
@@ -266,6 +301,8 @@ public class ButtonCanvaController : CanvasController
         if (forestButton != null) forestButton.SetActive(false);
         if (pickButton != null) pickButton.SetActive(false);
         if (populationButton != null) populationButton.SetActive(false);
+        if (leaveRaftButton != null) leaveRaftButton.SetActive(false);
+        if (voyageButton != null) voyageButton.SetActive(false);
         currentActiveButton = "";
         Debug.Log("All buttons hidden, currentActiveButton cleared");
     }
@@ -462,7 +499,7 @@ public class ButtonCanvaController : CanvasController
             // 如果找不到直接引用，可以在这里添加默认行为
             Debug.Log("Population UI controller not assigned, showing default pick UI");
         }
-        
+
         // 触发按钮点击事件
         onButtonClicked?.Invoke();
 
@@ -470,12 +507,58 @@ public class ButtonCanvaController : CanvasController
         {
             CursorManager.Instance.RegisterInteractionPanel(true);
         }
-        
+
         // 如果设置为点击后隐藏，则隐藏Canvas
         if (hideAfterClick)
         {
             HideCanvas();
         }
+    }
+
+    /// <summary>
+    /// 当下船按钮被点击时调用
+    /// </summary>
+    public void OnLeaveRaftButtonClicked()
+    {
+        Debug.Log("[ButtonCanvaController] 点击下船按钮");
+
+        if (VoyageSystemManager.Instance != null && VoyageSystemManager.Instance.IsOnRaft)
+        {
+            if (VoyageSystemManager.Instance.CanLeaveRaft())
+            {
+                VoyageSystemManager.Instance.LeaveRaft();
+            }
+            else
+            {
+                Debug.Log("[ButtonCanvaController] 不能在海上下船，必须靠近岛屿");
+            }
+        }
+        else
+        {
+            Debug.Log("[ButtonCanvaController] 玩家不在船上");
+        }
+
+        HideCanvas();
+    }
+
+    /// <summary>
+    /// 当出海按钮被点击时调用
+    /// </summary>
+    public void OnVoyageButtonClicked()
+    {
+        Debug.Log("[ButtonCanvaController] 点击出海按钮");
+
+        if (gotoSeaUIController != null)
+        {
+            gotoSeaUIController.ShowCanvas();
+            Debug.Log("[ButtonCanvaController] 已显示出海UI");
+        }
+        else
+        {
+            Debug.LogError("[ButtonCanvaController] gotoSeaUIController 未配置！请在 Inspector 中拖入 GotoSeaUIController 对象");
+        }
+
+        HideCanvas();
     }
     
     /// <summary>

@@ -131,6 +131,11 @@ public class GlobalSaveManager : MonoBehaviour
         if (personManager == null)
             personManager = PersonManager.Instance;
         Debug.Log($"  PersonManager: {(personManager != null ? "✓" : "✗")}");
+
+        if (VoyageSystemManager.Instance != null)
+            Debug.Log($"  VoyageSystemManager: ✓");
+        else
+            Debug.Log($"  VoyageSystemManager: ✗");
     }
 
     /// <summary>

@@ -15,6 +15,7 @@ public class voyagetrigger : MonoBehaviour
 
     [Header("UI设置")]
     [SerializeField] private GotoSeaUIController gotoSeaUI;
+    [SerializeField] private ButtonCanvaController buttonCanvaController;
 
     [Header("交互设置")]
     [SerializeField] private string playerTag = "Player";
@@ -55,6 +56,17 @@ public class voyagetrigger : MonoBehaviour
 
     playerInRange = true;
     if (showDebugLog) Debug.Log($"[voyagetrigger] 玩家进入航海触发范围，可按 F 打开选船界面。playerInRange = {playerInRange}");
+
+    // 显示出海按钮
+    if (buttonCanvaController != null)
+    {
+        buttonCanvaController.ShowButton("voyage");
+        if (showDebugLog) Debug.Log("[voyagetrigger] 已显示出海按钮");
+    }
+    else if (showDebugLog)
+    {
+        Debug.LogWarning("[voyagetrigger] ButtonCanvaController 未配置，出海按钮不会显示");
+    }
 }
     
 // 获取选中的生成点
@@ -88,6 +100,13 @@ public Transform GetSelectedSpawnPoint()
         {
             gotoSeaUI.HideCanvas(); // 需确保 GotoSeaUIController 有 HideCanvas 方法
             if (showDebugLog) Debug.Log("[voyagetrigger] 玩家离开范围，自动隐藏选船UI");
+        }
+
+        // 隐藏出海按钮
+        if (buttonCanvaController != null)
+        {
+            buttonCanvaController.HideAllButtons();
+            if (showDebugLog) Debug.Log("[voyagetrigger] 玩家离开范围，已隐藏出海按钮");
         }
 
         if (showDebugLog) Debug.Log("玩家离开航海触发范围");
