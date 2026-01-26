@@ -22,7 +22,7 @@ MonoBehaviour:
   initialYield: 10
   growthPhases: 5
   decayPerPhase: 0.2
-  leastYield: 0
+  leastYield: 1
   initialCropConsumption: 0
   monthlyCropConsumption: 0
   _nextPhaseYield: 10
