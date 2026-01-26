@@ -19,10 +19,10 @@ MonoBehaviour:
   source: 1
   state: 1
   unlocked: 0
-  initialYield: 0
+  initialYield: 7
   growthPhases: 0
-  decayPerPhase: 0
-  leastYield: 0
+  decayPerPhase: 0.2
+  leastYield: 3
   initialCropConsumption: 0
   monthlyCropConsumption: 0
-  _nextPhaseYield: 0
+  _nextPhaseYield: 7

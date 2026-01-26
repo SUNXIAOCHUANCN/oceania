@@ -24,5 +24,5 @@ MonoBehaviour:
   decayPerPhase: 0.5
   leastYield: 1
   initialCropConsumption: 0
-  monthlyCropConsumption: 4
+  monthlyCropConsumption: 2
   _nextPhaseYield: 8
