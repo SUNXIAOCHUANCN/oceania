@@ -9,8 +9,12 @@ public class TextShowManager : MonoBehaviour
 {
     [Header("UI组件")]
     [SerializeField] private GameObject textShowPanel; // 文本显示面板
+    [SerializeField] private Image image;
     [SerializeField] private TMP_Text displayText; // 显示文本的UI
     [SerializeField] private Button continueButton; // 继续按钮
+
+    [Header("Default Image Settings")]
+    [SerializeField] private Sprite defaultImage; // 可选的默认图片
 
     [Header("显示设置")]
     [SerializeField] private float typingSpeed = 0.05f; // 打字机效果速度
@@ -46,7 +50,48 @@ public class TextShowManager : MonoBehaviour
             continueButton.onClick.AddListener(OnContinueClicked);
         }
     }
+    public void SetImage(Sprite image)
+    {
+        if (this.image == null)
+        {
+            Debug.LogError("Image is not assigned in DialogueCanvasController!");
+            return;
+        }
+        if (image != null)
+        {
+            this.image.sprite = image;
+            this.image.gameObject.SetActive(true);
+        }
+    }
 
+    /// <summary>
+    /// 设置默认对话图片
+    /// </summary>
+    public void SetDefaultImage()
+    {
+        if (image != null)
+        {
+            // 如果有预设的默认图片，使用它
+            if (defaultImage != null)
+            {
+                image.sprite = defaultImage;
+                image.gameObject.SetActive(true);
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 清空对话图片
+    /// </summary>
+    public void ClearImage()
+    {
+        if (image != null)
+        {
+            image.sprite = null;
+            image.gameObject.SetActive(false);
+        }
+    }
     public void SetPageName(string pageName)
     {
         targetPageName = pageName;

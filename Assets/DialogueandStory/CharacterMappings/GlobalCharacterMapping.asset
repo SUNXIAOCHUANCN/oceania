@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c94cb0a5e9a54e4c8be32431e71980c, type: 3}
+  m_Name: GlobalCharacterMapping
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSpriteMapping
+  characterEntries:
+  - characterName: "\u57FA\u8BFA"
+    characterSprite: {fileID: 21300000, guid: 880f81e1a4e25d145bf7eb31ff5eb3c3, type: 3}
+  - characterName: "\u5B69\u5B50\u4EEC"
+    characterSprite: {fileID: 21300000, guid: 2770a57c0e0d6794eb1186f11ed7921e, type: 3}
+  - characterName: "\u5E93\u62C9\u5976\u5976"
+    characterSprite: {fileID: 21300000, guid: ca6171a5b8e7fd946bcd6b10b3fb9c47, type: 3}
+  - characterName: "\u62C9\u62C9"
+    characterSprite: {fileID: 21300000, guid: a44b81a2df0b03743bfe7310deb0fc38, type: 3}
+  - characterName: "\u739B\u62C9"
+    characterSprite: {fileID: 21300000, guid: 98147d821fb4ea641b97480f84527d53, type: 3}
+  - characterName: "\u739B\u83B1"
+    characterSprite: {fileID: 21300000, guid: 43285bff7e1af714d86ae541fc39a7af, type: 3}
+  - characterName: "\u827E\u62C9"
+    characterSprite: {fileID: 21300000, guid: 1b5e84c2415a87146bcf862b6246e802, type: 3}
+  - characterName: "\u8389\u6CD5"
+    characterSprite: {fileID: 21300000, guid: 28dba79c0515b2a478a4b658cc8aeeb4, type: 3}
+  - characterName: "\u963F\u65AF\u7279\u62C9"
+    characterSprite: {fileID: 21300000, guid: 7b80611868899df4fafe4aa2330970bd, type: 3}

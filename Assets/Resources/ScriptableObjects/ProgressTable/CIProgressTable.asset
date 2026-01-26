@@ -19,8 +19,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6a33a387bd86cd24d939477c3a0d933a, type: 2}
   - {fileID: 11400000, guid: a9291a26de6b5f54c949969b3eaea20c, type: 2}
   - {fileID: 11400000, guid: 7ed2ba0d09a7518499350d81ebff02f2, type: 2}
-  boundSecret: {fileID: 0}
-  boundClues: []
-  boundToken: {fileID: 0}
+  boundSecret: {fileID: 11400000, guid: c975b01b5e475ba469715de52921d34c, type: 2}
+  boundClues:
+  - {fileID: 11400000, guid: 25b3cb01270b683458594d00f13b057d, type: 2}
+  - {fileID: 11400000, guid: 6f6370dd633456b489e11fabd935d904, type: 2}
+  - {fileID: 11400000, guid: 8a928a07c61b1d9448ef1db3d0fc6ffd, type: 2}
+  boundToken: {fileID: 11400000, guid: f4212152f13afe343ac20a3d6e725439, type: 2}
   islandColor: {r: 1, g: 1, b: 1, a: 1}
-  islandIcon: {fileID: 0}
+  islandIcon: {fileID: 21300000, guid: 33bd08f684fe1b9409c74cb91c064957, type: 3}

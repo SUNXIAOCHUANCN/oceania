@@ -110,4 +110,43 @@ public class IslandPageController : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 当岛屿页面按钮被点击时调用
+    /// 检查岛屿是否完成，如果完成且信物未解锁，自动解锁信物
+    /// </summary>
+    public void OnPageButtonClick()
+    {
+        if (manager == null) return;
+
+        // 刷新显示
+        RefreshDisplay();
+
+        // 检查是否可以解锁信物
+        // 条件1: 岛屿必须完成（所有物种、线索、秘密已解锁）
+        // 条件2: 信物尚未解锁
+        if (manager.IsIslandComplete() && !manager.IsTokenUnlocked())
+        {
+            bool success = manager.UnlockToken();
+
+            if (success)
+            {
+                Debug.Log($"[IslandPageController] 岛屿 {manager.GetIslandName()} 已完成，自动解锁信物！");
+
+                // 解锁成功后刷新显示，立即显示信物
+                DisplayToken();
+            }
+        }
+        else if (manager.IsIslandComplete() && manager.IsTokenUnlocked())
+        {
+            Debug.Log($"[IslandPageController] 岛屿 {manager.GetIslandName()} 已完成，信物已解锁");
+        }
+        else
+        {
+            // 岛屿未完成，显示当前进度
+            float progress = manager.GetIslandProgress();
+            int progressPercent = Mathf.RoundToInt(progress * 100);
+            Debug.Log($"[IslandPageController] 岛屿 {manager.GetIslandName()} 未完成，当前进度: {progressPercent}%");
+        }
+    }
 }

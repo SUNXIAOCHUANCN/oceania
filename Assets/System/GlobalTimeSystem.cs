@@ -164,10 +164,6 @@ private const string SAVE_KEY_FIRST_START = "GlobalTimeSystem_FirstStart";
         PlayerPrefs.SetFloat(SAVE_KEY_TOTAL_TIME, TotalElapsedTime);
         PlayerPrefs.Save(); // 确保立即写入磁盘
     }
-    void OnApplicationQuit()
-    {
-        SaveTime();
-    }
 
     public void Pause() => isPaused = true;
     public void Resume() => isPaused = false;

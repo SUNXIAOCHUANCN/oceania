@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
   m_Name: Dolphi
   m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
-  personName: "\u591A\u83F2"
+  personName: "\u827E\u62C9"
   profession: 0
-  avatar: {fileID: 21300000, guid: 6df28e1b8fff3064caa2d2b1f48a9c06, type: 3}
+  avatar: {fileID: 21300000, guid: 1b5e84c2415a87146bcf862b6246e802, type: 3}
   recruited: 0
   professionDescription: "\u5728\u6D77\u4E0A\u822A\u884C\u65F6\u53EF\u4EE5\u8FA8\u8BA4\u4E1C\u5357\u897F\u5317"
   status: 0

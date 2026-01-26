@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
   m_Name: Kino
   m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
-  personName: "\u57FA\u8BFA"
+  personName: "\u739B\u83B1"
   profession: 1
-  avatar: {fileID: 21300000, guid: 6df28e1b8fff3064caa2d2b1f48a9c06, type: 3}
+  avatar: {fileID: 21300000, guid: 43285bff7e1af714d86ae541fc39a7af, type: 3}
   recruited: 1
   professionDescription: "\u643A\u5E26tamer\u51FA\u6D77\u53EF\u4EE5\u91C7\u96C6\u91CE\u751F\u7684\u7269\u79CD"
   status: 0

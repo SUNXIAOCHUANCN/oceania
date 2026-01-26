@@ -16,7 +16,6 @@ public class GotoSeaUIController : CanvasController
     [SerializeField] private Button closeButton; // 关闭按钮（拖入你的CloseButton即可）
 
     [Header("生成设置")]
-    [SerializeField] private Transform spawnPoint; // 港口生成点
     [SerializeField] private float spawnOffsetY = 0f; // Y轴偏移
 
     private PlayerController playerController;
@@ -96,6 +95,16 @@ public class GotoSeaUIController : CanvasController
     }
 
     // 选船逻辑（不变）
+    private Transform spawnPoint; // 从voyagetrigger获取的生成点
+
+    /// <summary>
+    /// 设置生成点
+    /// </summary>
+    public void SetSpawnPoint(Transform selectedSpawnPoint)
+    {
+        spawnPoint = selectedSpawnPoint;
+    }
+    
     private void OnShipSelected(int shipType)
     {
         GameObject selectedPrefab = shipType switch
@@ -114,32 +123,31 @@ public class GotoSeaUIController : CanvasController
 
         // 生成位置
         Vector3 spawnPosition = GetSpawnPosition();
-        GameObject shipInstance = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
 
-        // 获取船的控制器
-        RaftController raftController = shipInstance.GetComponentInChildren<RaftController>();
-        if (raftController == null)
+        // 调用VoyageSystemManager生成船只并上船
+        bool success = false;
+        if (VoyageSystemManager.Instance != null)
         {
-            Debug.LogError($"生成的船 {shipInstance.name} 没有 RaftController 组件！");
-            return;
-        }
-
-        // 玩家上船
-        if (playerController != null)
-        {
-            playerController.ForceBoardRaft(raftController);
-            Debug.Log($"已生成船类型 {shipType}，玩家已上船");
+            success = VoyageSystemManager.Instance.TrySpawnAndBoardRaft(
+                shipType,
+                selectedPrefab,
+                spawnPosition,
+                playerController
+            );
         }
         else
         {
-            Debug.LogError("PlayerController 未设置！");
+            Debug.LogError("[GotoSeaUIController] VoyageSystemManager 不存在！请确保场景中有 VoyageSystemManager 对象！");
         }
 
-        // 选船后关闭UI
-        HideCanvas();
+        if (success)
+        {
+            // 选船后关闭UI
+            HideCanvas();
+        }
     }
 
-    // 获取生成位置（不变）
+    // 获取生成位置（从voyagetrigger获取的生成点）
     private Vector3 GetSpawnPosition()
     {
         if (spawnPoint != null) return spawnPoint.position + Vector3.up * spawnOffsetY;

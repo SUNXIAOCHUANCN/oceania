@@ -1,0 +1,402 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8161914733498951435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1298464035929504150}
+  - component: {fileID: 7579902418439116804}
+  - component: {fileID: 5845332644464309933}
+  - component: {fileID: 2005044510518182429}
+  - component: {fileID: 6316748482551755328}
+  m_Layer: 0
+  m_Name: SpecialNPC2-Astrea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1298464035929504150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161914733498951435}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 105.64986, y: 11.521792, z: 215.7993}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1862402488457605805}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7579902418439116804
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161914733498951435}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &5845332644464309933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161914733498951435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6101cc697a2ac419c085dd72cad93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
+  dialogueStrings:
+  - text: "\u4F60\u6765\u4E86......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\u6211\u4EEC\u66FE\u662F\u4E00\u5BB6\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u4E5F\u8BB8\u5427\uFF0C\u56DE\u5FC6\u6709\u5982\u7901\u77F3\u4E0A\u7684\u9752\u82D4\uFF0C\u5728\u6F6E\u6C50\u65E5\u590D\u4E00\u65E5\u7684\u51B2\u5237\u4E0B\u6D88\u5931\u7684\u65E0\u5F71\u65E0\u8E2A\u3002"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\u4E0D\uFF0C\u4E0D\u662F\u7684\uFF0C\u6211\u77E5\u9053\u2014\u2014"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6211\u4EEC\u7684\u5BB6\u56ED\u5982\u4F55\u800C\u6765"
+    isEnd: 0
+    isQuestion: 1
+    answerOption1: "\u5929\u661F\u5760\u9668\u800C\u6765\uFF0C\u5148\u7956\u8FFD\u968F\u5929\u661F\u5230\u8FBE\u8FD9\u91CC\uFF0C\u8FD9\u662F\u5341\u5B57\u661F\u5C9B\u7684\u5F00\u59CB\u3002"
+    answerOption2: "\u6211\u4EEC\u4ECE\u7389\u4E4B\u57CE\u51FA\u53D1\uFF0C\u5411\u7740\u5357\u5341\u5B57\u661F\u7684\u5C3D\u5934\u822A\u884C\uFF0C\u8FD9\u662F\u5341\u5B57\u661F\u5C9B\u7684\u5F00\u59CB\u3002"
+    option1IndexJump: 5
+    option2IndexJump: 12
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\u4F60\u662F\u5982\u4F55\u77E5\u9053\u7684\uFF1F"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\u6211\u77E5\u9053\uFF0C\u6211\u8FD8\u77E5\u9053\uFF0C\u6211\u4EEC\u90FD\u662F\u7389\u4E4B\u57CE\u7684\u540E\u88D4\uFF0C\u6211\u4EEC\u4ECE\u7389\u4E4B\u57CE\u800C\u6765\uFF0C\u53EA\u662F\u6D77\u6C34\u5C06\u6211\u4EEC\u5206\u79BB......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6240\u4EE5......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6211\u4EEC\u672C\u662F\u4E00\u5BB6......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u6211\u4EEC\u672C\u662F\u4E00\u5BB6......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\u8FD9\u662F\u6211\u65CF\u7684\u4FE1\u7269\uFF0C\u8BF7\u60A8\u6536\u4E0B......"
+    isEnd: 0
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  - text: "\uFF08\u73B0\u5728\u6211\u53EF\u4EE5\u5728\u6D77\u56FE\u5FD7\u91CC\u89E3\u9501\u4FE1\u7269\u4E86\uFF09"
+    isEnd: 1
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2005044510518182429}
+          m_TargetAssemblyTypeName: ExploreRewardUnlockerNPC, Assembly-CSharp
+          m_MethodName: UnlockToken
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u57FA\u8BFA"
+  - text: "\u65C5\u4EBA\uFF0C\u6211\u94A6\u4F69\u4F60\u7684\u52C7\u6C14\uFF0C\u4F46\u8BF7\u60A8\u518D\u60F3\u4E00\u60F3\u5427......"
+    isEnd: 1
+    isQuestion: 0
+    answerOption1: 
+    answerOption2: 
+    option1IndexJump: 0
+    option2IndexJump: 0
+    startDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    endDialogueEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    speakerName: "\u963F\u65AF\u7279\u62C9"
+  NPCTransform: {fileID: 1862402488457605805}
+  image: {fileID: 0}
+  characterMapping: {fileID: 11400000, guid: 4f0dd1aeae659914e8d446d0ac4a3cf7, type: 2}
+  plotPointID: 
+  requiredPlotPoints: []
+--- !u!114 &2005044510518182429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161914733498951435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c36ddf14ca6a1e4caa31598920e5ed6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExploreRewardUnlockerNPC
+  targetIsland: 1
+  customProgressTableManager: {fileID: 0}
+  unlockSecret: 0
+  unlockToken: 0
+  showDebugLog: 1
+--- !u!114 &6316748482551755328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8161914733498951435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b785a10603c8949acda5840177861b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCAnimationController
+  animator: {fileID: 1627721843892084880}
+  autoFindAnimatorInChildren: 1
+  animatorObjectName: "NPC\u6A21\u578B"
+  gestureATrigger: A
+  gestureBTrigger: B
+  gestureCTrigger: C
+  playGestureOnDialogue: 1
+  minDelayBetweenGestures: 0.5
+  randomGesture: 1
+  showDebugLog: 0
+--- !u!1001 &2184857488651507014
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1298464035929504150}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      propertyPath: m_Name
+      value: Orc Idle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1627721843892084880}
+  m_SourcePrefab: {fileID: 100100000, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+--- !u!1 &1338490062318462999 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+  m_PrefabInstance: {fileID: 2184857488651507014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1627721843892084880
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338490062318462999}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 80d1441dfe971684daab4ccb9dea7387, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1862402488457605805 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4cab02bf3e5bcea46affe5ca5680c1e5, type: 3}
+  m_PrefabInstance: {fileID: 2184857488651507014}
+  m_PrefabAsset: {fileID: 0}

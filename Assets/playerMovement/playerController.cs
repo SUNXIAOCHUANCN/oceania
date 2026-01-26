@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public float minDistance = 2f;    // 最近距离 (拉到最近)
     public float maxDistance = 10f;   // 最远距离 (拉到最远)
     public float zoomSpeed = 0.5f;    // 缩放灵敏度
+    private float previousCameraDistance;
     [Header("光标控制")]
     public CursorManager cursorManager;
     private bool isCursorVisible = false;
@@ -56,7 +57,9 @@ public class PlayerController : MonoBehaviour
     public Vector3 raftStandOffset = new Vector3(0f, 0.5f, 0f);
     public float dismountPushDistance = 2f;
     public float dismountUpOffset = 0.5f;
-    public Key dismountKey = Key.F; // 按键下船
+    
+    [Header("输入设置")]
+    private playerInputActions inputActions;
 
     [Header("航海颠簸效果（驾驶时）")]
     public bool enableSeaBobbing = true;
@@ -79,6 +82,13 @@ public class PlayerController : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         characterController = GetComponent<CharacterController>();
+        
+        // 初始化输入动作
+        if (inputActions == null)
+        {
+            inputActions = new playerInputActions();
+        }
+        //interactionAction = inputActions.player.Interaction;
         
         // 查找子物体 Camera (建议确保名字匹配)
         Transform camTrans = transform.Find("Camera");
@@ -107,7 +117,46 @@ public class PlayerController : MonoBehaviour
         // 锁定并隐藏鼠标光标（FPS/TPS游戏的标准操作）
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        
     }
+
+    
+    private void OnEnable()
+    {
+        // 启用 Interaction 动作并绑定回调
+        /*
+        if (interactionAction != null)
+        {
+            interactionAction.Enable();
+            interactionAction.performed += OnInteractionPerformed;
+        }
+        */
+    }
+
+    private void OnDisable()
+    {
+        /*
+        // 禁用 Interaction 动作并解绑回调
+        if (interactionAction != null)
+        {
+            interactionAction.performed -= OnInteractionPerformed;
+            interactionAction.Disable();
+        }
+        */
+    }
+
+    /// <summary>
+    /// Interaction Action 回调 - 处理船只交互（上船/下船）
+    /// </summary>
+    private void OnInteractionPerformed(InputAction.CallbackContext context)
+    {
+        if (currentRaft != null)
+        {
+            HandleDismountInput();
+        }
+    }
+
 
     void Update()
     {
@@ -119,6 +168,7 @@ public class PlayerController : MonoBehaviour
         float currentSpeed=isRunning?runSpeed:speed;
         bool jumpTriggered=playerInput.actions.FindAction("Jump").triggered;
         bool isAltPressed = playerInput.actions.FindAction("UnlockCursor").IsPressed();
+        bool godownRaft=playerInput.actions.FindAction("Interaction").triggered;
 
         //摄像机距离
         float screenInput = playerInput.actions.FindAction("Zoom").ReadValue<Vector2>().y;
@@ -151,11 +201,22 @@ public class PlayerController : MonoBehaviour
         // 检测玩家是否在船上
         CheckIfOnRaft();
 
-        // 如果玩家在船上，处理船的控制和上/下船按键
+        // 检测下船输入（F键）
+        //bool interactTriggered = playerInput.actions.FindAction("Interaction").triggered;
+        if (currentRaft != null && godownRaft)
+        {
+            Debug.Log("下船输入检测到");
+            HandleDismountInput();
+        }
+        else
+        {
+            Debug.Log("玩家按下了F键，但是没有检测到船只");
+        }
+
+        // 如果玩家在船上，处理船的控制
         if (currentRaft != null)
         {
             UpdateRaftControl();
-            HandleDismountInput();
         }
         else
         {
@@ -603,6 +664,8 @@ public class PlayerController : MonoBehaviour
 
         transform.SetParent(currentRaft.transform, true);
 
+        previousCameraDistance = cameraDistance;
+
         Vector3 targetPosition = currentRaft.transform.position + raftStandOffset;
         if (currentRaft.standPoint != null)
         {
@@ -625,7 +688,7 @@ public class PlayerController : MonoBehaviour
             cameraPitch = 15f;    // 上船后抬头15度（视角更高）
             cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
             // 强制刷新相机位置
-            rotateCamera(Vector2.zero, sensitivity, cameraDistance);
+            rotateCamera(Vector2.zero, sensitivity, raftCameraDistance);
         }
     }
 
@@ -646,36 +709,57 @@ public class PlayerController : MonoBehaviour
         timeOnRaft = 0f;
         isControllingRaft = false;
         velocity = Vector3.zero;
-        cameraDistance = raftCameraDistance; // 恢复默认距离
+        cameraDistance = previousCameraDistance;
     }
 
     void HandleDismountInput()
     {
         if (currentRaft == null)
         {
+            Debug.LogWarning("HandleDismountInput: currentRaft is null!");
             return;
         }
 
-        if (Keyboard.current == null || dismountKey == Key.None)
-        {
-            return;
+        if (!isControllingRaft)
+        {            
+            // 情况1：刚上船但未进入控制模式
+            // → 强制进入船控制模式
+            isControllingRaft = true;
+            timeOnRaft = switchToRaftControlDelay;
+            AttachPlayerToRaft();
+            if (enableDebugLogs) Debug.Log($"[PlayerController] 按F键，开始控制船: {currentRaft.name}");
         }
-
-        if (Keyboard.current[dismountKey].wasPressedThisFrame)
+        else
         {
-            // 未进入船控制模式时，按键代表“开始控制船”
-            if (!isControllingRaft)
+            // 情况2：已经在控制船，尝试下船
+            // → 检查是否可以下船（必须靠近岛屿）
+
+            // 检查航海系统是否存在
+            if (VoyageSystemManager.Instance == null)
             {
-                isControllingRaft = true;
-                timeOnRaft = switchToRaftControlDelay; // 直接视为已经满足延迟
-                AttachPlayerToRaft();
-                Debug.Log($"按下{dismountKey}键，开始控制船: {currentRaft.name}");
-            }
-            else
-            {
-                // 已在船控制模式时，按键代表“下船”
+                if (enableDebugLogs) Debug.LogWarning("[PlayerController] VoyageSystemManager不存在，执行简单下船");
                 PerformDismount();
+                return;
             }
+
+            // 检查是否是当前控制的船
+            if (VoyageSystemManager.Instance.CurrentRaft != currentRaft)
+            {
+                if (enableDebugLogs) Debug.LogWarning("[PlayerController] 当前船不是航海系统记录的船，执行简单下船");
+                PerformDismount();
+                return;
+            }
+
+            // 检查是否可以下船（靠近岛屿）
+            if (!VoyageSystemManager.Instance.CanLeaveRaft())
+            {
+                if (enableDebugLogs) Debug.Log("[PlayerController] 不能在海上下船，必须靠近岛屿！");
+                return;
+            }
+
+            // 所有检查通过，执行下船
+            VoyageSystemManager.Instance.LeaveRaft();
+            if (enableDebugLogs) Debug.Log("[PlayerController] 通过VoyageSystemManager下船");
         }
     }
 
@@ -735,5 +819,20 @@ public class PlayerController : MonoBehaviour
     public bool IsControllingRaft()
     {
         return isControllingRaft && currentRaft != null;
+    }
+
+    /// <summary>
+    /// 强制下船（供外部系统调用）
+    /// </summary>
+    public void ForceLeaveRaft()
+    {
+        if (currentRaft == null)
+        {
+            Debug.LogWarning("[PlayerController] ForceLeaveRaft: 玩家不在船上，无法下船");
+            return;
+        }
+
+        // 调用原有的下船逻辑
+        PerformDismount();
     }
 }
