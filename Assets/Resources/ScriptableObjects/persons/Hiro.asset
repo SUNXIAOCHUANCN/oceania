@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8e593525c50dd49ac91dba9898bff2, type: 3}
   m_Name: Hiro
   m_EditorClassIdentifier: Assembly-CSharp::PersonScriptableObject
-  personName: "\u5E0C\u6D1B"
+  personName: "\u8389\u6CD5"
   profession: 5
   avatar: {fileID: 21300000, guid: 28dba79c0515b2a478a4b658cc8aeeb4, type: 3}
-  recruited: 1
+  recruited: 0
   professionDescription: "\u666E\u901A\u4EBA\u5458"
-  status: 0
-  monthlyCropConsumption: 5
-  monthlyAniConsumption: 5
-  monthlyMatConsumption: 5
+  status: 4
+  monthlyCropConsumption: 2
+  monthlyAniConsumption: 2
+  monthlyMatConsumption: 2

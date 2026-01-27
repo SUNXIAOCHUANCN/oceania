@@ -15,9 +15,9 @@ MonoBehaviour:
   personName: "\u739B\u83B1"
   profession: 1
   avatar: {fileID: 21300000, guid: 43285bff7e1af714d86ae541fc39a7af, type: 3}
-  recruited: 1
+  recruited: 0
   professionDescription: "\u643A\u5E26tamer\u51FA\u6D77\u53EF\u4EE5\u91C7\u96C6\u91CE\u751F\u7684\u7269\u79CD"
   status: 0
-  monthlyCropConsumption: 5
-  monthlyAniConsumption: 5
-  monthlyMatConsumption: 5
+  monthlyCropConsumption: 2
+  monthlyAniConsumption: 2
+  monthlyMatConsumption: 2
