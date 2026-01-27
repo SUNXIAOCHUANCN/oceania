@@ -145,10 +145,21 @@ public class ResourceManagerCalculator : MonoBehaviour
             farmSystem = FindObjectOfType<FarmSystem>();
         if (forestSystem == null)
             forestSystem = FindObjectOfType<ForestSystem>();
+
         if (ranchSystem == null)
             ranchSystem = FindObjectOfType<RanchSystem>();
         if (personManager == null)
             personManager = PersonManager.Instance;
+
+        if(farmSystem==null){
+            Debug.LogError("❌ FarmSystem 未找到！");
+        }
+        if (forestSystem == null)
+            Debug.LogError("❌ ForestSystem 未找到！");
+        if (ranchSystem == null)
+            Debug.LogError("❌ RanchSystem 未找到！");
+        if (personManager == null)
+            Debug.LogError("❌ PersonManager 未找到！");
     }
 
     /// <summary>
@@ -156,39 +167,108 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// </summary>
     public ResourceChange CalculateCurrentMonthNetGrowth()
     {
+        Debug.Log("========================================");
+        Debug.Log("📊 开始计算本月资源净增长");
+        Debug.Log("========================================");
+
         ResourceChange total = new ResourceChange();
+
+        // 记录各系统的贡献
+        float farmCropProduction = 0f;
+        float forestMatProduction = 0f;
+        float forestCropConsumption = 0f;
+        float ranchAniProduction = 0f;
+        float ranchCropConsumption = 0f;
+        float populationCropConsumption = 0f;
+        float populationAniConsumption = 0f;
+        float populationMatConsumption = 0f;
 
         // 1. 农场生产 (Crop +)
         if (farmSystem != null)
         {
-            total.crop += farmSystem.CurrentMonthProduction;
+            farmCropProduction = farmSystem.CurrentMonthProduction;
+            total.crop += farmCropProduction;
+            Debug.Log($"🌾 农场系统:");
+            Debug.Log($"   ├─ Crop 生产: +{farmCropProduction:F2}");
         }
 
-        // 2. 森林生产 (Crop +) 和消耗 (Crop -)
+        // 2. 森林生产 (Mat +) 和消耗 (Crop -)
         if (forestSystem != null)
         {
-            total.crop += forestSystem.CurrentMonthProduction;
-            total.crop -= forestSystem.CurrentMonthCropConsumption;
+            forestMatProduction = forestSystem.CurrentMonthProduction;
+            forestCropConsumption = forestSystem.CurrentMonthCropConsumption;
+            total.material += forestMatProduction;
+            total.crop -= forestCropConsumption;
+            Debug.Log($"🌲 森林系统:");
+            Debug.Log($"   ├─ Mat 生产: +{forestMatProduction:F2}");
+            Debug.Log($"   └─ Crop 消耗: -{forestCropConsumption:F2}");
         }
 
-        // 3. 牧场生产 (Crop +) 和消耗 (Crop -)
+        // 3. 牧场生产 (Ani +) 和消耗 (Crop -)
         if (ranchSystem != null)
         {
-            total.crop += ranchSystem.CurrentMonthProduction;
-            total.crop -= ranchSystem.CurrentMonthCropConsumption;
+            ranchAniProduction = ranchSystem.CurrentMonthProduction;
+            ranchCropConsumption = ranchSystem.CurrentMonthCropConsumption;
+            total.animal += ranchAniProduction;
+            total.crop -= ranchCropConsumption;
+            Debug.Log($"🐄 牧场系统:");
+            Debug.Log($"   ├─ Ani 生产: +{ranchAniProduction:F2}");
+            Debug.Log($"   └─ Crop 消耗: -{ranchCropConsumption:F2}");
         }
 
         // 4. 人口消耗 (Crop -, Ani -, Mat -)
         if (personManager != null)
         {
             var recruitedPersons = personManager.GetRecruitedPersons();
-            foreach (var person in recruitedPersons)
+            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} 人):");
+
+            if (recruitedPersons.Count > 0)
             {
-                total.crop -= person.monthlyCropConsumption;
-                total.animal -= person.monthlyAniConsumption;
-                total.material -= person.monthlyMatConsumption;
+                for (int i = 0; i < recruitedPersons.Count; i++)
+                {
+                    var person = recruitedPersons[i];
+                    bool isLast = (i == recruitedPersons.Count - 1);
+                    string prefix = isLast ? "   └─" : "   ├─";
+
+                    Debug.Log($"{prefix} [{person.personName}] Crop:{person.monthlyCropConsumption:F2} Ani:{person.monthlyAniConsumption:F2} Mat:{person.monthlyMatConsumption:F2}");
+
+                    total.crop -= person.monthlyCropConsumption;
+                    total.animal -= person.monthlyAniConsumption;
+                    total.material -= person.monthlyMatConsumption;
+
+                    populationCropConsumption += person.monthlyCropConsumption;
+                    populationAniConsumption += person.monthlyAniConsumption;
+                    populationMatConsumption += person.monthlyMatConsumption;
+                }
             }
+
+            // 输出总计
+            Debug.Log($"   📊 总计消耗:");
+            Debug.Log($"      ├─ Crop: -{populationCropConsumption:F2}");
+            Debug.Log($"      ├─ Ani: -{populationAniConsumption:F2}");
+            Debug.Log($"      └─ Mat: -{populationMatConsumption:F2}");
         }
+
+        // 输出汇总
+        Debug.Log("========================================");
+        Debug.Log("📈 本月资源变化汇总:");
+        Debug.Log($"----------------------------------------");
+        Debug.Log($"🌾 Crop (作物):");
+        Debug.Log($"   ├─ 生产: +{farmCropProduction:F2} (来自农场)");
+        float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
+        Debug.Log($"   ├─ 消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   └─ 净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
+
+        Debug.Log($"🐄 Ani (动物):");
+        Debug.Log($"   ├─ 生产: +{ranchAniProduction:F2} (来自牧场)");
+        Debug.Log($"   ├─ 消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ 净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
+
+        Debug.Log($"🪵 Mat (材料):");
+        Debug.Log($"   ├─ 生产: +{forestMatProduction:F2} (来自森林)");
+        Debug.Log($"   ├─ 消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ 净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
+        Debug.Log("========================================");
 
         return total;
     }
@@ -198,73 +278,150 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// </summary>
     public ResourceChange CalculateNextMonthNetGrowth()
     {
+        Debug.Log("========================================");
+        Debug.Log("📊 开始计算下月资源净增长");
+        Debug.Log("========================================");
+
         ResourceChange total = new ResourceChange();
+
+        // 记录各系统的贡献
+        float farmCropProduction = 0f;
+        float forestMatProduction = 0f;
+        float forestCropConsumption = 0f;
+        float ranchAniProduction = 0f;
+        float ranchCropConsumption = 0f;
+        float populationCropConsumption = 0f;
+        float populationAniConsumption = 0f;
+        float populationMatConsumption = 0f;
 
         // 1. 农场预计产量 (Crop +)
         if (farmSystem != null)
         {
-            // 应用管理者加成
-            float farmProduction = farmSystem.NextMonthExpectedYield;
+            farmCropProduction = farmSystem.NextMonthExpectedYield;
+            float managerBonus = 1f;
+            string managerInfo = "无管理者";
             if (farmSystem.Manager != null && farmSystem.Manager.profession == PersonProfession.farmer)
             {
-                farmProduction *= 1.2f;
+                managerBonus = 1.2f;
+                managerInfo = $"管理者: {farmSystem.Manager.personName} (农民 ×1.2)";
             }
-            total.crop += farmProduction;
+            farmCropProduction *= managerBonus;
+            total.crop += farmCropProduction;
+            Debug.Log($"🌾 农场系统 [{managerInfo}]:");
+            Debug.Log($"   └─ 预计 Crop 生产: +{farmCropProduction:F2}");
         }
 
-        // 2. 森林预计产量 (Crop +) 和消耗 (Crop -)
+        // 2. 森林预计产量 (Mat +) 和消耗 (Crop -)
         if (forestSystem != null)
         {
-            // 计算下月产量 (考虑退化)
-            float forestProduction = CalculateForestNextMonthProduction();
-            float forestConsumption = CalculateForestNextMonthConsumption();
+            forestMatProduction = CalculateForestNextMonthProduction();
+            forestCropConsumption = CalculateForestNextMonthConsumption();
 
-            // 应用管理者加成
+            float managerBonus = 1f;
+            string managerInfo = "无管理者";
             if (forestSystem.Manager != null && forestSystem.Manager.profession == PersonProfession.farmer)
             {
-                forestProduction *= 1.2f;
+                managerBonus = 1.5f;
+                managerInfo = $"管理者: {forestSystem.Manager.personName} (农民 ×1.5)";
             }
             else if (forestSystem.Manager == null)
             {
-                forestProduction *= 0f;
+                managerBonus = 1f;
+                managerInfo = "无管理者 (×1.0)";
             }
 
-            total.crop += forestProduction;
-            total.crop -= forestConsumption;
+            float originalProduction = forestMatProduction;
+            forestMatProduction *= managerBonus;
+            total.material += forestMatProduction;
+            total.crop -= forestCropConsumption;
+
+            Debug.Log($"🌲 森林系统 [{managerInfo}]:");
+            Debug.Log($"   ├─ 预计 Mat 生产: +{originalProduction:F2} → 加成后 +{forestMatProduction:F2}");
+            Debug.Log($"   └─ 预计 Crop 消耗: -{forestCropConsumption:F2}");
         }
 
-        // 3. 牧场预计产量 (Crop +) 和消耗 (Crop -)
+        // 3. 牧场预计产量 (Ani +) 和消耗 (Crop -)
         if (ranchSystem != null)
         {
-            // 计算下月产量 (考虑退化)
-            float ranchProduction = CalculateRanchNextMonthProduction();
-            float ranchConsumption = CalculateRanchNextMonthConsumption();
+            ranchAniProduction = CalculateRanchNextMonthProduction();
+            ranchCropConsumption = CalculateRanchNextMonthConsumption();
 
-            // 应用管理者加成
+            float managerBonus = 1f;
+            string managerInfo = "无管理者";
             if (ranchSystem.Manager != null && ranchSystem.Manager.profession == PersonProfession.farmer)
             {
-                ranchProduction *= 1.2f;
+                managerBonus = 1.2f;
+                managerInfo = $"管理者: {ranchSystem.Manager.personName} (农民 ×1.2)";
             }
             else if (ranchSystem.Manager == null)
             {
-                ranchProduction *= 0f;
+                managerBonus = 0f;
+                managerInfo = "无管理者 (×0.0)";
             }
 
-            total.crop += ranchProduction;
-            total.crop -= ranchConsumption;
+            float originalProduction = ranchAniProduction;
+            ranchAniProduction *= managerBonus;
+            total.animal += ranchAniProduction;
+            total.crop -= ranchCropConsumption;
+
+            Debug.Log($"🐄 牧场系统 [{managerInfo}]:");
+            Debug.Log($"   ├─ 预计 Ani 生产: +{originalProduction:F2} → 加成后 +{ranchAniProduction:F2}");
+            Debug.Log($"   └─ 预计 Crop 消耗: -{ranchCropConsumption:F2}");
         }
 
         // 4. 人口消耗 (假设人口不变)
         if (personManager != null)
         {
             var recruitedPersons = personManager.GetRecruitedPersons();
-            foreach (var person in recruitedPersons)
+            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} 人):");
+
+            if (recruitedPersons.Count > 0)
             {
-                total.crop -= person.monthlyCropConsumption;
-                total.animal -= person.monthlyAniConsumption;
-                total.material -= person.monthlyMatConsumption;
+                for (int i = 0; i < recruitedPersons.Count; i++)
+                {
+                    var person = recruitedPersons[i];
+                    bool isLast = (i == recruitedPersons.Count - 1);
+                    string prefix = isLast ? "   └─" : "   ├─";
+
+                    Debug.Log($"{prefix} [{person.personName}] Crop:{person.monthlyCropConsumption:F2} Ani:{person.monthlyAniConsumption:F2} Mat:{person.monthlyMatConsumption:F2}");
+
+                    total.crop -= person.monthlyCropConsumption;
+                    total.animal -= person.monthlyAniConsumption;
+                    total.material -= person.monthlyMatConsumption;
+
+                    populationCropConsumption += person.monthlyCropConsumption;
+                    populationAniConsumption += person.monthlyAniConsumption;
+                    populationMatConsumption += person.monthlyMatConsumption;
+                }
             }
+
+            // 输出总计
+            Debug.Log($"   📊 总计消耗:");
+            Debug.Log($"      ├─ Crop: -{populationCropConsumption:F2}");
+            Debug.Log($"      ├─ Ani: -{populationAniConsumption:F2}");
+            Debug.Log($"      └─ Mat: -{populationMatConsumption:F2}");
         }
+
+        // 输出汇总
+        Debug.Log("========================================");
+        Debug.Log("📈 下月资源变化汇总:");
+        Debug.Log($"----------------------------------------");
+        Debug.Log($"🌾 Crop (作物):");
+        Debug.Log($"   ├─ 生产: +{farmCropProduction:F2} (来自农场)");
+        float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
+        Debug.Log($"   ├─ 消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   └─ 净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
+
+        Debug.Log($"🐄 Ani (动物):");
+        Debug.Log($"   ├─ 生产: +{ranchAniProduction:F2} (来自牧场)");
+        Debug.Log($"   ├─ 消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ 净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
+
+        Debug.Log($"🪵 Mat (材料):");
+        Debug.Log($"   ├─ 生产: +{forestMatProduction:F2} (来自森林)");
+        Debug.Log($"   ├─ 消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ 净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
+        Debug.Log("========================================");
 
         return total;
     }

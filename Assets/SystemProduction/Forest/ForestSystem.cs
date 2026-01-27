@@ -35,8 +35,8 @@ public class ForestSystem : MonoBehaviour
     
     [Header("生产配置")]
     [SerializeField] private SpeciesType validSpeciesType = SpeciesType.Mat; // 参与计算的物种类型
-    [SerializeField] private float farmerBonusMultiplier = 1.2f; // 农民管理者加成倍率
-    [SerializeField] private float noManagerMultiplier = 0f; // 无管理者时的倍率
+    [SerializeField] private float farmerBonusMultiplier = 1.5f; // 农民管理者加成倍率
+    [SerializeField] private float noManagerMultiplier = 1f; // 无管理者时的倍率
     
     [Header("数量限制")]
     private const int MAX_TOTAL_AMOUNT = 15; // 所有物种总数量上限
