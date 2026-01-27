@@ -380,7 +380,7 @@ public class ForestSystem : MonoBehaviour
     public bool SetManager(PersonScriptableObject person)
     {
         if (person == null || !person.recruited || 
-            (person.status != PersonStatus.rest && person.status != PersonStatus.inranch))
+            (person.status != PersonStatus.rest && person.status != PersonStatus.inforest))
         {
             return false;
         }
@@ -393,7 +393,7 @@ public class ForestSystem : MonoBehaviour
         
         Manager = person;
         // 使用PersonManager统一管理人员状态
-        PersonManager.Instance.ChangePersonStatus(person, PersonStatus.inranch);
+        PersonManager.Instance.ChangePersonStatus(person, PersonStatus.inforest);
         
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();

@@ -486,7 +486,7 @@ public class RanchUIController : CanvasController
         }
         else
         {
-            Debug.LogError($"设置管理者失败: {admin.personName}");
+            Debug.Log($"设置管理者失败: {admin.personName}");
         }
     }
     

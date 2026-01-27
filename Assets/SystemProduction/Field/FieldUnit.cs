@@ -157,22 +157,23 @@ public class FieldUnit : MonoBehaviour
         {
             return;
         }
-        
-        // 更新NPY
+
+        // 更新NPY（应用退化）
         currentNPY = Mathf.Max(
-            currentNPY - currentCrop.decayPerPhase, 
+            currentNPY - currentCrop.decayPerPhase,
             currentCrop.leastYield
         );
-        
-        // 增加生长阶段
-        growthPhaseCount++;
-        
+
+        // 注意：不要在这里增加 growthPhaseCount
+        // 生长阶段已经在 HandlePhaseChange() 中增加过了
+        // 这里只需要更新产量和保存状态
+
         // 保存当前作物的NPY到字典
         if (currentCrop != null)
         {
             cropLastNPY[currentCrop.speciesName] = currentNPY;
         }
-        
+
         yieldLocked = false;
         OnYieldUpdated?.Invoke(currentNPY);
     }

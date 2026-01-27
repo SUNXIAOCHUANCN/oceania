@@ -254,20 +254,20 @@ public class ResourceManagerCalculator : MonoBehaviour
         Debug.Log("📈 本月资源变化汇总:");
         Debug.Log($"----------------------------------------");
         Debug.Log($"🌾 Crop (作物):");
-        Debug.Log($"   ├─ 生产: +{farmCropProduction:F2} (来自农场)");
+        Debug.Log($"   ├─ CROP生产: +{farmCropProduction:F2} (来自农场)");
         float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
-        Debug.Log($"   ├─ 消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
-        Debug.Log($"   └─ 净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
+        Debug.Log($"   ├─ CROP消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   └─ CROP净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
 
         Debug.Log($"🐄 Ani (动物):");
-        Debug.Log($"   ├─ 生产: +{ranchAniProduction:F2} (来自牧场)");
-        Debug.Log($"   ├─ 消耗: -{populationAniConsumption:F2} (来自人口)");
-        Debug.Log($"   └─ 净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
+        Debug.Log($"   ├─ ANI生产: +{ranchAniProduction:F2} (来自牧场)");
+        Debug.Log($"   ├─ ANI消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ ANI净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
 
         Debug.Log($"🪵 Mat (材料):");
-        Debug.Log($"   ├─ 生产: +{forestMatProduction:F2} (来自森林)");
-        Debug.Log($"   ├─ 消耗: -{populationMatConsumption:F2} (来自人口)");
-        Debug.Log($"   └─ 净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
+        Debug.Log($"   ├─ MAT生产: +{forestMatProduction:F2} (来自森林)");
+        Debug.Log($"   ├─ MAT消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ MAT净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
         Debug.Log("========================================");
 
         return total;
@@ -308,7 +308,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             farmCropProduction *= managerBonus;
             total.crop += farmCropProduction;
             Debug.Log($"🌾 农场系统 [{managerInfo}]:");
-            Debug.Log($"   └─ 预计 Crop 生产: +{farmCropProduction:F2}");
+            Debug.Log($"   └─ 农场预计 Crop 生产: +{farmCropProduction:F2}");
         }
 
         // 2. 森林预计产量 (Mat +) 和消耗 (Crop -)
@@ -336,8 +336,8 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= forestCropConsumption;
 
             Debug.Log($"🌲 森林系统 [{managerInfo}]:");
-            Debug.Log($"   ├─ 预计 Mat 生产: +{originalProduction:F2} → 加成后 +{forestMatProduction:F2}");
-            Debug.Log($"   └─ 预计 Crop 消耗: -{forestCropConsumption:F2}");
+            Debug.Log($"   ├─ 森林预计 Mat 生产: +{originalProduction:F2} → 加成后 +{forestMatProduction:F2}");
+            Debug.Log($"   └─ 森林预计 Crop 消耗: -{forestCropConsumption:F2}");
         }
 
         // 3. 牧场预计产量 (Ani +) 和消耗 (Crop -)
@@ -355,7 +355,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             }
             else if (ranchSystem.Manager == null)
             {
-                managerBonus = 0f;
+                managerBonus = 1f;
                 managerInfo = "无管理者 (×0.0)";
             }
 
@@ -365,8 +365,8 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= ranchCropConsumption;
 
             Debug.Log($"🐄 牧场系统 [{managerInfo}]:");
-            Debug.Log($"   ├─ 预计 Ani 生产: +{originalProduction:F2} → 加成后 +{ranchAniProduction:F2}");
-            Debug.Log($"   └─ 预计 Crop 消耗: -{ranchCropConsumption:F2}");
+            Debug.Log($"   ├─ 牧场预计 Ani 生产: +{originalProduction:F2} → 加成后 +{ranchAniProduction:F2}");
+            Debug.Log($"   └─ 牧场预计 Crop 消耗: -{ranchCropConsumption:F2}");
         }
 
         // 4. 人口消耗 (假设人口不变)
@@ -407,28 +407,32 @@ public class ResourceManagerCalculator : MonoBehaviour
         Debug.Log("📈 下月资源变化汇总:");
         Debug.Log($"----------------------------------------");
         Debug.Log($"🌾 Crop (作物):");
-        Debug.Log($"   ├─ 生产: +{farmCropProduction:F2} (来自农场)");
+        Debug.Log($"   ├─ CROP生产: +{farmCropProduction:F2} (来自农场)");
         float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
-        Debug.Log($"   ├─ 消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
-        Debug.Log($"   └─ 净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
+        Debug.Log($"   ├─ CROP消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   └─ CROP净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
 
         Debug.Log($"🐄 Ani (动物):");
-        Debug.Log($"   ├─ 生产: +{ranchAniProduction:F2} (来自牧场)");
-        Debug.Log($"   ├─ 消耗: -{populationAniConsumption:F2} (来自人口)");
-        Debug.Log($"   └─ 净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
+        Debug.Log($"   ├─ Ani生产: +{ranchAniProduction:F2} (来自牧场)");
+        Debug.Log($"   ├─ Ani消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ Ani净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
 
         Debug.Log($"🪵 Mat (材料):");
-        Debug.Log($"   ├─ 生产: +{forestMatProduction:F2} (来自森林)");
-        Debug.Log($"   ├─ 消耗: -{populationMatConsumption:F2} (来自人口)");
-        Debug.Log($"   └─ 净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
+        Debug.Log($"   ├─ Mat生产: +{forestMatProduction:F2} (来自森林)");
+        Debug.Log($"   ├─ Mat消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   └─ Mat净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
         Debug.Log("========================================");
 
         return total;
     }
 
     /// <summary>
-    /// 计算森林下月产量 (考虑退化)
+    /// 计算森林下月产量
     /// </summary>
+    /// <remarks>
+    /// 注意：不需要在这里计算退化，因为 ForestSystem.HandlePhaseChange() 已经更新了 nextPhaseYield
+    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的值
+    /// </remarks>
     private float CalculateForestNextMonthProduction()
     {
         if (forestSystem == null || SpeciesLoader.Instance == null)
@@ -443,11 +447,8 @@ public class ResourceManagerCalculator : MonoBehaviour
             if (species == null || species.speciesType != SpeciesType.Mat || !species.unlocked)
                 continue;
 
-            // 计算退化后的产量
-            float decayedYield = speciesData.nextPhaseYield - species.decayPerPhase;
-            decayedYield = Mathf.Max(decayedYield, species.leastYield);
-
-            total += decayedYield * speciesData.amount;
+            // 直接使用 nextPhaseYield，它已经在 ForestSystem.HandlePhaseChange() 中退化过了
+            total += speciesData.nextPhaseYield * speciesData.amount;
         }
 
         return total;
@@ -477,8 +478,12 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 计算牧场下月产量 (考虑退化)
+    /// 计算牧场下月产量
     /// </summary>
+    /// <remarks>
+    /// 注意：不需要在这里计算退化，因为 RanchSystem.HandlePhaseChange() 已经更新了 nextPhaseYield
+    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的值
+    /// </remarks>
     private float CalculateRanchNextMonthProduction()
     {
         if (ranchSystem == null || SpeciesLoader.Instance == null)
@@ -493,11 +498,8 @@ public class ResourceManagerCalculator : MonoBehaviour
             if (species == null || species.speciesType != SpeciesType.Ani || !species.unlocked)
                 continue;
 
-            // 计算退化后的产量
-            float decayedYield = speciesData.nextPhaseYield - species.decayPerPhase;
-            decayedYield = Mathf.Max(decayedYield, species.leastYield);
-
-            total += decayedYield * speciesData.amount;
+            // 直接使用 nextPhaseYield，它已经在 RanchSystem.HandlePhaseChange() 中退化过了
+            total += speciesData.nextPhaseYield * speciesData.amount;
         }
 
         return total;
