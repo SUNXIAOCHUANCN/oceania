@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using UnityEngine;
 
 /// <summary>
@@ -309,16 +310,46 @@ public class GlobalSaveManager : MonoBehaviour
     /// </summary>
     public bool HasAnySaveData()
     {
-        bool hasSave =
-            (playerStateManager != null && playerStateManager.SaveExists()) ||
-            (forestSaveSystem != null && forestSaveSystem.SaveExists()) ||
-            (farmSaveSystem != null && farmSaveSystem.SaveExists()) ||
-            (ranchSaveSystem != null && ranchSaveSystem.SaveExists()) ||
-            (exploreSaveSystem != null && exploreSaveSystem.SaveExists()) ||
-            (personSaveSystem != null && personSaveSystem.SaveExists()) ||
-            PlayerPrefs.HasKey("GlobalTimeSystem_TotalElapsedTime");
+        /*
+         bool hasSave =
+             (playerStateManager != null && playerStateManager.SaveExists()) ||
+             (forestSaveSystem != null && forestSaveSystem.SaveExists()) ||
+             (farmSaveSystem != null && farmSaveSystem.SaveExists()) ||
+             (ranchSaveSystem != null && ranchSaveSystem.SaveExists()) ||
+             (exploreSaveSystem != null && exploreSaveSystem.SaveExists()) ||
+             (personSaveSystem != null && personSaveSystem.SaveExists()) ||
+             PlayerPrefs.HasKey("GlobalTimeSystem_TotalElapsedTime");
 
-        return hasSave;
+         return hasSave;
+         */
+        string basePath = Application.persistentDataPath;
+
+        Debug.Log($"[GlobalSaveManager] 检查存档文件路径: {basePath}");
+
+        // 直接检查文件是否存在（不依赖SaveSystem实例）
+        bool hasPlayerSave = File.Exists(Path.Combine(basePath, "player_state.dat"));
+        bool hasFarmSave = File.Exists(Path.Combine(basePath, "farm_save.dat"));
+        bool hasForestSave = File.Exists(Path.Combine(basePath, "forest_save.dat"));
+        bool hasRanchSave = File.Exists(Path.Combine(basePath, "ranch_save.dat"));
+        bool hasExploreSave = File.Exists(Path.Combine(basePath, "explore_save.dat"));
+        bool hasPopulationSave = File.Exists(Path.Combine(basePath, "population_save.dat"));
+        bool hasTimeSave = PlayerPrefs.HasKey("GlobalTimeSystem_TotalElapsedTime");
+
+        bool result = hasPlayerSave || hasFarmSave || hasForestSave ||
+                      hasRanchSave || hasExploreSave || hasPopulationSave || hasTimeSave;
+
+        // 详细的调试日志
+        Debug.Log($"[GlobalSaveManager] 存档检测结果: {result}");
+        Debug.Log($"[GlobalSaveManager] 详细状态: " +
+                  $"Player={hasPlayerSave}, " +
+                  $"Farm={hasFarmSave}, " +
+                  $"Forest={hasForestSave}, " +
+                  $"Ranch={hasRanchSave}, " +
+                  $"Explore={hasExploreSave}, " +
+                  $"Population={hasPopulationSave}, " +
+                  $"Time={hasTimeSave}");
+
+        return result;
     }
 
     /// <summary>
@@ -328,8 +359,13 @@ public class GlobalSaveManager : MonoBehaviour
     {
         Debug.Log("[GlobalSaveManager] 删除所有存档...");
 
+        /*
         if (playerStateManager != null)
             playerStateManager.DeleteSaveFile();
+        */
+        string playerStatePath = System.IO.Path.Combine(Application.persistentDataPath, "player_state.dat");
+        if (System.IO.File.Exists(playerStatePath))
+            System.IO.File.Delete(playerStatePath);
 
         // 森林、农场、牧场、探索、人口的存档文件需要手动删除
         string forestSavePath = System.IO.Path.Combine(Application.persistentDataPath, "forest_save.dat");
