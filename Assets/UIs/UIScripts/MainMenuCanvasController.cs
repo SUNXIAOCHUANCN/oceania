@@ -37,6 +37,10 @@ public class MainMenuController : MonoBehaviour
             Debug.Log("[MainMenuController] 所有存档已删除");
 
             // 加载游戏场景
+            if (GlobalTimeSystem.Instance != null)
+            {
+                GlobalTimeSystem.Instance.ResetTime();
+            }
             Time.timeScale = 1f;
             GlobalTimeSystem.Instance.Resume();
             SceneManager.LoadScene("MainIsland");
