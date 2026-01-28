@@ -9,7 +9,7 @@ public class GlobalSaveManager : MonoBehaviour
     public static GlobalSaveManager Instance { get; private set; }
 
     [Header("系统引用")]
-    [SerializeField] private GlobalTimeSystem globalTimeSystem;
+    private GlobalTimeSystem globalTimeSystem;
     [SerializeField] private PlayerStateManager playerStateManager;
     [SerializeField] private ForestSaveSystem forestSaveSystem;
     [SerializeField] private FarmSaveSystem farmSaveSystem;

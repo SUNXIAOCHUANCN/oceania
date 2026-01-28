@@ -64,6 +64,16 @@ public class TimeUIManager : MonoBehaviour
                 lastUpdateTime = currentSeconds;
             }
         }
+
+        if (GlobalTimeSystem.Instance == null)
+        {
+            Debug.LogError("GlobalTimeSystem.Instance is NULL");
+            return;
+        }
+
+        Debug.Log("TimeScale: " + Time.timeScale);
+        Debug.Log("isPaused: " + GlobalTimeSystem.Instance.isPaused);
+        Debug.Log("Elapsed: " + GlobalTimeSystem.Instance.TotalElapsedTime);
     }
 
     void RefreshTotalTime()

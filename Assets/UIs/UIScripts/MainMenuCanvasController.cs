@@ -37,6 +37,8 @@ public class MainMenuController : MonoBehaviour
             Debug.Log("[MainMenuController] 所有存档已删除");
 
             // 加载游戏场景
+            Time.timeScale = 1f;
+            GlobalTimeSystem.Instance.Resume();
             SceneManager.LoadScene("MainIsland");
         }
         else
@@ -53,6 +55,8 @@ public class MainMenuController : MonoBehaviour
         Debug.Log("[MainMenuController] 点击继续游戏");
 
         // 直接加载游戏场景（GlobalSaveManager会自动加载存档）
+        Time.timeScale = 1f;
+        GlobalTimeSystem.Instance.Resume();
         SceneManager.LoadScene("MainIsland");
     }
 
