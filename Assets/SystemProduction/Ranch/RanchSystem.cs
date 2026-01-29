@@ -9,14 +9,14 @@ public class RanchSpeciesData
     public string speciesName;
     public float amount;
     public float nextPhaseYield;
-    
+
     public RanchSpeciesData(string name, float amt)
     {
         speciesName = name;
         amount = amt;
         nextPhaseYield = 0f; // 将在初始化时设置
     }
-    
+
     public RanchSpeciesData(string name, float amt, float nextYield)
     {
         speciesName = name;
@@ -29,69 +29,75 @@ public class RanchSystem : MonoBehaviour
 {
     [Header("牧场数据库")]
     [SerializeField] private List<RanchSpeciesData> ranchDatabase = new List<RanchSpeciesData>();
-    
+
     [Header("UI引用")]
     [SerializeField] private RanchUIController uiController;
-    
+
     [Header("生产配置")]
     [SerializeField] private SpeciesType validSpeciesType = SpeciesType.Ani; // 参与计算的物种类型
     [SerializeField] private float farmerBonusMultiplier = 1.2f; // 农民管理者加成倍率
     [SerializeField] private float noManagerMultiplier = 1f; // 无管理者时的倍率
-    
+
     [Header("数量限制")]
     private const int MAX_TOTAL_AMOUNT = 15; // 所有物种总数量上限
     private int currentTotalAmount = 0; // 当前总数量
     public float CurrentMonthDecay { get; private set; } // 本月所有动物的总退化量
-    
+
     public PersonScriptableObject Manager { get; private set; }
     public float CurrentMonthProduction { get; private set; }
     public float NextMonthExpectedYield { get; private set; }
     public float CurrentMonthCropConsumption { get; private set; }
     public int CurrentTotalAmount => currentTotalAmount; // 当前总数量（只读）
     public int MaxTotalAmount => MAX_TOTAL_AMOUNT; // 最大总数量（只读）
-    
+
     public UnityEvent<float> OnProductionCalculated = new UnityEvent<float>();
     public UnityEvent<float> OnCropConsumptionCalculated = new UnityEvent<float>();
     public UnityEvent<PersonScriptableObject> OnManagerChanged = new UnityEvent<PersonScriptableObject>();
     public UnityEvent<int> OnTotalAmountChanged = new UnityEvent<int>(); // 总数量变化事件
-    
+
+    private void Awake()
+    {
+        // 确保无管理者倍率不会为0（修复可能的Inspector设置错误）
+        if (noManagerMultiplier == 0f)
+        {
+            noManagerMultiplier = 1f;
+            DebugTool.LogRanch("Awake() 中修正 noManagerMultiplier 从 0 改为 1f");
+        }
+    }
+
     private void Start()
     {
-        Debug.Log("Start() 方法开始执行");
+        DebugTool.LogRanch("Start() 开始执行");
 
         // 确保订阅月相变化事件（作为 OnEnable 的备用）
         // 先取消订阅以防止重复订阅
         if (GlobalTimeSystem.Instance != null)
         {
-            Debug.Log("GlobalTimeSystem.Instance 不为 null，准备订阅");
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
-            Debug.Log("在 Start 中成功订阅月相变化事件");
+            DebugTool.LogRanch("在 Start 中成功订阅月相变化事件");
         }
         else
         {
-            Debug.Log("RanchSystem", "Start 时 GlobalTimeSystem.Instance 仍为 null，无法订阅月相变化事件！");
+            DebugTool.LogError("RanchSystem", "Start 时 GlobalTimeSystem.Instance 仍为 null，无法订阅月相变化事件！");
         }
 
-        Debug.Log($"存档加载前数据库大小: {ranchDatabase.Count}");
+        DebugTool.LogRanch("存档加载前数据库大小: {0}", ranchDatabase.Count);
+
         // 尝试加载存档
         if (RanchSaveSystem.Instance.SaveExists())
         {
-            Debug.Log("检测到存档文件，正在加载...");
-            Debug.Log($"存档加载前数据库大小: {ranchDatabase.Count}");
+            DebugTool.LogRanch("检测到存档文件，正在加载...");
             RanchSaveSystem.Instance.LoadRanchData(this);
-            Debug.Log($"存档加载后数据库大小: {ranchDatabase.Count}"); // 可能为0
+            DebugTool.LogRanch("存档加载后数据库大小: {0}", ranchDatabase.Count);
             AddAllUnlockedAnimalsToDatabase();
-            Debug.Log($"调用AddAllUnlockedAnimalsToDatabase后数据库大小: {ranchDatabase.Count}");
+            DebugTool.LogRanch("调用AddAllUnlockedAnimalsToDatabase后数据库大小: {0}", ranchDatabase.Count);
         }
         else
         {
-            Debug.Log("未检测到存档文件，初始化空的数据库");
+            DebugTool.LogRanch("未检测到存档文件，初始化空的数据库");
             // 如果没有存档，初始化空的数据库
             InitializeEmptyDatabase();
-
-            // 自动添加所有已解锁的动物物种到数据库
-            //AddAllUnlockedAnimalsToDatabase();
         }
 
         // 计算下月预计产量
@@ -106,11 +112,11 @@ public class RanchSystem : MonoBehaviour
             uiController = FindObjectOfType<RanchUIController>();
             if (uiController == null)
             {
-                Debug.Log("RanchSystem", "未找到RanchUIController，UI更新功能将不可用");
+                DebugTool.LogWarning("RanchSystem", "未找到RanchUIController，UI更新功能将不可用");
             }
             else
             {
-                Debug.Log("已自动找到RanchUIController");
+                DebugTool.LogRanch("已自动找到RanchUIController");
             }
         }
 
@@ -118,81 +124,81 @@ public class RanchSystem : MonoBehaviour
         UpdateUI();
 
         // 添加调试信息：显示当前数据库状态
-        Debug.Log($"RanchSystem启动完成，当前数据库状态:");
-        Debug.Log($"  - 数据库大小: {ranchDatabase.Count}");
-        Debug.Log($"  - 当前总数量: {currentTotalAmount}");
-        Debug.Log($"  - 最大总数量: {MAX_TOTAL_AMOUNT}");
+        DebugTool.LogRanch("RanchSystem启动完成，当前数据库状态:");
+        DebugTool.LogRanch("  - 数据库大小: {0}", ranchDatabase.Count);
+        DebugTool.LogRanch("  - 当前总数量: {0}", currentTotalAmount);
+        DebugTool.LogRanch("  - 最大总数量: {0}", MAX_TOTAL_AMOUNT);
 
         if (ranchDatabase.Count > 0)
         {
             foreach (var data in ranchDatabase)
             {
-                Debug.Log($"  - 物种: {data.speciesName}, 数量: {data.amount:F2}, 下月产量: {data.nextPhaseYield:F2}");
+                DebugTool.LogRanch("  - 物种: {0}, 数量: {1}, 下月产量: {2}", data.speciesName, data.amount, data.nextPhaseYield);
             }
         }
         else
         {
-            Debug.Log("  - 数据库为空，没有预加载任何物种");
+            DebugTool.LogRanch("  - 数据库为空，没有预加载任何物种");
         }
 
-        Debug.Log("Start() 方法完成");
+        DebugTool.LogRanch("Start() 完成");
     }
-    
+
     private void OnEnable()
     {
-        Debug.Log("OnEnable() 方法开始执行");
+        DebugTool.LogRanch("OnEnable() 开始执行");
 
         // 订阅月相变化事件
         if (GlobalTimeSystem.Instance != null)
         {
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
-            Debug.Log("成功订阅月相变化事件");
+            DebugTool.LogRanch("成功订阅月相变化事件");
         }
         else
         {
-            Debug.Log("RanchSystem", "OnEnable时 GlobalTimeSystem.Instance 为 null，将在 Start 中重新尝试订阅");
+            DebugTool.LogWarning("RanchSystem", "OnEnable时 GlobalTimeSystem.Instance 为 null，将在 Start 中重新尝试订阅");
         }
 
-        Debug.Log("OnEnable() 方法完成");
+        DebugTool.LogRanch("OnEnable() 完成");
     }
-    
+
     private void OnDisable()
     {
-        Debug.Log("OnDisable() 方法开始执行");
+        DebugTool.LogRanch("OnDisable() 开始执行");
 
         // 取消订阅月相变化事件
         if (GlobalTimeSystem.Instance != null)
         {
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
-            Debug.Log("成功取消订阅月相变化事件");
+            DebugTool.LogRanch("成功取消订阅月相变化事件");
         }
 
-        Debug.Log("OnDisable() 方法完成");
+        DebugTool.LogRanch("OnDisable() 完成");
     }
-    
+
     private void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit() 方法开始执行");
+        DebugTool.LogRanch("OnApplicationQuit() 开始执行");
         // 游戏退出时保存数据
         RanchSaveSystem.Instance.SaveRanchData(this);
-        Debug.Log("OnApplicationQuit() 保存数据完成");
+        DebugTool.LogRanch("OnApplicationQuit() 完成");
     }
-    
+
     /// <summary>
     /// 自动将所有已解锁的动物物种添加到数据库
     /// </summary>
     private void AddAllUnlockedAnimalsToDatabase()
     {
-        Debug.Log("AddAllUnlockedAnimalsToDatabase() 方法开始执行");
+        DebugTool.LogRanch("AddAllUnlockedAnimalsToDatabase() 开始执行");
 
         if (SpeciesLoader.Instance == null)
         {
-            Debug.Log("RanchSystem", "SpeciesLoader.Instance 为空，无法加载动物物种");
+            DebugTool.LogError("RanchSystem", "SpeciesLoader.Instance 为空，无法加载动物物种");
             return;
         }
 
         var unlockedAnis = SpeciesLoader.Instance.GetUnlockedAniSpecies();
-        Debug.Log($"发现 {unlockedAnis.Count} 个解锁的动物物种");
+        DebugTool.LogRanch("发现 {0} 个解锁的动物物种", unlockedAnis.Count);
 
         int addedCount = 0;
         foreach (var ani in unlockedAnis)
@@ -200,39 +206,37 @@ public class RanchSystem : MonoBehaviour
             // 检查物种是否已在数据库中
             if (!ranchDatabase.Any(s => s.speciesName == ani.speciesName))
             {
-                Debug.Log($"正在添加动物物种: {ani.speciesName}");
+                DebugTool.LogRanch("正在添加动物物种: {0}", ani.speciesName);
                 // 添加数量为0的物种，仅用于初始化
                 AddSpeciesToDatabase(ani, 0f);
                 addedCount++;
             }
             else
             {
-                Debug.Log($"物种 {ani.speciesName} 已在数据库中，跳过");
+                DebugTool.LogRanch("物种 {0} 已在数据库中，跳过", ani.speciesName);
             }
         }
 
-        Debug.Log($"AddAllUnlockedAnimalsToDatabase 完成，添加了 {addedCount} 个新物种");
-        Debug.Log("AddAllUnlockedAnimalsToDatabase() 方法完成");
+        DebugTool.LogRanch("AddAllUnlockedAnimalsToDatabase 完成，添加了 {0} 个新物种", addedCount);
     }
-    
+
     /// <summary>
     /// 初始化空的牧场数据库
     /// </summary>
     private void InitializeEmptyDatabase()
     {
-        Debug.Log("InitializeEmptyDatabase() 方法开始执行");
+        DebugTool.LogRanch("InitializeEmptyDatabase() 开始执行");
         ranchDatabase.Clear();
-        Debug.Log("牧场数据库已初始化为空");
-        Debug.Log("InitializeEmptyDatabase() 方法完成");
+        DebugTool.LogRanch("牧场数据库已初始化为空");
     }
-    
+
     /// <summary>
     /// 处理月相变化
     /// </summary>
     private void HandlePhaseChange(GlobalTimeSystem.MoonPhase phase, int phaseCount)
     {
-        Debug.Log("========== HandlePhaseChange() 开始 ==========");
-        Debug.Log($"月相: {phase}, 阶段数: {phaseCount}");
+        DebugTool.LogRanch("========================================");
+        DebugTool.LogRanch("HandlePhaseChange() 开始执行，月相: {0}, 阶段数: {1}", phase, phaseCount);
 
         float totalProduction = 0f;
         float totalCropConsumption = 0f;
@@ -245,7 +249,7 @@ public class RanchSystem : MonoBehaviour
             SpeciesScriptableObject species = GetSpeciesByName(speciesData.speciesName);
             if (species == null)
             {
-                Debug.Log("RanchSystem", $"找不到物种: {speciesData.speciesName}");
+                DebugTool.LogWarning("RanchSystem", "找不到物种: {0}", speciesData.speciesName);
                 continue;
             }
 
@@ -257,7 +261,8 @@ public class RanchSystem : MonoBehaviour
 
             // 计算产量：nextPhaseYield * amount
             float speciesProduction = speciesData.nextPhaseYield * speciesData.amount;
-            Debug.Log($"物种 {speciesData.speciesName}: nextPhaseYield={speciesData.nextPhaseYield:F2}, amount={speciesData.amount:F2}, production={speciesProduction:F2}");
+            DebugTool.LogRanch("物种 {0}: nextPhaseYield={1}, amount={2}, production={3}",
+                speciesData.speciesName, speciesData.nextPhaseYield, speciesData.amount, speciesProduction);
             totalProduction += speciesProduction;
 
             // 计算消耗：monthlyCropConsumption * amount (仅对动物类型)
@@ -275,31 +280,34 @@ public class RanchSystem : MonoBehaviour
             totalDecay += species.decayPerPhase * speciesData.amount;
         }
 
-        Debug.Log($"循环完成: totalProduction={totalProduction:F2}, totalCropConsumption={totalCropConsumption:F2}, totalDecay={totalDecay:F2}");
+        DebugTool.LogRanch("循环完成: totalProduction={0}, totalCropConsumption={1}, totalDecay={2}",
+            totalProduction, totalCropConsumption, totalDecay);
 
         // 应用管理者加成
         float finalProduction = totalProduction;
-        Debug.Log($"应用加成前: finalProduction={finalProduction:F2}, Manager={Manager?.personName}");
+        DebugTool.LogRanch("应用加成前: finalProduction={0}, Manager={1}", finalProduction, Manager?.personName ?? "无");
+
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             finalProduction *= farmerBonusMultiplier;
-            Debug.Log($"应用农民加成: finalProduction={finalProduction:F2} (倍率={farmerBonusMultiplier})");
+            DebugTool.LogRanch("应用农民加成: finalProduction={0} (倍率={1})", finalProduction, farmerBonusMultiplier);
         }
         else if (Manager == null)
         {
             finalProduction *= noManagerMultiplier;
-            Debug.Log($"无管理者加成: finalProduction={finalProduction:F2} (倍率={noManagerMultiplier})");
+            DebugTool.LogRanch("无管理者加成: finalProduction={0} (倍率={1})", finalProduction, noManagerMultiplier);
         }
         else
         {
-            Debug.Log($"管理者非农民: {Manager.personName}, profession={Manager.profession}, finalProduction={finalProduction:F2}");
+            DebugTool.LogRanch("管理者非农民: {0}, profession={1}, finalProduction={2}",
+                Manager.personName, Manager.profession, finalProduction);
         }
 
         // 保存当前月的生产和消耗数据
         CurrentMonthProduction = finalProduction;
         CurrentMonthCropConsumption = totalCropConsumption;
         CurrentMonthDecay = totalDecay; // 保存本月退化量
-        Debug.Log($"CurrentMonthProduction 已设置: {CurrentMonthProduction:F2}");
+        DebugTool.LogRanch("CurrentMonthProduction 已设置: {0}", CurrentMonthProduction);
 
         // 重新计算下月预计产量
         CalculateNextMonthExpectedYield();
@@ -308,16 +316,17 @@ public class RanchSystem : MonoBehaviour
         UpdateUI();
 
         // 触发事件（通知 ResourceManagerCalculator 进行资源修改）
-        Debug.Log($"准备触发事件: OnProductionCalculated({finalProduction:F2})");
+        DebugTool.LogRanch("准备触发事件: OnProductionCalculated({0})", finalProduction);
         OnProductionCalculated?.Invoke(finalProduction);
-        Debug.Log($"事件已触发");
+        DebugTool.LogRanch("事件已触发");
         OnCropConsumptionCalculated?.Invoke(totalCropConsumption);
 
-        Debug.Log($"牧场月相变化处理完成: 产量={finalProduction:F2}, 消耗={totalCropConsumption:F2}");
-        Debug.Log("========== HandlePhaseChange() 完成 ==========");
+        DebugTool.LogRanch("牧场月相变化处理完成: 产量={0}, 消耗={1}", finalProduction, totalCropConsumption);
 
         // 检查新解锁的物种
         CheckForNewlyUnlockedSpecies();
+
+        DebugTool.LogRanch("HandlePhaseChange() 完成");
     }
 
     /// <summary>
@@ -325,11 +334,11 @@ public class RanchSystem : MonoBehaviour
     /// </summary>
     private void CheckForNewlyUnlockedSpecies()
     {
-        Debug.Log("CheckForNewlyUnlockedSpecies() 方法开始执行");
+        DebugTool.LogRanch("CheckForNewlyUnlockedSpecies() 开始执行");
 
         if (SpeciesLoader.Instance == null)
         {
-            Debug.Log("RanchSystem", "SpeciesLoader.Instance 为空，无法检查新解锁物种");
+            DebugTool.LogError("RanchSystem", "SpeciesLoader.Instance 为空，无法检查新解锁物种");
             return;
         }
 
@@ -340,7 +349,7 @@ public class RanchSystem : MonoBehaviour
             // 检查物种是否已在数据库中
             if (!ranchDatabase.Any(s => s.speciesName == species.speciesName))
             {
-                Debug.Log($"发现新解锁的动物物种: {species.speciesName}，添加到牧场数据库");
+                DebugTool.LogRanch("发现新解锁的动物物种: {0}，添加到牧场数据库", species.speciesName);
                 AddSpeciesToDatabase(species, 0f);
                 addedCount++;
             }
@@ -348,21 +357,21 @@ public class RanchSystem : MonoBehaviour
 
         if (addedCount > 0)
         {
-            Debug.Log($"CheckForNewlyUnlockedSpecies: 添加了 {addedCount} 个新解锁的动物物种");
+            DebugTool.LogRanch("CheckForNewlyUnlockedSpecies: 添加了 {0} 个新解锁的动物物种", addedCount);
             // 重新计算预计产量并更新UI
             CalculateNextMonthExpectedYield();
             UpdateUI();
         }
 
-        Debug.Log("CheckForNewlyUnlockedSpecies() 方法完成");
+        DebugTool.LogRanch("CheckForNewlyUnlockedSpecies() 完成");
     }
-    
+
     /// <summary>
     /// 计算下个月预计产量
     /// </summary>
     public void CalculateNextMonthExpectedYield()
     {
-        Debug.Log("CalculateNextMonthExpectedYield() 方法开始执行");
+        DebugTool.LogRanch("CalculateNextMonthExpectedYield() 开始执行");
 
         NextMonthExpectedYield = 0f;
 
@@ -380,28 +389,29 @@ public class RanchSystem : MonoBehaviour
             NextMonthExpectedYield += speciesData.nextPhaseYield * speciesData.amount;
         }
 
+        DebugTool.LogRanch("下月原始预计产量: {0}", NextMonthExpectedYield);
+
         // 应用管理者加成
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             NextMonthExpectedYield *= farmerBonusMultiplier;
-            Debug.Log($"应用农民管理者加成: {NextMonthExpectedYield:F2} (倍率={farmerBonusMultiplier})");
+            DebugTool.LogRanch("应用农民管理者加成: {0} (倍率={1})", NextMonthExpectedYield, farmerBonusMultiplier);
         }
         else if (Manager == null)
         {
             NextMonthExpectedYield *= noManagerMultiplier;
-            Debug.Log($"无管理者加成: {NextMonthExpectedYield:F2} (倍率={noManagerMultiplier})");
+            DebugTool.LogRanch("无管理者加成: {0} (倍率={1})", NextMonthExpectedYield, noManagerMultiplier);
         }
 
-        Debug.Log($"CalculateNextMonthExpectedYield 完成: {NextMonthExpectedYield:F2}");
-        Debug.Log("CalculateNextMonthExpectedYield() 方法完成");
+        DebugTool.LogRanch("CalculateNextMonthExpectedYield() 完成，最终预计产量: {0}", NextMonthExpectedYield);
     }
-    
+
     /// <summary>
     /// 更新当前总数量
     /// </summary>
     private void UpdateTotalAmount()
     {
-        Debug.Log("UpdateTotalAmount() 方法开始执行");
+        DebugTool.LogRanch("UpdateTotalAmount() 开始执行");
 
         currentTotalAmount = 0;
         foreach (RanchSpeciesData speciesData in ranchDatabase)
@@ -409,14 +419,14 @@ public class RanchSystem : MonoBehaviour
             currentTotalAmount += Mathf.RoundToInt(speciesData.amount);
         }
 
-        Debug.Log($"总数量更新: {currentTotalAmount}/{MAX_TOTAL_AMOUNT}");
+        DebugTool.LogRanch("总数量更新: {0}/{1}", currentTotalAmount, MAX_TOTAL_AMOUNT);
 
         // 触发事件
         OnTotalAmountChanged?.Invoke(currentTotalAmount);
 
-        Debug.Log("UpdateTotalAmount() 方法完成");
+        DebugTool.LogRanch("UpdateTotalAmount() 完成");
     }
-    
+
     /// <summary>
     /// 通过物种名称获取物种ScriptableObject
     /// </summary>
@@ -424,7 +434,7 @@ public class RanchSystem : MonoBehaviour
     {
         if (SpeciesLoader.Instance == null)
         {
-            Debug.Log("RanchSystem", "SpeciesLoader.Instance is null!");
+            DebugTool.LogError("RanchSystem", "SpeciesLoader.Instance is null!");
             return null;
         }
 
@@ -437,34 +447,35 @@ public class RanchSystem : MonoBehaviour
         var result = allSpecies.Find(s => s.speciesName == speciesName);
         if (result == null)
         {
-            Debug.Log("RanchSystem", $"在所有物种中未找到名称为 '{speciesName}' 的物种");
+            DebugTool.LogWarning("RanchSystem", "在所有物种中未找到名称为 '{0}' 的物种", speciesName);
         }
         else
         {
-            Debug.Log($"成功找到物种: {speciesName}");
+            DebugTool.LogRanch("成功找到物种: {0}", speciesName);
         }
 
         return result;
     }
-    
+
     /// <summary>
     /// 设置管理者
     /// </summary>
     public bool SetManager(PersonScriptableObject person)
     {
-        Debug.Log($"SetManager() 方法开始执行, 设置管理者: {person?.personName}");
+        DebugTool.LogRanch("SetManager() 开始执行，设置管理者: {0}", person?.personName ?? "null");
 
         if (person == null || !person.recruited ||
             (person.status != PersonStatus.rest && person.status != PersonStatus.inranch))
         {
-            Debug.Log("RanchSystem", $"SetManager 失败: 人员不符合条件 person={person?.personName}, recruited={person?.recruited}, status={person?.status}");
+            DebugTool.LogRanch("SetManager 失败: 人员不符合条件, recruited={0}, status={1}",
+                person?.recruited ?? false, person?.status ?? PersonStatus.rest);
             return false;
         }
 
         // 如果已有管理者，先移除
         if (Manager != null)
         {
-            Debug.Log($"移除旧管理者: {Manager.personName}");
+            DebugTool.LogRanch("移除旧管理者: {0}", Manager.personName);
             RemoveManager();
         }
 
@@ -472,7 +483,7 @@ public class RanchSystem : MonoBehaviour
         // 使用PersonManager统一管理人员状态
         PersonManager.Instance.ChangePersonStatus(person, PersonStatus.inranch);
 
-        Debug.Log($"新管理者已设置: {person.personName}, 职业: {person.profession}");
+        DebugTool.LogRanch("新管理者已设置: {0}, 职业: {1}", person.personName, person.profession);
 
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
@@ -480,22 +491,22 @@ public class RanchSystem : MonoBehaviour
 
         OnManagerChanged?.Invoke(person);
 
-        Debug.Log("SetManager() 方法完成");
+        DebugTool.LogRanch("SetManager() 完成");
         return true;
     }
-    
+
     /// <summary>
     /// 移除管理者
     /// </summary>
     public void RemoveManager()
     {
-        Debug.Log($"RemoveManager() 方法开始执行, 当前管理者: {Manager?.personName}");
+        DebugTool.LogRanch("RemoveManager() 开始执行，当前管理者: {0}", Manager?.personName ?? "无");
 
         if (Manager != null)
         {
             // 使用PersonManager统一管理人员状态
             PersonManager.Instance.ChangePersonStatus(Manager, PersonStatus.rest);
-            Debug.Log($"管理者已移除: {Manager.personName}");
+            DebugTool.LogRanch("管理者已移除: {0}", Manager.personName);
             Manager = null;
 
             // 重新计算预计产量
@@ -505,37 +516,38 @@ public class RanchSystem : MonoBehaviour
             OnManagerChanged?.Invoke(null);
         }
 
-        Debug.Log("RemoveManager() 方法完成");
+        DebugTool.LogRanch("RemoveManager() 完成");
     }
-    
+
     /// <summary>
     /// 获取所有已招募的人员（用于管理员选择）
     /// </summary>
     public List<PersonScriptableObject> GetAllRecruitedPersons()
     {
-        Debug.Log("GetAllRecruitedPersons() 方法开始执行");
+        DebugTool.LogRanch("GetAllRecruitedPersons() 开始执行");
 
         if (PersonManager.Instance == null)
         {
-            Debug.Log("RanchSystem", "PersonManager.Instance is null!");
+            DebugTool.LogError("RanchSystem", "PersonManager.Instance is null!");
             return new List<PersonScriptableObject>();
         }
 
         var persons = PersonManager.Instance.GetAllPersons();
-        Debug.Log($"获取到 {persons.Count} 个已招募人员");
+        DebugTool.LogRanch("获取到 {0} 个已招募人员", persons.Count);
 
-        Debug.Log("GetAllRecruitedPersons() 方法完成");
         return persons;
     }
-    
+
     /// <summary>
     /// 更新UI
     /// </summary>
     private void UpdateUI()
     {
+        DebugTool.LogRanch("UpdateUI() 开始执行");
+
         // 确保UI控制器存在
         EnsureUIController();
-        
+
         if (uiController != null)
         {
             uiController.UpdateRanchInfo(
@@ -544,9 +556,13 @@ public class RanchSystem : MonoBehaviour
                 CurrentMonthCropConsumption,
                 Manager
             );
+            DebugTool.LogRanch("UI已更新: 本月产量 {0}, 下月预计 {1}, 本月消耗 {2}, 管理者 {3}",
+                CurrentMonthProduction, NextMonthExpectedYield, CurrentMonthCropConsumption, Manager?.personName ?? "无");
         }
+
+        DebugTool.LogRanch("UpdateUI() 完成");
     }
-    
+
     /// <summary>
     /// 确保UI控制器已初始化
     /// </summary>
@@ -557,25 +573,25 @@ public class RanchSystem : MonoBehaviour
             uiController = FindObjectOfType<RanchUIController>();
             if (uiController == null)
             {
-                Debug.Log("RanchSystem", "UpdateUI: 未找到RanchUIController，UI更新功能将不可用");
+                DebugTool.LogWarning("RanchSystem", "UpdateUI: 未找到RanchUIController，UI更新功能将不可用");
             }
             else
             {
-                Debug.Log("成功找到RanchUIController");
+                DebugTool.LogRanch("成功找到RanchUIController");
             }
         }
     }
-    
+
     /// <summary>
     /// 向牧场数据库添加物种
     /// </summary>
     public bool AddSpeciesToDatabase(SpeciesScriptableObject species, float amount)
     {
-        Debug.Log($"AddSpeciesToDatabase() 方法开始执行, 物种: {species?.speciesName}, 数量: {amount:F2}");
+        DebugTool.LogRanch("AddSpeciesToDatabase() 开始执行，物种: {0}, 数量: {1}", species?.speciesName ?? "null", amount);
 
         if (species == null || amount < 0)
         {
-            Debug.Log("RanchSystem", $"无效的物种或数量: species={species?.speciesName}, amount={amount}");
+            DebugTool.LogWarning("RanchSystem", "无效的物种或数量: species={0}, amount={1}", species?.speciesName ?? "null", amount);
             return false;
         }
 
@@ -583,7 +599,8 @@ public class RanchSystem : MonoBehaviour
         int amountInt = Mathf.RoundToInt(amount);
         if (currentTotalAmount + amountInt > MAX_TOTAL_AMOUNT)
         {
-            Debug.Log("RanchSystem", $"超过总数量上限: 当前{currentTotalAmount}, 尝试添加{amountInt}, 上限{MAX_TOTAL_AMOUNT}");
+            DebugTool.LogWarning("RanchSystem", "超过总数量上限: 当前{0}, 尝试添加{1}, 上限{2}",
+                currentTotalAmount, amountInt, MAX_TOTAL_AMOUNT);
             return false;
         }
 
@@ -593,20 +610,19 @@ public class RanchSystem : MonoBehaviour
         {
             // 更新现有数量
             existingData.amount += amount;
-            Debug.Log($"更新现有物种数量: {species.speciesName}, 新数量: {existingData.amount:F2}");
             // 如果是第一次添加或nextPhaseYield为0，设置初始值
             if (existingData.nextPhaseYield <= 0)
             {
                 existingData.nextPhaseYield = species.initialYield;
-                Debug.Log($"设置初始产量: {existingData.nextPhaseYield:F2}");
             }
+            DebugTool.LogRanch("更新现有物种: {0}, 新数量: {1}", species.speciesName, existingData.amount);
         }
         else
         {
             // 创建新数据
             RanchSpeciesData newData = new RanchSpeciesData(species.speciesName, amount, species.initialYield);
             ranchDatabase.Add(newData);
-            Debug.Log($"添加新物种到数据库: {species.speciesName}, 数量: {amount:F2}, 初始产量: {species.initialYield:F2}");
+            DebugTool.LogRanch("添加新物种: {0}, 数量: {1}, 初始产量: {2}", species.speciesName, amount, species.initialYield);
         }
 
         // 重新计算预计产量
@@ -614,117 +630,125 @@ public class RanchSystem : MonoBehaviour
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
 
-        Debug.Log($"AddSpeciesToDatabase 完成: 当前数据库大小={ranchDatabase.Count}, 当前总数量={currentTotalAmount}");
-        Debug.Log("AddSpeciesToDatabase() 方法完成");
+        DebugTool.LogRanch("AddSpeciesToDatabase 完成: 当前数据库大小={0}, 当前总数量={1}",
+            ranchDatabase.Count, currentTotalAmount);
         return true;
     }
-    
+
     /// <summary>
     /// 从牧场数据库移除物种
     /// </summary>
     public bool RemoveSpeciesFromDatabase(string speciesName, float amount)
     {
+        DebugTool.LogRanch("RemoveSpeciesFromDatabase() 开始执行，物种: {0}, 数量: {1}", speciesName, amount);
+
         RanchSpeciesData existingData = ranchDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"牧场中找不到物种: {speciesName}");
+            DebugTool.LogWarning("RanchSystem", "牧场中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         if (existingData.amount < amount)
         {
-            Debug.LogWarning($"数量不足: {speciesName} 只有 {existingData.amount}，无法移除 {amount}");
+            DebugTool.LogWarning("RanchSystem", "数量不足: {0} 只有 {1}，无法移除 {2}", speciesName, existingData.amount, amount);
             return false;
         }
-        
+
         existingData.amount -= amount;
         // 注意：即使数量为0，我们也不从数据库中移除该物种（保持只增不减的逻辑）
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
-        
-        Debug.Log($"已从牧场移除物种: {speciesName} x{amount}");
+
+        DebugTool.LogRanch("已从牧场移除物种: {0} x{1}, 剩余数量: {2}", speciesName, amount, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 增加指定物种的数量（+1）
     /// </summary>
     public bool IncrementSpeciesAmount(string speciesName)
     {
+        DebugTool.LogRanch("IncrementSpeciesAmount() 开始执行，物种: {0}", speciesName);
+
         RanchSpeciesData existingData = ranchDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"牧场中找不到物种: {speciesName}");
+            DebugTool.LogWarning("RanchSystem", "牧场中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         // 检查总数量上限
         if (currentTotalAmount + 1 > MAX_TOTAL_AMOUNT)
         {
-            Debug.LogWarning($"超过总数量上限: 当前{currentTotalAmount}, 上限{MAX_TOTAL_AMOUNT}");
+            DebugTool.LogWarning("RanchSystem", "超过总数量上限: 当前{0}, 上限{1}", currentTotalAmount, MAX_TOTAL_AMOUNT);
             return false;
         }
-        
+
         existingData.amount += 1;
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateTotalAmount(); // 更新总数量
         UpdateUI();
-        
-        Debug.Log($"已增加物种数量: {speciesName} +1, 当前数量: {existingData.amount}");
+
+        DebugTool.LogRanch("已增加物种数量: {0} +1, 当前数量: {1}", speciesName, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 减少指定物种的数量（-1）
     /// </summary>
     public bool DecrementSpeciesAmount(string speciesName)
     {
+        DebugTool.LogRanch("DecrementSpeciesAmount() 开始执行，物种: {0}", speciesName);
+
         RanchSpeciesData existingData = ranchDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"牧场中找不到物种: {speciesName}");
+            DebugTool.LogWarning("RanchSystem", "牧场中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         if (existingData.amount < 1)
         {
-            Debug.LogWarning($"数量不足: {speciesName} 只有 {existingData.amount}，无法减少");
+            DebugTool.LogWarning("RanchSystem", "数量不足: {0} 只有 {1}，无法减少", speciesName, existingData.amount);
             return false;
         }
-        
+
         existingData.amount -= 1;
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
-        
-        Debug.Log($"已减少物种数量: {speciesName} -1, 当前数量: {existingData.amount}");
+
+        DebugTool.LogRanch("已减少物种数量: {0} -1, 当前数量: {1}", speciesName, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 获取牧场数据库的副本
     /// </summary>
     public List<RanchSpeciesData> GetRanchDatabase()
     {
-        Debug.Log($"GetRanchDatabase called, returning {ranchDatabase.Count} items");
+        DebugTool.LogRanch("GetRanchDatabase() 调用，返回 {0} 个项目", ranchDatabase.Count);
         return new List<RanchSpeciesData>(ranchDatabase);
     }
-    
+
     /// <summary>
     /// 从保存数据加载牧场数据库（修复副本问题）
     /// </summary>
     public void LoadRanchDatabaseFromSave(List<RanchSpeciesSaveData> saveDataList)
     {
+        DebugTool.LogRanch("LoadRanchDatabaseFromSave() 开始执行，加载 {0} 个项目", saveDataList?.Count ?? 0);
+
         // 清空当前数据库
         ranchDatabase.Clear();
-        
+
         // 添加保存的数据
         foreach (RanchSpeciesSaveData speciesData in saveDataList)
         {
@@ -737,30 +761,31 @@ public class RanchSystem : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"无法找到保存的物种: {speciesData.speciesName}，跳过加载");
+                DebugTool.LogWarning("RanchSystem", "无法找到保存的物种: {0}，跳过加载", speciesData.speciesName);
             }
         }
-        
-        Debug.Log($"从保存数据加载牧场数据库完成，共 {ranchDatabase.Count} 个项目");
+
+        DebugTool.LogRanch("从保存数据加载牧场数据库完成，共 {0} 个项目", ranchDatabase.Count);
     }
-    
+
     /// <summary>
     /// 获取管理者
     /// </summary>
     public PersonScriptableObject GetManager()
     {
+        DebugTool.LogRanch("GetManager() 调用，返回管理者: {0}", Manager?.personName ?? "无");
         return Manager;
     }
-    
+
     /// <summary>
     /// 清空牧场数据库（用于测试）
     /// </summary>
     public void ClearDatabase()
     {
-        Debug.Log("正在清空牧场数据库...");
+        DebugTool.LogRanch("ClearDatabase() 开始执行");
         ranchDatabase.Clear();
         CalculateNextMonthExpectedYield();
         UpdateUI();
-        Debug.Log("牧场数据库已清空");
+        DebugTool.LogRanch("牧场数据库已清空");
     }
 }

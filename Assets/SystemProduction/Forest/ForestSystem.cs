@@ -9,14 +9,14 @@ public class ForestSpeciesData
     public string speciesName;
     public float amount;
     public float nextPhaseYield;
-    
+
     public ForestSpeciesData(string name, float amt)
     {
         speciesName = name;
         amount = amt;
         nextPhaseYield = 0f; // 将在初始化时设置
     }
-    
+
     public ForestSpeciesData(string name, float amt, float nextYield)
     {
         speciesName = name;
@@ -29,192 +29,214 @@ public class ForestSystem : MonoBehaviour
 {
     [Header("森林数据库")]
     [SerializeField] private List<ForestSpeciesData> forestDatabase = new List<ForestSpeciesData>();
-    
+
     [Header("UI引用")]
     [SerializeField] private ForestUIController uiController;
-    
+
     [Header("生产配置")]
     [SerializeField] private SpeciesType validSpeciesType = SpeciesType.Mat; // 参与计算的物种类型
     [SerializeField] private float farmerBonusMultiplier = 1.5f; // 农民管理者加成倍率
     [SerializeField] private float noManagerMultiplier = 1f; // 无管理者时的倍率
-    
+
     [Header("数量限制")]
     private const int MAX_TOTAL_AMOUNT = 15; // 所有物种总数量上限
     private int currentTotalAmount = 0; // 当前总数量
     public float CurrentMonthDecay { get; private set; } // 本月所有植物的总退化量
-    
+
     public PersonScriptableObject Manager { get; private set; }
     public float CurrentMonthProduction { get; private set; }
     public float NextMonthExpectedYield { get; private set; }
     public float CurrentMonthCropConsumption { get; private set; }
     public int CurrentTotalAmount => currentTotalAmount; // 当前总数量（只读）
     public int MaxTotalAmount => MAX_TOTAL_AMOUNT; // 最大总数量（只读）
-    
+
     public UnityEvent<float> OnProductionCalculated = new UnityEvent<float>();
     public UnityEvent<float> OnCropConsumptionCalculated = new UnityEvent<float>();
     public UnityEvent<PersonScriptableObject> OnManagerChanged = new UnityEvent<PersonScriptableObject>();
     public UnityEvent<int> OnTotalAmountChanged = new UnityEvent<int>(); // 总数量变化事件
-    
+
+    private void Awake()
+    {
+        // 确保无管理者倍率不会为0（修复可能的Inspector设置错误）
+        if (noManagerMultiplier == 0f)
+        {
+            noManagerMultiplier = 1f;
+            DebugTool.LogForest("Awake() 中修正 noManagerMultiplier 从 0 改为 1f");
+        }
+    }
+
     private void Start()
     {
-        Debug.Log("[ForestSystem] Start 方法开始执行");
+        DebugTool.LogForest("Start() 开始执行");
 
         // 确保订阅月相变化事件（作为 OnEnable 的备用）
         // 先取消订阅以防止重复订阅
         if (GlobalTimeSystem.Instance != null)
         {
-            Debug.Log("[ForestSystem] GlobalTimeSystem.Instance 不为 null，准备订阅");
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
-            Debug.Log("[ForestSystem] 在 Start 中成功订阅月相变化事件");
+            DebugTool.LogForest("在 Start 中成功订阅月相变化事件");
         }
         else
         {
-            Debug.LogError("[ForestSystem] Start 时 GlobalTimeSystem.Instance 仍为 null，无法订阅月相变化事件！");
+            DebugTool.LogError("ForestSystem", "Start 时 GlobalTimeSystem.Instance 仍为 null，无法订阅月相变化事件！");
         }
 
-        Debug.Log($"存档加载前数据库大小: {forestDatabase.Count}");
+        DebugTool.LogForest("存档加载前数据库大小: {0}", forestDatabase.Count);
+
         // 尝试加载存档
         if (ForestSaveSystem.Instance.SaveExists())
         {
-            Debug.Log("检测到存档文件，正在加载...");
-            Debug.Log($"存档加载前数据库大小: {forestDatabase.Count}");
+            DebugTool.LogForest("检测到存档文件，正在加载...");
             ForestSaveSystem.Instance.LoadForestData(this);
-            Debug.Log($"存档加载后数据库大小: {forestDatabase.Count}"); // 可能为0
+            DebugTool.LogForest("存档加载后数据库大小: {0}", forestDatabase.Count);
             AddAllUnlockedMaterialsToDatabase();
-            Debug.Log($"调用AddAllUnlockedMaterialsToDatabase后数据库大小: {forestDatabase.Count}");
+            DebugTool.LogForest("调用AddAllUnlockedMaterialsToDatabase后数据库大小: {0}", forestDatabase.Count);
         }
         else
         {
-            Debug.Log("未检测到存档文件，初始化空的数据库");
+            DebugTool.LogForest("未检测到存档文件，初始化空的数据库");
             // 如果没有存档，初始化空的数据库
             InitializeEmptyDatabase();
-            
-            // 自动添加所有已解锁的材料物种到数据库
-            //AddAllUnlockedMaterialsToDatabase();
         }
-        
+
         // 计算下月预计产量
         CalculateNextMonthExpectedYield();
-        
+
         // 更新总数量
         UpdateTotalAmount();
-        
+
         // 尝试自动查找UI控制器
         if (uiController == null)
         {
             uiController = FindObjectOfType<ForestUIController>();
             if (uiController == null)
             {
-                Debug.LogWarning("未找到ForestUIController，UI更新功能将不可用");
+                DebugTool.LogWarning("ForestSystem", "未找到ForestUIController，UI更新功能将不可用");
             }
             else
             {
-                Debug.Log("已自动找到ForestUIController");
+                DebugTool.LogForest("已自动找到ForestUIController");
             }
         }
-        
+
         // 更新UI
         UpdateUI();
-        
+
         // 添加调试信息：显示当前数据库状态
-        Debug.Log($"ForestSystem启动完成，当前数据库状态:");
-        Debug.Log($"  - 数据库大小: {forestDatabase.Count}");
-        Debug.Log($"  - 当前总数量: {currentTotalAmount}");
-        Debug.Log($"  - 最大总数量: {MAX_TOTAL_AMOUNT}");
-        
+        DebugTool.LogForest("ForestSystem启动完成，当前数据库状态:");
+        DebugTool.LogForest("  - 数据库大小: {0}", forestDatabase.Count);
+        DebugTool.LogForest("  - 当前总数量: {0}", currentTotalAmount);
+        DebugTool.LogForest("  - 最大总数量: {0}", MAX_TOTAL_AMOUNT);
+
         if (forestDatabase.Count > 0)
         {
             foreach (var data in forestDatabase)
             {
-                Debug.Log($"  - 物种: {data.speciesName}, 数量: {data.amount}, 下月产量: {data.nextPhaseYield}");
+                DebugTool.LogForest("  - 物种: {0}, 数量: {1}, 下月产量: {2}", data.speciesName, data.amount, data.nextPhaseYield);
             }
         }
         else
         {
-            Debug.Log("  - 数据库为空，没有预加载任何物种");
+            DebugTool.LogForest("  - 数据库为空，没有预加载任何物种");
         }
+
+        DebugTool.LogForest("Start() 完成");
     }
-    
+
     private void OnEnable()
     {
+        DebugTool.LogForest("OnEnable() 开始执行");
+
         // 订阅月相变化事件
         if (GlobalTimeSystem.Instance != null)
         {
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
+            DebugTool.LogForest("成功订阅月相变化事件");
         }
         else
         {
-            Debug.LogWarning("[ForestSystem] OnEnable时 GlobalTimeSystem.Instance 为 null，将在 Start 中重新尝试订阅");
+            DebugTool.LogWarning("ForestSystem", "OnEnable时 GlobalTimeSystem.Instance 为 null，将在 Start 中重新尝试订阅");
         }
+
+        DebugTool.LogForest("OnEnable() 完成");
     }
-    
+
     private void OnDisable()
     {
+        DebugTool.LogForest("OnDisable() 开始执行");
+
         // 取消订阅月相变化事件
         if (GlobalTimeSystem.Instance != null)
         {
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
+            DebugTool.LogForest("成功取消订阅月相变化事件");
         }
+
+        DebugTool.LogForest("OnDisable() 完成");
     }
-    
+
     private void OnApplicationQuit()
     {
+        DebugTool.LogForest("OnApplicationQuit() 开始执行");
         // 游戏退出时保存数据
         ForestSaveSystem.Instance.SaveForestData(this);
+        DebugTool.LogForest("OnApplicationQuit() 完成");
     }
-    
+
     /// <summary>
     /// 自动将所有已解锁的材料物种添加到数据库
     /// </summary>
     private void AddAllUnlockedMaterialsToDatabase()
     {
+        DebugTool.LogForest("AddAllUnlockedMaterialsToDatabase() 开始执行");
+
         if (SpeciesLoader.Instance == null)
         {
-            Debug.LogError("SpeciesLoader.Instance 为空，无法加载材料物种");
+            DebugTool.LogError("ForestSystem", "SpeciesLoader.Instance 为空，无法加载材料物种");
             return;
         }
-        
+
         var unlockedMats = SpeciesLoader.Instance.GetUnlockedMatSpecies();
-        Debug.Log($"发现 {unlockedMats.Count} 个解锁的材料物种");
-        
+        DebugTool.LogForest("发现 {0} 个解锁的材料物种", unlockedMats.Count);
+
         int addedCount = 0;
         foreach (var mat in unlockedMats)
         {
             // 检查物种是否已在数据库中
             if (!forestDatabase.Any(s => s.speciesName == mat.speciesName))
             {
-                Debug.Log($"正在添加材料物种: {mat.speciesName}");
+                DebugTool.LogForest("正在添加材料物种: {0}", mat.speciesName);
                 // 添加数量为0的物种，仅用于初始化
                 AddSpeciesToDatabase(mat, 0f);
                 addedCount++;
             }
             else
             {
-                Debug.Log($"物种 {mat.speciesName} 已在数据库中，跳过");
+                DebugTool.LogForest("物种 {0} 已在数据库中，跳过", mat.speciesName);
             }
         }
-        
-        Debug.Log($"AddAllUnlockedMaterialsToDatabase 完成，添加了 {addedCount} 个新物种");
+
+        DebugTool.LogForest("AddAllUnlockedMaterialsToDatabase 完成，添加了 {0} 个新物种", addedCount);
     }
-    
+
     /// <summary>
     /// 初始化空的森林数据库
     /// </summary>
     private void InitializeEmptyDatabase()
     {
+        DebugTool.LogForest("InitializeEmptyDatabase() 开始执行");
         forestDatabase.Clear();
-        Debug.Log("森林数据库已初始化为空");
+        DebugTool.LogForest("森林数据库已初始化为空");
     }
-    
+
     /// <summary>
     /// 处理月相变化
     /// </summary>
     private void HandlePhaseChange(GlobalTimeSystem.MoonPhase phase, int phaseCount)
     {
-        Debug.Log($"========================================");
-        Debug.Log($"🚨 [ForestSystem] HandlePhaseChange 被调用!!! phase={phase}, phaseCount={phaseCount}");
-        Debug.Log($"========================================");
+        DebugTool.LogForest("========================================");
+        DebugTool.LogForest("HandlePhaseChange() 开始执行，月相: {0}, 阶段数: {1}", phase, phaseCount);
 
         float totalProduction = 0f;
         float totalCropConsumption = 0f;
@@ -227,7 +249,7 @@ public class ForestSystem : MonoBehaviour
             SpeciesScriptableObject species = GetSpeciesByName(speciesData.speciesName);
             if (species == null)
             {
-                Debug.LogWarning($"找不到物种: {speciesData.speciesName}");
+                DebugTool.LogWarning("ForestSystem", "找不到物种: {0}", speciesData.speciesName);
                 continue;
             }
 
@@ -239,7 +261,8 @@ public class ForestSystem : MonoBehaviour
 
             // 计算产量：nextPhaseYield * amount
             float speciesProduction = speciesData.nextPhaseYield * speciesData.amount;
-            Debug.Log($"[ForestSystem] 物种 {speciesData.speciesName}: nextPhaseYield={speciesData.nextPhaseYield}, amount={speciesData.amount}, production={speciesProduction}");
+            DebugTool.LogForest("物种 {0}: nextPhaseYield={1}, amount={2}, production={3}",
+                speciesData.speciesName, speciesData.nextPhaseYield, speciesData.amount, speciesProduction);
             totalProduction += speciesProduction;
 
             // 计算消耗：monthlyCropConsumption * amount (仅对材料类型)
@@ -257,31 +280,34 @@ public class ForestSystem : MonoBehaviour
             totalDecay += species.decayPerPhase * speciesData.amount;
         }
 
-        Debug.Log($"[ForestSystem] 循环完成: totalProduction={totalProduction}, totalCropConsumption={totalCropConsumption}, totalDecay={totalDecay}");
+        DebugTool.LogForest("循环完成: totalProduction={0}, totalCropConsumption={1}, totalDecay={2}",
+            totalProduction, totalCropConsumption, totalDecay);
 
         // 应用管理者加成
         float finalProduction = totalProduction;
-        Debug.Log($"[ForestSystem] 应用加成前: finalProduction={finalProduction}, Manager={Manager?.personName}");
+        DebugTool.LogForest("应用加成前: finalProduction={0}, Manager={1}", finalProduction, Manager?.personName ?? "无");
+
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             finalProduction *= farmerBonusMultiplier;
-            Debug.Log($"[ForestSystem] 应用农民加成: finalProduction={finalProduction} (倍率={farmerBonusMultiplier})");
+            DebugTool.LogForest("应用农民加成: finalProduction={0} (倍率={1})", finalProduction, farmerBonusMultiplier);
         }
         else if (Manager == null)
         {
             finalProduction *= noManagerMultiplier;
-            Debug.Log($"[ForestSystem] 无管理者加成: finalProduction={finalProduction} (倍率={noManagerMultiplier})");
+            DebugTool.LogForest("无管理者加成: finalProduction={0} (倍率={1})", finalProduction, noManagerMultiplier);
         }
         else
         {
-            Debug.Log($"[ForestSystem] 管理者非农民: {Manager.personName}, profession={Manager.profession}, finalProduction={finalProduction}");
+            DebugTool.LogForest("管理者非农民: {0}, profession={1}, finalProduction={2}",
+                Manager.personName, Manager.profession, finalProduction);
         }
 
         // 保存当前月的生产和消耗数据
         CurrentMonthProduction = finalProduction;
         CurrentMonthCropConsumption = totalCropConsumption;
         CurrentMonthDecay = totalDecay; // 保存本月退化量
-        Debug.Log($"[ForestSystem] CurrentMonthProduction 已设置: {CurrentMonthProduction}");
+        DebugTool.LogForest("CurrentMonthProduction 已设置: {0}", CurrentMonthProduction);
 
         // 重新计算下月预计产量
         CalculateNextMonthExpectedYield();
@@ -290,15 +316,17 @@ public class ForestSystem : MonoBehaviour
         UpdateUI();
 
         // 触发事件（通知 ResourceManagerCalculator 进行资源修改）
-        Debug.Log($"[ForestSystem] 准备触发事件: OnProductionCalculated({finalProduction})");
+        DebugTool.LogForest("准备触发事件: OnProductionCalculated({0})", finalProduction);
         OnProductionCalculated?.Invoke(finalProduction);
-        Debug.Log($"[ForestSystem] 事件已触发");
+        DebugTool.LogForest("事件已触发");
         OnCropConsumptionCalculated?.Invoke(totalCropConsumption);
 
-        Debug.Log($"森林月相变化处理完成: 产量={finalProduction}, 消耗={totalCropConsumption}");
+        DebugTool.LogForest("森林月相变化处理完成: 产量={0}, 消耗={1}", finalProduction, totalCropConsumption);
 
         // 检查新解锁的物种
         CheckForNewlyUnlockedSpecies();
+
+        DebugTool.LogForest("HandlePhaseChange() 完成");
     }
 
     /// <summary>
@@ -306,9 +334,11 @@ public class ForestSystem : MonoBehaviour
     /// </summary>
     private void CheckForNewlyUnlockedSpecies()
     {
+        DebugTool.LogForest("CheckForNewlyUnlockedSpecies() 开始执行");
+
         if (SpeciesLoader.Instance == null)
         {
-            Debug.LogError("SpeciesLoader.Instance 为空，无法检查新解锁物种");
+            DebugTool.LogError("ForestSystem", "SpeciesLoader.Instance 为空，无法检查新解锁物种");
             return;
         }
 
@@ -319,68 +349,84 @@ public class ForestSystem : MonoBehaviour
             // 检查物种是否已在数据库中
             if (!forestDatabase.Any(s => s.speciesName == species.speciesName))
             {
-                Debug.Log($"发现新解锁的材料物种: {species.speciesName}，添加到森林数据库");
+                DebugTool.LogForest("发现新解锁的材料物种: {0}，添加到森林数据库", species.speciesName);
                 AddSpeciesToDatabase(species, 0f);
                 addedCount++;
             }
         }
-        
+
         if (addedCount > 0)
         {
-            Debug.Log($"CheckForNewlyUnlockedSpecies: 添加了 {addedCount} 个新解锁的材料物种");
+            DebugTool.LogForest("CheckForNewlyUnlockedSpecies: 添加了 {0} 个新解锁的材料物种", addedCount);
             // 重新计算预计产量并更新UI
             CalculateNextMonthExpectedYield();
             UpdateUI();
         }
+
+        DebugTool.LogForest("CheckForNewlyUnlockedSpecies() 完成");
     }
-    
+
     /// <summary>
     /// 计算下个月预计产量
     /// </summary>
     public void CalculateNextMonthExpectedYield()
     {
+        DebugTool.LogForest("CalculateNextMonthExpectedYield() 开始执行");
+
         NextMonthExpectedYield = 0f;
-        
+
         foreach (ForestSpeciesData speciesData in forestDatabase)
         {
             SpeciesScriptableObject species = GetSpeciesByName(speciesData.speciesName);
             if (species == null) continue;
-            
+
             // 保护机制：检查物种类型和解锁状态
             if (species.speciesType != validSpeciesType || !species.unlocked)
             {
                 continue;
             }
-            
+
             NextMonthExpectedYield += speciesData.nextPhaseYield * speciesData.amount;
         }
-        
+
+        DebugTool.LogForest("下月原始预计产量: {0}", NextMonthExpectedYield);
+
         // 应用管理者加成
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             NextMonthExpectedYield *= farmerBonusMultiplier;
+            DebugTool.LogForest("应用农民管理者加成: {0} (倍率={1})", NextMonthExpectedYield, farmerBonusMultiplier);
         }
         else if (Manager == null)
         {
             NextMonthExpectedYield *= noManagerMultiplier;
+            DebugTool.LogForest("无管理者加成: {0} (倍率={1})", NextMonthExpectedYield, noManagerMultiplier);
         }
+
+        DebugTool.LogForest("CalculateNextMonthExpectedYield() 完成，最终预计产量: {0}", NextMonthExpectedYield);
     }
-    
+
     /// <summary>
     /// 更新当前总数量
     /// </summary>
     private void UpdateTotalAmount()
     {
+        DebugTool.LogForest("UpdateTotalAmount() 开始执行");
+
         currentTotalAmount = 0;
         foreach (ForestSpeciesData speciesData in forestDatabase)
         {
             currentTotalAmount += Mathf.RoundToInt(speciesData.amount);
         }
-        
+
+        DebugTool.LogForest("总数量更新: {0}/{1}", currentTotalAmount, MAX_TOTAL_AMOUNT);
+
         // 触发事件
         OnTotalAmountChanged?.Invoke(currentTotalAmount);
+
+        DebugTool.LogForest("UpdateTotalAmount() 完成");
     }
-    
+
     /// <summary>
     /// 通过物种名称获取物种ScriptableObject
     /// </summary>
@@ -388,99 +434,121 @@ public class ForestSystem : MonoBehaviour
     {
         if (SpeciesLoader.Instance == null)
         {
-            Debug.LogError("SpeciesLoader.Instance is null!");
+            DebugTool.LogError("ForestSystem", "SpeciesLoader.Instance is null!");
             return null;
         }
-        
+
         // 从所有物种中查找
         var allSpecies = new List<SpeciesScriptableObject>();
         allSpecies.AddRange(SpeciesLoader.Instance.GetUnlockedCropSpecies());
         allSpecies.AddRange(SpeciesLoader.Instance.GetUnlockedAniSpecies());
         allSpecies.AddRange(SpeciesLoader.Instance.GetUnlockedMatSpecies());
-        
+
         var result = allSpecies.Find(s => s.speciesName == speciesName);
         if (result == null)
         {
-            Debug.LogWarning($"在所有物种中未找到名称为 '{speciesName}' 的物种");
+            DebugTool.LogWarning("ForestSystem", "在所有物种中未找到名称为 '{0}' 的物种", speciesName);
         }
         else
         {
-            Debug.Log($"成功找到物种: {speciesName}");
+            DebugTool.LogForest("成功找到物种: {0}", speciesName);
         }
-        
+
         return result;
     }
-    
+
     /// <summary>
     /// 设置管理者
     /// </summary>
     public bool SetManager(PersonScriptableObject person)
     {
-        if (person == null || !person.recruited || 
+        DebugTool.LogForest("SetManager() 开始执行，设置管理者: {0}", person?.personName ?? "null");
+
+        if (person == null || !person.recruited ||
             (person.status != PersonStatus.rest && person.status != PersonStatus.inforest))
         {
+            DebugTool.LogForest("SetManager 失败: 人员不符合条件, recruited={0}, status={1}",
+                person?.recruited ?? false, person?.status ?? PersonStatus.rest);
             return false;
         }
-        
+
         // 如果已有管理者，先移除
         if (Manager != null)
         {
+            DebugTool.LogForest("移除旧管理者: {0}", Manager.personName);
             RemoveManager();
         }
-        
+
         Manager = person;
         // 使用PersonManager统一管理人员状态
         PersonManager.Instance.ChangePersonStatus(person, PersonStatus.inforest);
-        
+
+        DebugTool.LogForest("新管理者已设置: {0}, 职业: {1}", person.personName, person.profession);
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
-        
+
         OnManagerChanged?.Invoke(person);
+
+        DebugTool.LogForest("SetManager() 完成");
         return true;
     }
-    
+
     /// <summary>
     /// 移除管理者
     /// </summary>
     public void RemoveManager()
     {
+        DebugTool.LogForest("RemoveManager() 开始执行，当前管理者: {0}", Manager?.personName ?? "无");
+
         if (Manager != null)
         {
             // 使用PersonManager统一管理人员状态
             PersonManager.Instance.ChangePersonStatus(Manager, PersonStatus.rest);
             Manager = null;
-            
+
+            DebugTool.LogForest("管理者已移除");
+
             // 重新计算预计产量
             CalculateNextMonthExpectedYield();
             UpdateUI();
-            
+
             OnManagerChanged?.Invoke(null);
         }
+
+        DebugTool.LogForest("RemoveManager() 完成");
     }
-    
+
     /// <summary>
     /// 获取所有已招募的人员（用于管理员选择）
     /// </summary>
     public List<PersonScriptableObject> GetAllRecruitedPersons()
     {
+        DebugTool.LogForest("GetAllRecruitedPersons() 开始执行");
+
         if (PersonManager.Instance == null)
         {
-            Debug.LogError("PersonManager.Instance is null!");
+            DebugTool.LogError("ForestSystem", "PersonManager.Instance is null!");
             return new List<PersonScriptableObject>();
         }
-        
-        return PersonManager.Instance.GetAllPersons();
+
+        var persons = PersonManager.Instance.GetAllPersons();
+        DebugTool.LogForest("获取到 {0} 个已招募人员", persons.Count);
+
+        return persons;
     }
-    
+
     /// <summary>
     /// 更新UI
     /// </summary>
     private void UpdateUI()
     {
+        DebugTool.LogForest("UpdateUI() 开始执行");
+
         // 确保UI控制器存在
         EnsureUIController();
-        
+
         if (uiController != null)
         {
             uiController.UpdateForestInfo(
@@ -489,9 +557,13 @@ public class ForestSystem : MonoBehaviour
                 CurrentMonthCropConsumption,
                 Manager
             );
+            DebugTool.LogForest("UI已更新: 本月产量 {0}, 下月预计 {1}, 本月消耗 {2}, 管理者 {3}",
+                CurrentMonthProduction, NextMonthExpectedYield, CurrentMonthCropConsumption, Manager?.personName ?? "无");
         }
+
+        DebugTool.LogForest("UpdateUI() 完成");
     }
-    
+
     /// <summary>
     /// 确保UI控制器已初始化
     /// </summary>
@@ -502,30 +574,37 @@ public class ForestSystem : MonoBehaviour
             uiController = FindObjectOfType<ForestUIController>();
             if (uiController == null)
             {
-                Debug.LogWarning("UpdateUI: 未找到ForestUIController，UI更新功能将不可用");
+                DebugTool.LogWarning("ForestSystem", "UpdateUI: 未找到ForestUIController，UI更新功能将不可用");
+            }
+            else
+            {
+                DebugTool.LogForest("成功找到ForestUIController");
             }
         }
     }
-    
+
     /// <summary>
     /// 向森林数据库添加物种
     /// </summary>
     public bool AddSpeciesToDatabase(SpeciesScriptableObject species, float amount)
     {
+        DebugTool.LogForest("AddSpeciesToDatabase() 开始执行，物种: {0}, 数量: {1}", species?.speciesName ?? "null", amount);
+
         if (species == null || amount < 0)
         {
-            Debug.LogWarning("无效的物种或数量");
+            DebugTool.LogWarning("ForestSystem", "无效的物种或数量: species={0}, amount={1}", species?.speciesName ?? "null", amount);
             return false;
         }
-        
+
         // 检查总数量上限
         int amountInt = Mathf.RoundToInt(amount);
         if (currentTotalAmount + amountInt > MAX_TOTAL_AMOUNT)
         {
-            Debug.LogWarning($"超过总数量上限: 当前{currentTotalAmount}, 尝试添加{amountInt}, 上限{MAX_TOTAL_AMOUNT}");
+            DebugTool.LogWarning("ForestSystem", "超过总数量上限: 当前{0}, 尝试添加{1}, 上限{2}",
+                currentTotalAmount, amountInt, MAX_TOTAL_AMOUNT);
             return false;
         }
-        
+
         // 检查是否已存在
         ForestSpeciesData existingData = forestDatabase.Find(data => data.speciesName == species.speciesName);
         if (existingData != null)
@@ -537,131 +616,140 @@ public class ForestSystem : MonoBehaviour
             {
                 existingData.nextPhaseYield = species.initialYield;
             }
+            DebugTool.LogForest("更新现有物种: {0}, 新数量: {1}", species.speciesName, existingData.amount);
         }
         else
         {
             // 创建新数据
             ForestSpeciesData newData = new ForestSpeciesData(species.speciesName, amount, species.initialYield);
             forestDatabase.Add(newData);
+            DebugTool.LogForest("添加新物种: {0}, 数量: {1}, 初始产量: {2}", species.speciesName, amount, species.initialYield);
         }
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
-        
-        Debug.Log($"已添加物种到森林: {species.speciesName} x{amount}");
-        Debug.Log($"  - 当前数据库大小: {forestDatabase.Count}");
-        Debug.Log($"  - 当前总数量: {currentTotalAmount}");
+
+        DebugTool.LogForest("AddSpeciesToDatabase 完成: 当前数据库大小={0}, 当前总数量={1}",
+            forestDatabase.Count, currentTotalAmount);
         return true;
     }
-    
+
     /// <summary>
     /// 从森林数据库移除物种
     /// </summary>
     public bool RemoveSpeciesFromDatabase(string speciesName, float amount)
     {
+        DebugTool.LogForest("RemoveSpeciesFromDatabase() 开始执行，物种: {0}, 数量: {1}", speciesName, amount);
+
         ForestSpeciesData existingData = forestDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"森林中找不到物种: {speciesName}");
+            DebugTool.LogWarning("ForestSystem", "森林中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         if (existingData.amount < amount)
         {
-            Debug.LogWarning($"数量不足: {speciesName} 只有 {existingData.amount}，无法移除 {amount}");
+            DebugTool.LogWarning("ForestSystem", "数量不足: {0} 只有 {1}，无法移除 {2}", speciesName, existingData.amount, amount);
             return false;
         }
-        
+
         existingData.amount -= amount;
         // 注意：即使数量为0，我们也不从数据库中移除该物种（保持只增不减的逻辑）
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
-        
-        Debug.Log($"已从森林移除物种: {speciesName} x{amount}");
+
+        DebugTool.LogForest("已从森林移除物种: {0} x{1}, 剩余数量: {2}", speciesName, amount, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 增加指定物种的数量（+1）
     /// </summary>
     public bool IncrementSpeciesAmount(string speciesName)
     {
+        DebugTool.LogForest("IncrementSpeciesAmount() 开始执行，物种: {0}", speciesName);
+
         ForestSpeciesData existingData = forestDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"森林中找不到物种: {speciesName}");
+            DebugTool.LogWarning("ForestSystem", "森林中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         // 检查总数量上限
         if (currentTotalAmount + 1 > MAX_TOTAL_AMOUNT)
         {
-            Debug.LogWarning($"超过总数量上限: 当前{currentTotalAmount}, 上限{MAX_TOTAL_AMOUNT}");
+            DebugTool.LogWarning("ForestSystem", "超过总数量上限: 当前{0}, 上限{1}", currentTotalAmount, MAX_TOTAL_AMOUNT);
             return false;
         }
-        
+
         existingData.amount += 1;
-        
+
         // 重新计算预计产量
-        CalculateNextMonthExpectedYield();        
+        CalculateNextMonthExpectedYield();
         UpdateTotalAmount(); // 更新总数量
         UpdateUI();
-        
-        Debug.Log($"已增加物种数量: {speciesName} +1, 当前数量: {existingData.amount}");
+
+        DebugTool.LogForest("已增加物种数量: {0} +1, 当前数量: {1}", speciesName, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 减少指定物种的数量（-1）
     /// </summary>
     public bool DecrementSpeciesAmount(string speciesName)
     {
+        DebugTool.LogForest("DecrementSpeciesAmount() 开始执行，物种: {0}", speciesName);
+
         ForestSpeciesData existingData = forestDatabase.Find(data => data.speciesName == speciesName);
         if (existingData == null)
         {
-            Debug.LogWarning($"森林中找不到物种: {speciesName}");
+            DebugTool.LogWarning("ForestSystem", "森林中找不到物种: {0}", speciesName);
             return false;
         }
-        
+
         if (existingData.amount < 1)
         {
-            Debug.LogWarning($"数量不足: {speciesName} 只有 {existingData.amount}，无法减少");
+            DebugTool.LogWarning("ForestSystem", "数量不足: {0} 只有 {1}，无法减少", speciesName, existingData.amount);
             return false;
         }
-        
+
         existingData.amount -= 1;
-        
+
         // 重新计算预计产量
         CalculateNextMonthExpectedYield();
         UpdateUI();
         UpdateTotalAmount(); // 更新总数量
-        
-        Debug.Log($"已减少物种数量: {speciesName} -1, 当前数量: {existingData.amount}");
+
+        DebugTool.LogForest("已减少物种数量: {0} -1, 当前数量: {1}", speciesName, existingData.amount);
         return true;
     }
-    
+
     /// <summary>
     /// 获取森林数据库的副本
     /// </summary>
     public List<ForestSpeciesData> GetForestDatabase()
     {
-        Debug.Log($"GetForestDatabase called, returning {forestDatabase.Count} items");
+        DebugTool.LogForest("GetForestDatabase() 调用，返回 {0} 个项目", forestDatabase.Count);
         return new List<ForestSpeciesData>(forestDatabase);
     }
-    
+
     /// <summary>
     /// 从保存数据加载森林数据库（修复副本问题）
     /// </summary>
     public void LoadForestDatabaseFromSave(List<ForestSpeciesSaveData> saveDataList)
     {
+        DebugTool.LogForest("LoadForestDatabaseFromSave() 开始执行，加载 {0} 个项目", saveDataList?.Count ?? 0);
+
         // 清空当前数据库
         forestDatabase.Clear();
-        
+
         // 添加保存的数据
         foreach (ForestSpeciesSaveData speciesData in saveDataList)
         {
@@ -669,15 +757,16 @@ public class ForestSystem : MonoBehaviour
             ForestSpeciesData newData = new ForestSpeciesData(speciesData.speciesName, speciesData.amount, speciesData.nextPhaseYield);
             forestDatabase.Add(newData);
         }
-        
-        Debug.Log($"从存档加载森林数据库完成，共加载 {forestDatabase.Count} 个物种");
+
+        DebugTool.LogForest("从存档加载森林数据库完成，共加载 {0} 个物种", forestDatabase.Count);
     }
-    
+
     /// <summary>
     /// 获取管理者
     /// </summary>
     public PersonScriptableObject GetManager()
     {
+        DebugTool.LogForest("GetManager() 调用，返回管理者: {0}", Manager?.personName ?? "无");
         return Manager;
     }
 }

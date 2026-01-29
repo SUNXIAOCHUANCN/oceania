@@ -34,33 +34,41 @@ public class ForestUIController : CanvasController
     private void Start()
     {
         base.Start();
+        DebugTool.LogForest("Start() 开始执行");
+
         // 获取ForestSystem引用
         forestSystem = FindObjectOfType<ForestSystem>();
         if (forestSystem == null)
         {
-            Debug.LogError("找不到ForestSystem实例！");
+            DebugTool.LogError("ForestUIController", "找不到ForestSystem实例！");
         }
-        
+        else
+        {
+            DebugTool.LogForest("ForestSystem 已找到");
+        }
+
         // 加载Material.prefab
         materialPrefab = Resources.Load<GameObject>(MATERIAL_PREFAB_PATH);
         if (materialPrefab == null)
         {
-            Debug.LogError($"无法加载Material预制体: {MATERIAL_PREFAB_PATH}");
+            DebugTool.LogError("ForestUIController", "无法加载Material预制体: {0}", MATERIAL_PREFAB_PATH);
         }
-        
+
         // 初始化管理员面板
         if (adminManagerPanel != null) adminManagerPanel.SetActive(false);
         if (resetManagerButton != null) resetManagerButton.onClick.AddListener(OnResetManagerButtonClicked);
-        
+
         // 初始化关闭按钮
         if (closeForestButton != null) closeForestButton.onClick.AddListener(OnCloseForestButtonClicked);
-        
+
         // 初始化UI
         UpdateForestInfo(0f, 0f, 0f, null);
+
+        DebugTool.LogForest("Start() 完成");
     }
     
     /// <summary>
-    /// 更新森林信息（由ForestSystem调用）
+    /// 更新森林信息（由ForestSystem调用�?
     /// </summary>
     public void UpdateForestInfo(float currentProduction, float nextMonthExpectedYield, 
                                float cropConsumption, PersonScriptableObject manager)
@@ -75,7 +83,7 @@ public class ForestUIController : CanvasController
         if (cropConsumptionText != null)
             cropConsumptionText.text = $"{cropConsumption:F1}";
         
-        // 更新管理者信息
+        // 更新管理者信�?
         UpdateManagerInfo(manager);
         
         // 更新物种列表
@@ -92,19 +100,19 @@ public class ForestUIController : CanvasController
     {
         if (forestSystem == null) return;
         
-        // 更新材料总数文本：总数量/上限
+        // 更新材料总数文本：总数�?上限
         if (matNumbersText != null)
         {
             matNumbersText.text = $"{forestSystem.CurrentTotalAmount}/{forestSystem.MaxTotalAmount}";
         }
         
-        // 更新退化总量显示：所有材料减少量相加（decayPerPhase*amount）
+        // 更新退化总量显示：所有材料减少量相加（decayPerPhase*amount�?
         if (matDecayText != null)
         {
             matDecayText.text = $"{forestSystem.CurrentMonthDecay:F1}";
         }
         
-        // 根据总数量更新显示的图片（分界值：5,10）
+        // 根据总数量更新显示的图片（分界值：5,10�?
         if (materialsDisplayImage != null && materialCountSprites != null && materialCountSprites.Length >= 3)
         {
             int totalAmount = forestSystem.CurrentTotalAmount;
@@ -132,7 +140,7 @@ public class ForestUIController : CanvasController
     }
     
     /// <summary>
-    /// 更新管理者信息
+    /// 更新管理者信�?
     /// </summary>
     private void UpdateManagerInfo(PersonScriptableObject manager)
     {
@@ -150,7 +158,7 @@ public class ForestUIController : CanvasController
         else
         {
             if (managerNameText != null)
-                managerNameText.text = "无管理者";
+                managerNameText.text = "无管理员";
             
             if (managerIcon != null)
                 managerIcon.gameObject.SetActive(false);
@@ -171,12 +179,12 @@ public class ForestUIController : CanvasController
             Destroy(child.gameObject);
         }
         
-        // 获取所有已解锁的材料物种（根据你的描述，UI应该显示所有解锁的物种）
+        // 获取所有已解锁的材料物种（根据你的描述，UI应该显示所有解锁的物种�?
         List<SpeciesScriptableObject> unlockedMats = SpeciesLoader.Instance?.GetUnlockedMatSpecies();
         if (unlockedMats == null || unlockedMats.Count == 0)
             return;
         
-        // 为每个解锁的物种创建UI项
+        // 为每个解锁的物种创建UI�?
         foreach (SpeciesScriptableObject species in unlockedMats)
         {
             // 实例化Material.prefab
@@ -184,11 +192,11 @@ public class ForestUIController : CanvasController
             if (materialItem == null)
                 continue;
             
-            // 从森林数据库中获取该物种的数据
+            // 从森林数据库中获取该物种的数�?
             List<ForestSpeciesData> forestDatabase = forestSystem.GetForestDatabase();
             ForestSpeciesData speciesData = forestDatabase.Find(data => data.speciesName == species.speciesName);
             
-            // 如果数据库中没有该物种的数据，创建一个默认数据（amount=0）
+            // 如果数据库中没有该物种的数据，创建一个默认数据（amount=0�?
             if (speciesData == null)
             {
                 speciesData = new ForestSpeciesData(species.speciesName, 0f, species.initialYield);
@@ -274,27 +282,37 @@ public class ForestUIController : CanvasController
     /// </summary>
     private void OnAddMatButtonClick(string speciesName)
     {
+        DebugTool.LogForest("OnAddMatButtonClick() 增加材料: {0}", speciesName);
         if (forestSystem != null)
         {
             bool success = forestSystem.IncrementSpeciesAmount(speciesName);
             if (!success)
             {
-                Debug.LogWarning($"增加物种数量失败: {speciesName}");
+                DebugTool.LogWarning("ForestUIController", "增加物种数量失败: {0}", speciesName);
+            }
+            else
+            {
+                DebugTool.LogForest("成功增加物种数量: {0}", speciesName);
             }
         }
     }
-    
+
     /// <summary>
     /// 处理减少物种数量按钮点击
     /// </summary>
     private void OnCutMatButtonClick(string speciesName)
     {
+        DebugTool.LogForest("OnCutMatButtonClick() 减少材料: {0}", speciesName);
         if (forestSystem != null)
         {
             bool success = forestSystem.DecrementSpeciesAmount(speciesName);
             if (!success)
             {
-                Debug.LogWarning($"减少物种数量失败: {speciesName}");
+                DebugTool.LogWarning("ForestUIController", "减少物种数量失败: {0}", speciesName);
+            }
+            else
+            {
+                DebugTool.LogForest("成功减少物种数量: {0}", speciesName);
             }
         }
     }
@@ -309,7 +327,7 @@ public class ForestUIController : CanvasController
     }
     
     /// <summary>
-    /// 重置管理者按钮点击事件
+    /// 重置管理者按钮点击事�?
     /// </summary>
     private void OnResetManagerButtonClicked()
     {
@@ -317,12 +335,12 @@ public class ForestUIController : CanvasController
         {
             // 显示管理者选择面板
             adminManagerPanel.SetActive(true);
-            // 初始化管理者名单
+            // 初始化管理者名�?
             InitializeAdminManagerPanel();
         }
         else
         {
-            Debug.LogError("adminManagerPanel is not assigned!");
+            DebugTool.LogError("ForestUIController", "adminManagerPanel is not assigned!");
         }
     }
     
@@ -331,81 +349,83 @@ public class ForestUIController : CanvasController
     /// </summary>
     private void InitializeAdminManagerPanel()
     {
-        // 清除现有管理者列表
+        // 清除现有管理者列�?
         foreach (Transform child in managerList)
         {
             Destroy(child.gameObject);
         }
         
-        // 加载Admin预制体
+        // 加载Admin预制�?
         GameObject adminPrefab = Resources.Load<GameObject>(ADMIN_PREFAB_PATH);
         if (adminPrefab == null)
         {
-            Debug.LogError($"无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
+            DebugTool.LogError("ForestUIController", $"无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
             return;
         }
         
         // 检查ForestSystem实例
         if (forestSystem == null)
         {
-            Debug.LogError("ForestSystem实例未找到");
+            DebugTool.LogError("ForestUIController", "ForestSystem实例未找到");
             return;
         }
         
         // 获取所有已招募的人员，并筛选不在onsea状态的人员
         List<PersonScriptableObject> allPersons = forestSystem.GetAllRecruitedPersons();
         List<PersonScriptableObject> eligiblePersons = new List<PersonScriptableObject>();
-        
-        Debug.Log($"=== 开始调试管理者信息 ===");
-        Debug.Log($"总人员数: {allPersons.Count}");
-        
+
+        DebugTool.LogForest("=== 开始调试管理者信息 ===");
+        DebugTool.LogForest("总人员数: {0}", allPersons.Count);
+
         // 输出所有人员的详细信息
         for (int i = 0; i < allPersons.Count; i++)
         {
             var person = allPersons[i];
-            Debug.Log($"索引 {i}: 人员名称: {person.personName}, 已招募: {person.recruited}, 状态: {person.status}, 职业: {person.profession}");
+            DebugTool.LogForest("索引 {0}: 人员名称: {1}, 已招募: {2}, 状态: {3}, 职业: {4}",
+                i, person.personName, person.recruited, person.status, person.profession);
         }
-        
-        Debug.Log($"=== 筛选符合条件的管理者 ===");
+
+        DebugTool.LogForest("=== 筛选符合条件的管理者 ===");
         int addedCount = 0;
         foreach (PersonScriptableObject person in allPersons)
         {
             // 条件：已招募且不在onsea状态
             if (person.recruited && person.status != PersonStatus.onsea)
             {
-                Debug.Log($"检查人员: {person.personName}, 状态: {person.status}, 已招募: {person.recruited}");
+                DebugTool.LogForest("检查人员: {0}, 状态: {1}, 已招募: {2}",
+                    person.personName, person.status, person.recruited);
                 // 检查是否已经添加过该人员（避免重复）
                 if (!eligiblePersons.Contains(person))
                 {
                     eligiblePersons.Add(person);
                     addedCount++;
-                    Debug.Log($"添加管理者: {person.personName}, 状态: {person.status}");
+                    DebugTool.LogForest("添加管理者: {0}, 状态: {1}", person.personName, person.status);
                 }
                 else
                 {
-                    Debug.LogWarning($"检测到重复人员: {person.personName}, 已跳过添加");
+                    DebugTool.LogWarning("ForestUIController", "检测到重复人员: {0}, 已跳过添加", person.personName);
                 }
             }
         }
-        
-        Debug.Log($"=== 管理者筛选完成 ===");
-        Debug.Log($"符合条件的管理者总数: {eligiblePersons.Count}");
-        Debug.Log($"本次筛选新增人员数: {addedCount}");
-        
+
+        DebugTool.LogForest("=== 管理者筛选完成 ===");
+        DebugTool.LogForest("符合条件的管理者总数: {0}", eligiblePersons.Count);
+        DebugTool.LogForest("本次筛选新增人员数: {0}", addedCount);
+
         if (eligiblePersons.Count == 0)
         {
-            Debug.Log("没有符合条件的管理者");
+            DebugTool.LogForest("没有符合条件的管理者");
             return;
         }
-        
+
         // 创建管理者选择项
-        Debug.Log($"开始创建 {eligiblePersons.Count} 个管理者UI元素");
+        DebugTool.LogForest("开始创建 {0} 个管理者UI元素", eligiblePersons.Count);
         foreach (PersonScriptableObject person in eligiblePersons)
         {
-            Debug.Log($"正在创建管理者UI: {person.personName}");
+            DebugTool.LogForest("正在创建管理者UI: {0}", person.personName);
             GameObject adminItem = Instantiate(adminPrefab, managerList);
             adminItem.name = person.personName;
-            
+
             // 填充管理者信息（按照用户指定的映射关系）
             // touxiang → Avatar
             Transform avatarTransform = adminItem.transform.Find("touxiang");
@@ -413,28 +433,28 @@ public class ForestUIController : CanvasController
             {
                 avatar.sprite = person.avatar;
             }
-            
+
             // name → Person Name
             Transform nameTransform = adminItem.transform.Find("name");
             if (nameTransform != null && nameTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI nameText))
             {
                 nameText.text = person.personName;
             }
-            
+
             // job → Profession
             Transform jobTransform = adminItem.transform.Find("job");
             if (jobTransform != null && jobTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI jobText))
             {
                 jobText.text = person.profession.ToString();
             }
-            
+
             // effect → Profession Description
             Transform effectTransform = adminItem.transform.Find("effect");
             if (effectTransform != null && effectTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI effectText))
             {
                 effectText.text = person.professionDescription;
             }
-            
+
             // 获取按钮并添加点击事件
             Transform adminButton = adminItem.transform.Find("adminButton");
             if (adminButton != null && adminButton.TryGetComponent<Button>(out Button button))
@@ -449,11 +469,11 @@ public class ForestUIController : CanvasController
                     rootButton.onClick.AddListener(() => OnAdminSelected(person));
                 }
             }
-            Debug.Log($"成功创建管理者UI: {person.personName}");
+            DebugTool.LogForest("成功创建管理者UI: {0}", person.personName);
         }
-        Debug.Log($"完成创建管理者UI，共创建 {eligiblePersons.Count} 个元素");
-        
-        Debug.Log($"已加载 {eligiblePersons.Count} 个管理者到UI");
+        DebugTool.LogForest("完成创建管理者UI，共创建 {0} 个元素", eligiblePersons.Count);
+
+        DebugTool.LogForest("已加载 {0} 个管理者到UI", eligiblePersons.Count);
     }
     
     /// <summary>
@@ -461,30 +481,34 @@ public class ForestUIController : CanvasController
     /// </summary>
     private void OnAdminSelected(PersonScriptableObject admin)
     {
+        DebugTool.LogForest("OnAdminSelected() 开始执行，管理者: {0}", admin?.personName ?? "null");
+
         if (forestSystem == null)
         {
-            Debug.LogError("ForestSystem未找到");
+            DebugTool.LogError("ForestUIController", "ForestSystem未找到");
             return;
         }
-        
+
         // 设置新的管理者
         bool success = forestSystem.SetManager(admin);
         if (success)
         {
-            Debug.Log($"成功设置管理者: {admin.personName}");
-            
+            DebugTool.LogForest("成功设置管理者: {0}", admin.personName);
+
             // 隐藏管理者选择面板
             if (adminManagerPanel != null)
             {
                 adminManagerPanel.SetActive(false);
             }
-            
+
             // 更新UI显示
             UpdateManagerInfo(admin);
+
+            DebugTool.LogForest("OnAdminSelected() 完成");
         }
         else
         {
-            Debug.Log($"设置管理者失败: {admin.personName}");
+            DebugTool.LogForest("设置管理者失败: {0}", admin.personName);
         }
     }
     

@@ -52,60 +52,67 @@ public class FarmUIController : CanvasController
     /// </summary>
     public override void ShowCanvas()
     {
-        Debug.Log($"FarmUIController.ShowCanvas() called, current active state: {gameObject.activeSelf}");
+        DebugTool.LogFarm("ShowCanvas() 调用，当前激活状态: {0}", gameObject.activeSelf);
         base.ShowCanvas();
-        Debug.Log($"FarmUIController.ShowCanvas() completed, new active state: {gameObject.activeSelf}");
+        DebugTool.LogFarm("ShowCanvas() 完成，新激活状态: {0}", gameObject.activeSelf);
     }
 
     private void Start()
     {
+        DebugTool.LogFarm("Start() 开始执行");
+
         // 初始化UI
         InitializeUI();
-        
+
         // 初始化AdminManager UI
         if (adminManagerPanel != null) adminManagerPanel.SetActive(false);
         if (resetManagerButton != null) resetManagerButton.onClick.AddListener(OnResetManagerButtonClicked);
         if (closeFarmButton != null) closeFarmButton.onClick.AddListener(OnCloseFarmButtonClicked);
-        Debug.Log("ResetManagerButton initialized");
-        
+        DebugTool.LogFarm("ResetManagerButton 已初始化");
+
         // 获取农场系统
         farmSystem = FindObjectOfType<FarmSystem>();
         if (farmSystem == null)
         {
-            Debug.LogError("FarmSystem not found in the scene!");
+            DebugTool.LogError("FarmUIController", "FarmSystem not found in the scene!");
             return;
         }
-        
+        DebugTool.LogFarm("FarmSystem 已找到");
+
         // 初始更新UI
         UpdateFarmInfo(0, 0, null);
-        
+
         // 订阅农场事件
         farmSystem.OnProductionCalculated.AddListener(OnProductionCalculated);
         farmSystem.OnManagerChanged.AddListener(UpdateManagerInfo);
 
         // 初始化田地UI（设置作物图标等）
         UpdateFieldUI();
-        
+
         // 订阅农场事件
         farmSystem.OnProductionCalculated.AddListener(OnProductionCalculated);
 
         // 调试信息
-        Debug.Log("FarmUIController initialized");
-        Debug.Log("Crop panel active: " + cropChoosePanel.activeSelf);
-        Debug.Log("Worker panel active: " + workerChoosePanel.activeSelf);
-        Debug.Log("Field toggles count: " + fieldToggles.Count);
-        
+        DebugTool.LogFarm("FarmUIController 已初始化");
+        DebugTool.LogFarm("Crop panel active: {0}", cropChoosePanel.activeSelf);
+        DebugTool.LogFarm("Worker panel active: {0}", workerChoosePanel.activeSelf);
+        DebugTool.LogFarm("Field toggles count: {0}", fieldToggles.Count);
+
         // 在开始时不显示UI
         HideCanvas();
+        DebugTool.LogFarm("Start() 完成");
     }
     
     private void OnDestroy()
     {
+        DebugTool.LogFarm("OnDestroy() 开始执行");
         if (farmSystem != null)
         {
             farmSystem.OnProductionCalculated.RemoveListener(OnProductionCalculated);
             farmSystem.OnManagerChanged.RemoveListener(UpdateManagerInfo);
+            DebugTool.LogFarm("已取消订阅农场事件");
         }
+        DebugTool.LogFarm("OnDestroy() 完成");
     }
     
     /// <summary>
@@ -113,17 +120,21 @@ public class FarmUIController : CanvasController
 /// </summary>
 private void InitializeUI()
 {
+    DebugTool.LogFarm("InitializeUI() 开始执行");
+
     // 初始化已存在的田地UI
     // 注意：现在fieldToggles是通过Inspector手动赋值的
     InitializeExistingFieldUIs();
-    
+
     // 初始化选择面板（现在不传递参数，等选择田地时再更新）
     InitializeCropChoosePanel(); // 不传递田地，使用默认值
     InitializeWorkerChoosePanel();
-    
+
     // 默认隐藏选择面板
     cropChoosePanel.SetActive(false);
     workerChoosePanel.SetActive(false);
+
+    DebugTool.LogFarm("InitializeUI() 完成");
 }
     
     /// <summary>
@@ -131,9 +142,11 @@ private void InitializeUI()
 /// </summary>
 private void InitializeExistingFieldUIs()
 {
+    DebugTool.LogFarm("InitializeExistingFieldUIs() 开始执行");
+
     // 注意：现在fieldToggles是通过Inspector手动赋值的
     // 这里不需要做任何操作
-    
+
     // 为已有的fieldToggles设置事件监听器
     for (int i = 0; i < fieldToggles.Count; i++)
     {
@@ -141,16 +154,18 @@ private void InitializeExistingFieldUIs()
         {
             int fieldIndex = i;
             fieldToggles[i].onValueChanged.RemoveAllListeners(); // 清除旧监听器
-            fieldToggles[i].onValueChanged.AddListener((isOn) => 
+            fieldToggles[i].onValueChanged.AddListener((isOn) =>
             {
                 if (isOn)
                 {
                     OnFieldSelected(fieldIndex);
                 }
             });
-            Debug.Log($"Field toggle {i} 初始化完成");
+            DebugTool.LogFarm("Field toggle {0} 初始化完成", i);
         }
     }
+
+    DebugTool.LogFarm("InitializeExistingFieldUIs() 完成，共初始化 {0} 个田地", fieldToggles.Count);
 }
     
     /// <summary>
@@ -158,54 +173,57 @@ private void InitializeExistingFieldUIs()
     /// </summary>
     private void InitializeCropChoosePanel(FieldUnit targetField = null)
     {
+        DebugTool.LogFarm("InitializeCropChoosePanel() 开始执行，目标田地: {0}", targetField?.name ?? "null");
+
         // 清除现有作物
         foreach (Transform child in cropList)
         {
             Destroy(child.gameObject);
         }
-        
+
         // 加载CropChoice预制体
         GameObject cropChoicePrefab = Resources.Load<GameObject>(CROP_CHOICE_PREFAB_PATH);
         if (cropChoicePrefab == null)
         {
-            Debug.LogError($"无法加载作物选择预制体: {CROP_CHOICE_PREFAB_PATH}");
+            DebugTool.LogError("FarmUIController", "无法加载作物选择预制体: {0}", CROP_CHOICE_PREFAB_PATH);
             return;
         }
-        
+
         // 获取所有已解锁的作物
         List<SpeciesScriptableObject> unlockedCrops = SpeciesLoader.Instance.GetUnlockedCropSpecies();
-        
+        DebugTool.LogFarm("发现 {0} 个已解锁的作物", unlockedCrops.Count);
+
         // 创建作物选择项
         foreach (SpeciesScriptableObject crop in unlockedCrops)
         {
             GameObject cropChoice = Instantiate(cropChoicePrefab, cropList);
             cropChoice.name = crop.speciesName;
-            
+
             // 填充作物信息
             Transform cropImage = cropChoice.transform.Find("cropImage");
             if (cropImage != null && cropImage.TryGetComponent<Image>(out Image image))
             {
                 image.sprite = crop.icon;
             }
-            
+
             Transform cropNameText = cropChoice.transform.Find("cropName");
             if (cropNameText != null && cropNameText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI cropName))
             {
                 cropName.text = crop.speciesName;
             }
-            
+
             Transform cropFromText = cropChoice.transform.Find("cropFrom");
             if (cropFromText != null && cropFromText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI cropFrom))
             {
                 cropFrom.text = crop.source.ToString();
             }
-            
+
             Transform cropIdText = cropChoice.transform.Find("cropId");
             if (cropIdText != null && cropIdText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI cropId))
             {
                 cropId.text = crop.speciesDescription;
             }
-            
+
             Transform productNumberText = cropChoice.transform.Find("productNumber");
             if (productNumberText != null && productNumberText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI productNumber))
             {
@@ -215,18 +233,18 @@ private void InitializeExistingFieldUIs()
                     // 从田地获取该作物的最后记录NPY
                     var cropLastNPY = targetField.GetCropLastNPY();
                     string cropNameStr = crop.speciesName;
-                    
+
                     if (cropLastNPY.TryGetValue(cropNameStr, out float lastNPY))
                     {
                         // 使用上次记录的NPY
                         productNumber.text = lastNPY.ToString("F1");
-                        Debug.Log($"作物 {cropNameStr} 在该田地上的预计产量: {lastNPY}");
+                        DebugTool.LogFarm("作物 {0} 在该田地上的预计产量: {1}", cropNameStr, lastNPY);
                     }
                     else
                     {
                         // 使用初始产量
                         productNumber.text = crop.initialYield.ToString("F1");
-                        Debug.Log($"作物 {cropNameStr} 在该田地上首次种植，使用初始产量: {crop.initialYield}");
+                        DebugTool.LogFarm("作物 {0} 在该田地上首次种植，使用初始产量: {1}", cropNameStr, crop.initialYield);
                     }
                 }
                 else
@@ -235,19 +253,19 @@ private void InitializeExistingFieldUIs()
                     productNumber.text = crop.nextPhaseYield.ToString("F1");
                 }
             }
-            
+
             Transform growMoonsText = cropChoice.transform.Find("growMoons");
             if (growMoonsText != null && growMoonsText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI growMoons))
             {
                 growMoons.text = crop.growthPhases.ToString();
             }
-            
+
             Transform decayNumberText = cropChoice.transform.Find("decayNumber");
             if (decayNumberText != null && decayNumberText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI decayNumber))
             {
                 decayNumber.text = crop.decayPerPhase.ToString("F2");
             }
-            
+
             // 获取按钮并添加点击事件
             Transform cropButton = cropChoice.transform.Find("cropButton");
             if (cropButton != null && cropButton.TryGetComponent<Button>(out Button button))
@@ -263,6 +281,8 @@ private void InitializeExistingFieldUIs()
                 }
             }
         }
+
+        DebugTool.LogFarm("InitializeCropChoosePanel() 完成，创建了 {0} 个作物项", unlockedCrops.Count);
     }
     
     /// <summary>
@@ -270,99 +290,102 @@ private void InitializeExistingFieldUIs()
     /// </summary>
     private void InitializeWorkerChoosePanel()
     {
+        DebugTool.LogFarm("InitializeWorkerChoosePanel() 开始执行");
+
         // 清除现有工人
         foreach (Transform child in workerList)
         {
             Destroy(child.gameObject);
         }
-        
+
         // 加载PersonInCrop预制体
         GameObject personInCropPrefab = Resources.Load<GameObject>(PERSON_IN_CROP_PREFAB_PATH);
         if (personInCropPrefab == null)
         {
-            Debug.LogError($"无法加载人员预制体: {PERSON_IN_CROP_PREFAB_PATH}");
+            DebugTool.LogError("FarmUIController", "无法加载人员预制体: {0}", PERSON_IN_CROP_PREFAB_PATH);
             return;
         }
-        
+
         // 检查PersonManager实例
         if (PersonManager.Instance == null)
         {
-            Debug.LogError("PersonManager实例未找到");
+            DebugTool.LogError("FarmUIController", "PersonManager实例未找到");
             return;
         }
-        
+
         // 获取所有已招募的人员，并筛选状态为Rest或Infarm的
         List<PersonScriptableObject> allPersons = PersonManager.Instance.GetAllPersons();
         List<PersonScriptableObject> eligiblePersons = new List<PersonScriptableObject>();
-        
-        Debug.Log($"=== 开始调试人员信息 ===");
-        Debug.Log($"总人员数: {allPersons.Count}");
-        
+
+        DebugTool.LogFarm("=== 开始调试人员信息 ===");
+        DebugTool.LogFarm("总人员数: {0}", allPersons.Count);
+
         // 输出所有人员的详细信息
         for (int i = 0; i < allPersons.Count; i++)
         {
             var person = allPersons[i];
-            Debug.Log($"索引 {i}: 人员名称: {person.personName}, 已招募: {person.recruited}, 状态: {person.status}, 职业: {person.profession}");
+            DebugTool.LogFarm("索引 {0}: 人员名称: {1}, 已招募: {2}, 状态: {3}, 职业: {4}",
+                i, person.personName, person.recruited, person.status, person.profession);
         }
-        
-        Debug.Log($"=== 筛选符合条件的可开垦人员 ===");
+
+        DebugTool.LogFarm("=== 筛选符合条件的可开垦人员 ===");
         int addedCount = 0;
         foreach (PersonScriptableObject person in allPersons)
         {
             if (person.recruited && (person.status == PersonStatus.rest || person.status == PersonStatus.infarm))
             {
-                Debug.Log($"检查人员: {person.personName}, 状态: {person.status}, 已招募: {person.recruited}");
+                DebugTool.LogFarm("检查人员: {0}, 状态: {1}, 已招募: {2}", person.personName, person.status, person.recruited);
                 // 检查是否已经添加过该人员（避免重复）
                 if (!eligiblePersons.Contains(person))
                 {
                     eligiblePersons.Add(person);
                     addedCount++;
-                    Debug.Log($"添加可开垦人员: {person.personName}, 状态: {person.status}");
+                    DebugTool.LogFarm("添加可开垦人员: {0}, 状态: {1}", person.personName, person.status);
                 }
                 else
                 {
-                    Debug.LogWarning($"检测到重复人员: {person.personName}, 已跳过添加");
+                    DebugTool.LogWarning("FarmUIController", "检测到重复人员: {0}, 已跳过添加", person.personName);
                 }
             }
         }
-        
-        Debug.Log($"=== 可开垦人员筛选完成 ===");
-        Debug.Log($"符合条件的可开垦人员总数: {eligiblePersons.Count}");
-        Debug.Log($"本次筛选新增人员数: {addedCount}");
-        
+
+        DebugTool.LogFarm("=== 可开垦人员筛选完成 ===");
+        DebugTool.LogFarm("符合条件的可开垦人员总数: {0}", eligiblePersons.Count);
+        DebugTool.LogFarm("本次筛选新增人员数: {0}", addedCount);
+
         if (eligiblePersons.Count == 0)
         {
-            Debug.Log("没有符合条件的可开垦人员");
+            DebugTool.LogFarm("没有符合条件的可开垦人员");
             return;
         }
-        
+
         // 创建人员选择项
-        Debug.Log($"开始创建 {eligiblePersons.Count} 个人员UI元素");
+        DebugTool.LogFarm("开始创建 {0} 个人员UI元素", eligiblePersons.Count);
         foreach (PersonScriptableObject person in eligiblePersons)
         {
-            Debug.Log($"正在创建人员UI: {person.personName}");
+            DebugTool.LogFarm("正在创建人员UI: {0}", person.personName);
             GameObject personInCrop = Instantiate(personInCropPrefab, workerList);
             personInCrop.name = person.personName;
-            
+
             // 填充人员信息
             Transform nameText = personInCrop.transform.Find("name");
             if (nameText != null && nameText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI name))
             {
                 name.text = person.personName;
             }
-            
+
             Transform jobText = personInCrop.transform.Find("job");
             if (jobText != null && jobText.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI job))
             {
                 job.text = person.profession.ToString();
             }
-            
+
             Transform avatarImage = personInCrop.transform.Find("Avatar");
             if (avatarImage != null && avatarImage.TryGetComponent<Image>(out Image avatar))
             {
                 avatar.sprite = person.avatar;
             }
-            
+
             // 获取按钮并添加点击事件
             Transform personButton = personInCrop.transform.Find("personButton");
             if (personButton != null && personButton.TryGetComponent<Button>(out Button button))
@@ -377,11 +400,12 @@ private void InitializeExistingFieldUIs()
                     rootButton.onClick.AddListener(() => OnWorkerSelected(person));
                 }
             }
-            Debug.Log($"成功创建人员UI: {person.personName}");
+            DebugTool.LogFarm("成功创建人员UI: {0}", person.personName);
         }
-        Debug.Log($"完成创建人员UI，共创建 {eligiblePersons.Count} 个元素");
-        
-        Debug.Log($"已加载 {eligiblePersons.Count} 个可开垦人员到UI");
+        DebugTool.LogFarm("完成创建人员UI，共创建 {0} 个元素", eligiblePersons.Count);
+
+        DebugTool.LogFarm("已加载 {0} 个可开垦人员到UI", eligiblePersons.Count);
+        DebugTool.LogFarm("InitializeWorkerChoosePanel() 完成");
     }
     
     /// <summary>
@@ -417,7 +441,7 @@ private void InitializeExistingFieldUIs()
         GameObject adminPrefab = Resources.Load<GameObject>(ADMIN_PREFAB_PATH);
         if (adminPrefab == null)
         {
-            Debug.LogError($"无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
+            DebugTool.LogError("FarmUIController", "无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
             return;
         }
         
@@ -432,56 +456,58 @@ private void InitializeExistingFieldUIs()
         List<PersonScriptableObject> allPersons = PersonManager.Instance.GetAllPersons();
         List<PersonScriptableObject> eligiblePersons = new List<PersonScriptableObject>();
         
-        Debug.Log($"=== 开始调试管理者信息 ===");
-        Debug.Log($"总人员数: {allPersons.Count}");
-        
+        DebugTool.LogFarm("=== 开始调试管理者信息 ===");
+        DebugTool.LogFarm("总人员数: {0}", allPersons.Count);
+
         // 输出所有人员的详细信息
         for (int i = 0; i < allPersons.Count; i++)
         {
             var person = allPersons[i];
-            Debug.Log($"索引 {i}: 人员名称: {person.personName}, 已招募: {person.recruited}, 状态: {person.status}, 职业: {person.profession}");
+            DebugTool.LogFarm("索引 {0}: 人员名称: {1}, 已招募: {2}, 状态: {3}, 职业: {4}",
+                i, person.personName, person.recruited, person.status, person.profession);
         }
-        
-        Debug.Log($"=== 筛选符合条件的管理者 ===");
+
+        DebugTool.LogFarm("=== 筛选符合条件的管理者 ===");
         int addedCount = 0;
         foreach (PersonScriptableObject person in allPersons)
         {
             // 条件：已招募且不在onsea状态
             if (person.recruited && person.status != PersonStatus.onsea)
             {
-                Debug.Log($"检查人员: {person.personName}, 状态: {person.status}, 已招募: {person.recruited}");
+                DebugTool.LogFarm("检查人员: {0}, 状态: {1}, 已招募: {2}",
+                    person.personName, person.status, person.recruited);
                 // 检查是否已经添加过该人员（避免重复）
                 if (!eligiblePersons.Contains(person))
                 {
                     eligiblePersons.Add(person);
                     addedCount++;
-                    Debug.Log($"添加管理者: {person.personName}, 状态: {person.status}");
+                    DebugTool.LogFarm("添加管理者: {0}, 状态: {1}", person.personName, person.status);
                 }
                 else
                 {
-                    Debug.LogWarning($"检测到重复人员: {person.personName}, 已跳过添加");
+                    DebugTool.LogWarning("FarmUIController", "检测到重复人员: {0}, 已跳过添加", person.personName);
                 }
             }
         }
-        
-        Debug.Log($"=== 管理者筛选完成 ===");
-        Debug.Log($"符合条件的管理者总数: {eligiblePersons.Count}");
-        Debug.Log($"本次筛选新增人员数: {addedCount}");
-        
+
+        DebugTool.LogFarm("=== 管理者筛选完成 ===");
+        DebugTool.LogFarm("符合条件的管理者总数: {0}", eligiblePersons.Count);
+        DebugTool.LogFarm("本次筛选新增人员数: {0}", addedCount);
+
         if (eligiblePersons.Count == 0)
         {
-            Debug.Log("没有符合条件的管理者");
+            DebugTool.LogFarm("没有符合条件的管理者");
             return;
         }
-        
+
         // 创建管理者选择项
-        Debug.Log($"开始创建 {eligiblePersons.Count} 个管理者UI元素");
+        DebugTool.LogFarm("开始创建 {0} 个管理者UI元素", eligiblePersons.Count);
         foreach (PersonScriptableObject person in eligiblePersons)
         {
-            Debug.Log($"正在创建管理者UI: {person.personName}");
+            DebugTool.LogFarm("正在创建管理者UI: {0}", person.personName);
             GameObject adminItem = Instantiate(adminPrefab, managerList);
             adminItem.name = person.personName;
-            
+
             // 填充管理者信息（按照用户指定的映射关系）
             // touxiang → Avatar
             Transform avatarTransform = adminItem.transform.Find("touxiang");
@@ -489,28 +515,28 @@ private void InitializeExistingFieldUIs()
             {
                 avatar.sprite = person.avatar;
             }
-            
+
             // name → Person Name
             Transform nameTransform = adminItem.transform.Find("name");
             if (nameTransform != null && nameTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI nameText))
             {
                 nameText.text = person.personName;
             }
-            
+
             // job → Profession
             Transform jobTransform = adminItem.transform.Find("job");
             if (jobTransform != null && jobTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI jobText))
             {
                 jobText.text = person.profession.ToString();
             }
-            
+
             // effect → Profession Description
             Transform effectTransform = adminItem.transform.Find("effect");
             if (effectTransform != null && effectTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI effectText))
             {
                 effectText.text = person.professionDescription;
             }
-            
+
             // 获取按钮并添加点击事件
             Transform adminButton = adminItem.transform.Find("adminButton");
             if (adminButton != null && adminButton.TryGetComponent<Button>(out Button button))
@@ -525,11 +551,11 @@ private void InitializeExistingFieldUIs()
                     rootButton.onClick.AddListener(() => OnAdminSelected(person));
                 }
             }
-            Debug.Log($"成功创建管理者UI: {person.personName}");
+            DebugTool.LogFarm("成功创建管理者UI: {0}", person.personName);
         }
-        Debug.Log($"完成创建管理者UI，共创建 {eligiblePersons.Count} 个元素");
-        
-        Debug.Log($"已加载 {eligiblePersons.Count} 个管理者到UI");
+        DebugTool.LogFarm("完成创建管理者UI，共创建 {0} 个元素", eligiblePersons.Count);
+
+        DebugTool.LogFarm("已加载 {0} 个管理者到UI", eligiblePersons.Count);
     }
     
     /// <summary>
@@ -547,7 +573,7 @@ private void InitializeExistingFieldUIs()
         bool success = farmSystem.SetManager(admin);
         if (success)
         {
-            Debug.Log($"成功设置管理者: {admin.personName}");
+            DebugTool.LogFarm("成功设置管理者: {0}", admin.personName);
             
             // 隐藏管理者选择面板
             if (adminManagerPanel != null)
@@ -560,7 +586,7 @@ private void InitializeExistingFieldUIs()
         }
         else
         {
-            Debug.Log($"设置管理者失败: {admin.personName}");
+            DebugTool.LogFarm("设置管理者失败: {0}", admin.personName);
         }
     }
     
@@ -600,13 +626,13 @@ private void InitializeExistingFieldUIs()
         }
 
         // 实时反馈当前选择的field信息
-        Debug.Log($"=== 当前选择的田地 ===");
-        Debug.Log($"田地索引: {fieldIndex}");
-        Debug.Log($"田地名称: {selectedField.name}");
-        Debug.Log($"是否已解锁: {selectedField.IsUnlocked}");
-        Debug.Log($"当前作物: {(selectedField.CurrentCrop != null ? selectedField.CurrentCrop.speciesName : "无作物")}");
-        Debug.Log($"当前产量: {selectedField.CurrentNPY:F2}");
-        Debug.Log($"=====================");
+        DebugTool.LogFarm("=== 当前选择的田地 ===");
+        DebugTool.LogFarm("田地索引: {0}", fieldIndex);
+        DebugTool.LogFarm("田地名称: {0}", selectedField.name);
+        DebugTool.LogFarm("是否已解锁: {0}", selectedField.IsUnlocked);
+        DebugTool.LogFarm("当前作物: {0}", selectedField.CurrentCrop != null ? selectedField.CurrentCrop.speciesName : "无作物");
+        DebugTool.LogFarm("当前产量: {0:F2}", selectedField.CurrentNPY);
+        DebugTool.LogFarm("=====================");
 
         
         // 根据田地状态显示相应面板
@@ -616,14 +642,14 @@ private void InitializeExistingFieldUIs()
             InitializeCropChoosePanel(selectedField);
             cropChoosePanel.SetActive(true);
             workerChoosePanel.SetActive(false);
-            Debug.Log("显示作物选择面板，已更新为田地特定产量");
+            DebugTool.LogFarm("显示作物选择面板，已更新为田地特定产量");
         }
         else
         {
             InitializeWorkerChoosePanel();
             cropChoosePanel.SetActive(false);
             workerChoosePanel.SetActive(true);
-            Debug.Log("显示工人选择面板");
+            DebugTool.LogFarm("显示工人选择面板");
         }
     }
     
@@ -660,7 +686,7 @@ private void InitializeExistingFieldUIs()
                 if (field.CurrentWorker == worker)
                 {
                     isWorkerOccupied = true;
-                    Debug.LogWarning($"工人 {worker.personName} 已经被其他田地占用，无法重复分配");
+                    DebugTool.LogWarning("FarmUIController", "工人 {worker.personName} 已经被其他田地占用，无法重复分配");
                     break;
                 }
             }
@@ -676,7 +702,7 @@ private void InitializeExistingFieldUIs()
             if (PersonManager.Instance != null)
             {
                 PersonManager.Instance.ChangePersonStatus(worker, PersonStatus.infarm);
-                Debug.Log($"工人 {worker.personName} 状态已更新为在农场");
+                DebugTool.LogFarm("工人 {0} 状态已更新为在农场", worker.personName);
             }
             
             // 开垦田地

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 资源计算器 - 集中计算每月的资源变化
+/// 资源计算�?- 集中计算每月的资源变�?
 /// </summary>
 public class ResourceManagerCalculator : MonoBehaviour
 {
@@ -55,7 +55,7 @@ public class ResourceManagerCalculator : MonoBehaviour
         public ResourceChange currentMonthNetGrowth;      // 本月净增长
         public ResourceChange nextMonthNetGrowth;        // 下月净增长
         public ResourceChange monthOverMonthChange;      // 环比变化 (下月-本月)
-        public ResourceChange currentResources;          // 当前资源量
+        public ResourceChange currentResources;          // 当前资源�?
 
         public MonthlyResourceSummary() { }
 
@@ -82,7 +82,7 @@ public class ResourceManagerCalculator : MonoBehaviour
     public event Action<float, float, float> OnProductionDataCalculated;
 
     /// <summary>
-    /// 消费系统消耗事件 (crop, ani, mat)
+    /// 消费系统消耗事�?(crop, ani, mat)
     /// </summary>
     public event Action<float, float, float> OnConsumptionDataCalculated;
 
@@ -102,7 +102,7 @@ public class ResourceManagerCalculator : MonoBehaviour
 
     private void Start()
     {
-        // 初始化时计算一次
+        // 初始化时计算一�?
         CalculateResourceSummary();
         SubscribeToProductionEvents();
     }
@@ -138,14 +138,14 @@ public class ResourceManagerCalculator : MonoBehaviour
             personManager = PersonManager.Instance;
 
         if(farmSystem==null){
-            Debug.LogError("❌ FarmSystem 未找到！");
+            DebugTool.LogError("ResourceCalculator", "�?FarmSystem 未找到！");
         }
         if (forestSystem == null)
-            Debug.LogError("❌ ForestSystem 未找到！");
+            DebugTool.LogError("ResourceCalculator", "�?ForestSystem 未找到！");
         if (ranchSystem == null)
-            Debug.LogError("❌ RanchSystem 未找到！");
+            DebugTool.LogError("ResourceCalculator", "�?RanchSystem 未找到！");
         if (personManager == null)
-            Debug.LogError("❌ PersonManager 未找到！");
+            DebugTool.LogError("ResourceCalculator", "�?PersonManager 未找到！");
     }
 
     /// <summary>
@@ -178,7 +178,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             Debug.Log($"   ├─ Crop 生产: +{farmCropProduction:F2}");
         }
 
-        // 2. 森林生产 (Mat +) 和消耗 (Crop -)
+        // 2. 森林生产 (Mat +) 和消�?(Crop -)
         if (forestSystem != null)
         {
             forestMatProduction = forestSystem.CurrentMonthProduction;
@@ -187,10 +187,10 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= forestCropConsumption;
             Debug.Log($"🌲 森林系统:");
             Debug.Log($"   ├─ Mat 生产: +{forestMatProduction:F2}");
-            Debug.Log($"   └─ Crop 消耗: -{forestCropConsumption:F2}");
+            Debug.Log($"   └─ Crop 消�? -{forestCropConsumption:F2}");
         }
 
-        // 3. 牧场生产 (Ani +) 和消耗 (Crop -)
+        // 3. 牧场生产 (Ani +) 和消�?(Crop -)
         if (ranchSystem != null)
         {
             ranchAniProduction = ranchSystem.CurrentMonthProduction;
@@ -199,14 +199,14 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= ranchCropConsumption;
             Debug.Log($"🐄 牧场系统:");
             Debug.Log($"   ├─ Ani 生产: +{ranchAniProduction:F2}");
-            Debug.Log($"   └─ Crop 消耗: -{ranchCropConsumption:F2}");
+            Debug.Log($"   └─ Crop 消�? -{ranchCropConsumption:F2}");
         }
 
-        // 4. 人口消耗 (Crop -, Ani -, Mat -)
+        // 4. 人口消�?(Crop -, Ani -, Mat -)
         if (personManager != null)
         {
             var recruitedPersons = personManager.GetRecruitedPersons();
-            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} 人):");
+            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} �?:");
 
             if (recruitedPersons.Count > 0)
             {
@@ -229,30 +229,30 @@ public class ResourceManagerCalculator : MonoBehaviour
             }
 
             // 输出总计
-            Debug.Log($"   📊 总计消耗:");
+            Debug.Log($"   📊 总计消�?");
             Debug.Log($"      ├─ Crop: -{populationCropConsumption:F2}");
             Debug.Log($"      ├─ Ani: -{populationAniConsumption:F2}");
             Debug.Log($"      └─ Mat: -{populationMatConsumption:F2}");
         }
 
-        // 输出汇总
+        // 输出汇�?
         Debug.Log("========================================");
-        Debug.Log("📈 本月资源变化汇总:");
+        Debug.Log("📈 本月资源变化汇�?");
         Debug.Log($"----------------------------------------");
         Debug.Log($"🌾 Crop (作物):");
         Debug.Log($"   ├─ CROP生产: +{farmCropProduction:F2} (来自农场)");
         float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
-        Debug.Log($"   ├─ CROP消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   ├─ CROP消�? -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
         Debug.Log($"   └─ CROP净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
 
         Debug.Log($"🐄 Ani (动物):");
         Debug.Log($"   ├─ ANI生产: +{ranchAniProduction:F2} (来自牧场)");
-        Debug.Log($"   ├─ ANI消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   ├─ ANI消�? -{populationAniConsumption:F2} (来自人口)");
         Debug.Log($"   └─ ANI净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
 
         Debug.Log($"🪵 Mat (材料):");
         Debug.Log($"   ├─ MAT生产: +{forestMatProduction:F2} (来自森林)");
-        Debug.Log($"   ├─ MAT消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   ├─ MAT消�? -{populationMatConsumption:F2} (来自人口)");
         Debug.Log($"   └─ MAT净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
         Debug.Log("========================================");
 
@@ -285,11 +285,11 @@ public class ResourceManagerCalculator : MonoBehaviour
         {
             farmCropProduction = farmSystem.NextMonthExpectedYield;
             float managerBonus = 1f;
-            string managerInfo = "无管理者";
+            string managerInfo = "无管理员";
             if (farmSystem.Manager != null && farmSystem.Manager.profession == PersonProfession.farmer)
             {
                 managerBonus = 1.2f;
-                managerInfo = $"管理者: {farmSystem.Manager.personName} (农民 ×1.2)";
+                managerInfo = $"管理�? {farmSystem.Manager.personName} (农民 ×1.2)";
             }
             farmCropProduction *= managerBonus;
             total.crop += farmCropProduction;
@@ -297,23 +297,23 @@ public class ResourceManagerCalculator : MonoBehaviour
             Debug.Log($"   └─ 农场预计 Crop 生产: +{farmCropProduction:F2}");
         }
 
-        // 2. 森林预计产量 (Mat +) 和消耗 (Crop -)
+        // 2. 森林预计产量 (Mat +) 和消�?(Crop -)
         if (forestSystem != null)
         {
             forestMatProduction = CalculateForestNextMonthProduction();
             forestCropConsumption = CalculateForestNextMonthConsumption();
 
             float managerBonus = 1f;
-            string managerInfo = "无管理者";
+            string managerInfo = "无管理员";
             if (forestSystem.Manager != null && forestSystem.Manager.profession == PersonProfession.farmer)
             {
                 managerBonus = 1.5f;
-                managerInfo = $"管理者: {forestSystem.Manager.personName} (农民 ×1.5)";
+                managerInfo = $"管理�? {forestSystem.Manager.personName} (农民 ×1.5)";
             }
             else if (forestSystem.Manager == null)
             {
                 managerBonus = 1f;
-                managerInfo = "无管理者 (×1.0)";
+                managerInfo = "无管理�?(×1.0)";
             }
 
             float originalProduction = forestMatProduction;
@@ -322,27 +322,27 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= forestCropConsumption;
 
             Debug.Log($"🌲 森林系统 [{managerInfo}]:");
-            Debug.Log($"   ├─ 森林预计 Mat 生产: +{originalProduction:F2} → 加成后 +{forestMatProduction:F2}");
-            Debug.Log($"   └─ 森林预计 Crop 消耗: -{forestCropConsumption:F2}");
+            Debug.Log($"   ├─ 森林预计 Mat 生产: +{originalProduction:F2} �?加成�?+{forestMatProduction:F2}");
+            Debug.Log($"   └─ 森林预计 Crop 消�? -{forestCropConsumption:F2}");
         }
 
-        // 3. 牧场预计产量 (Ani +) 和消耗 (Crop -)
+        // 3. 牧场预计产量 (Ani +) 和消�?(Crop -)
         if (ranchSystem != null)
         {
             ranchAniProduction = CalculateRanchNextMonthProduction();
             ranchCropConsumption = CalculateRanchNextMonthConsumption();
 
             float managerBonus = 1f;
-            string managerInfo = "无管理者";
+            string managerInfo = "无管理员";
             if (ranchSystem.Manager != null && ranchSystem.Manager.profession == PersonProfession.farmer)
             {
                 managerBonus = 1.2f;
-                managerInfo = $"管理者: {ranchSystem.Manager.personName} (农民 ×1.2)";
+                managerInfo = $"管理�? {ranchSystem.Manager.personName} (农民 ×1.2)";
             }
             else if (ranchSystem.Manager == null)
             {
                 managerBonus = 1f;
-                managerInfo = "无管理者 (×0.0)";
+                managerInfo = "无管理�?(×0.0)";
             }
 
             float originalProduction = ranchAniProduction;
@@ -351,15 +351,15 @@ public class ResourceManagerCalculator : MonoBehaviour
             total.crop -= ranchCropConsumption;
 
             Debug.Log($"🐄 牧场系统 [{managerInfo}]:");
-            Debug.Log($"   ├─ 牧场预计 Ani 生产: +{originalProduction:F2} → 加成后 +{ranchAniProduction:F2}");
-            Debug.Log($"   └─ 牧场预计 Crop 消耗: -{ranchCropConsumption:F2}");
+            Debug.Log($"   ├─ 牧场预计 Ani 生产: +{originalProduction:F2} �?加成�?+{ranchAniProduction:F2}");
+            Debug.Log($"   └─ 牧场预计 Crop 消�? -{ranchCropConsumption:F2}");
         }
 
-        // 4. 人口消耗 (假设人口不变)
+        // 4. 人口消�?(假设人口不变)
         if (personManager != null)
         {
             var recruitedPersons = personManager.GetRecruitedPersons();
-            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} 人):");
+            Debug.Log($"👥 人口系统 ({recruitedPersons.Count} �?:");
 
             if (recruitedPersons.Count > 0)
             {
@@ -382,30 +382,30 @@ public class ResourceManagerCalculator : MonoBehaviour
             }
 
             // 输出总计
-            Debug.Log($"   📊 总计消耗:");
+            Debug.Log($"   📊 总计消�?");
             Debug.Log($"      ├─ Crop: -{populationCropConsumption:F2}");
             Debug.Log($"      ├─ Ani: -{populationAniConsumption:F2}");
             Debug.Log($"      └─ Mat: -{populationMatConsumption:F2}");
         }
 
-        // 输出汇总
+        // 输出汇�?
         Debug.Log("========================================");
-        Debug.Log("📈 下月资源变化汇总:");
+        Debug.Log("📈 下月资源变化汇�?");
         Debug.Log($"----------------------------------------");
         Debug.Log($"🌾 Crop (作物):");
         Debug.Log($"   ├─ CROP生产: +{farmCropProduction:F2} (来自农场)");
         float totalCropConsumption = forestCropConsumption + ranchCropConsumption + populationCropConsumption;
-        Debug.Log($"   ├─ CROP消耗: -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
+        Debug.Log($"   ├─ CROP消�? -{totalCropConsumption:F2} (森林:{forestCropConsumption:F2} + 牧场:{ranchCropConsumption:F2} + 人口:{populationCropConsumption:F2})");
         Debug.Log($"   └─ CROP净增长: {(total.crop >= 0 ? "+" : "")}{total.crop:F2}");
 
         Debug.Log($"🐄 Ani (动物):");
         Debug.Log($"   ├─ Ani生产: +{ranchAniProduction:F2} (来自牧场)");
-        Debug.Log($"   ├─ Ani消耗: -{populationAniConsumption:F2} (来自人口)");
+        Debug.Log($"   ├─ Ani消�? -{populationAniConsumption:F2} (来自人口)");
         Debug.Log($"   └─ Ani净增长: {(total.animal >= 0 ? "+" : "")}{total.animal:F2}");
 
         Debug.Log($"🪵 Mat (材料):");
         Debug.Log($"   ├─ Mat生产: +{forestMatProduction:F2} (来自森林)");
-        Debug.Log($"   ├─ Mat消耗: -{populationMatConsumption:F2} (来自人口)");
+        Debug.Log($"   ├─ Mat消�? -{populationMatConsumption:F2} (来自人口)");
         Debug.Log($"   └─ Mat净增长: {(total.material >= 0 ? "+" : "")}{total.material:F2}");
         Debug.Log("========================================");
 
@@ -416,8 +416,8 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// 计算森林下月产量
     /// </summary>
     /// <remarks>
-    /// 注意：不需要在这里计算退化，因为 ForestSystem.HandlePhaseChange() 已经更新了 nextPhaseYield
-    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的值
+    /// 注意：不需要在这里计算退化，因为 ForestSystem.HandlePhaseChange() 已经更新�?nextPhaseYield
+    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的�?
     /// </remarks>
     private float CalculateForestNextMonthProduction()
     {
@@ -433,7 +433,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             if (species == null || species.speciesType != SpeciesType.Mat || !species.unlocked)
                 continue;
 
-            // 直接使用 nextPhaseYield，它已经在 ForestSystem.HandlePhaseChange() 中退化过了
+            // 直接使用 nextPhaseYield，它已经�?ForestSystem.HandlePhaseChange() 中退化过�?
             total += speciesData.nextPhaseYield * speciesData.amount;
         }
 
@@ -441,7 +441,7 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 计算森林下月消耗
+    /// 计算森林下月消�?
     /// </summary>
     private float CalculateForestNextMonthConsumption()
     {
@@ -467,8 +467,8 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// 计算牧场下月产量
     /// </summary>
     /// <remarks>
-    /// 注意：不需要在这里计算退化，因为 RanchSystem.HandlePhaseChange() 已经更新了 nextPhaseYield
-    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的值
+    /// 注意：不需要在这里计算退化，因为 RanchSystem.HandlePhaseChange() 已经更新�?nextPhaseYield
+    /// 这里直接使用 speciesData.nextPhaseYield 即可，它已经是退化后的�?
     /// </remarks>
     private float CalculateRanchNextMonthProduction()
     {
@@ -484,7 +484,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             if (species == null || species.speciesType != SpeciesType.Ani || !species.unlocked)
                 continue;
 
-            // 直接使用 nextPhaseYield，它已经在 RanchSystem.HandlePhaseChange() 中退化过了
+            // 直接使用 nextPhaseYield，它已经�?RanchSystem.HandlePhaseChange() 中退化过�?
             total += speciesData.nextPhaseYield * speciesData.amount;
         }
 
@@ -492,7 +492,7 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 计算牧场下月消耗
+    /// 计算牧场下月消�?
     /// </summary>
     private float CalculateRanchNextMonthConsumption()
     {
@@ -515,7 +515,7 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 获取当前资源量
+    /// 获取当前资源�?
     /// </summary>
     public ResourceChange GetCurrentResources()
     {
@@ -530,7 +530,7 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 计算完整的资源摘要
+    /// 计算完整的资源摘�?
     /// </summary>
     public void CalculateResourceSummary()
     {
@@ -552,7 +552,7 @@ public class ResourceManagerCalculator : MonoBehaviour
         // 触发事件
         OnResourceSummaryUpdated?.Invoke(CurrentSummary);
 
-        Debug.Log($"[ResourceManagerCalculator] 资源摘要已更新:");
+        Debug.Log($"[ResourceManagerCalculator] 资源摘要已更�?");
         Debug.Log($"  本月净增长: {currentMonth}");
         Debug.Log($"  下月净增长: {nextMonth}");
         Debug.Log($"  环比变化: {CurrentSummary.monthOverMonthChange}");
@@ -614,7 +614,7 @@ public class ResourceManagerCalculator : MonoBehaviour
             ranchSystem.OnCropConsumptionCalculated.AddListener(OnRanchCropConsumptionCalculated);
         }
 
-        // 订阅人口消耗事件
+        // 订阅人口消耗事�?
         if (personManager != null)
         {
             personManager.OnPopulationConsumptionCalculated.AddListener(OnPopulationConsumptionCalculated);
@@ -656,14 +656,14 @@ public class ResourceManagerCalculator : MonoBehaviour
     {
         Debug.Log($"[ResourceManagerCalculator] 收到农场产量回调: {production}");
 
-        if (ResourceManager.Instance != null && production != 0) // 改为 !=0 而不是 >0，允许负数
+        if (ResourceManager.Instance != null && production != 0) // 改为 !=0 而不�?>0，允许负�?
         {
             ResourceManager.Instance.AddCrop(production);
             Debug.Log($"[ResourceManagerCalculator] 已向 ResourceManager 添加 Crop: {production}");
         }
         else if (ResourceManager.Instance == null)
         {
-            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+            DebugTool.LogError("ResourceCalculator", "[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
         }
 
         OnProductionDataCalculated?.Invoke(production, 0f, 0f);
@@ -677,18 +677,18 @@ public class ResourceManagerCalculator : MonoBehaviour
         {
             Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
             CalculateResourceSummary();
-            productionSystemsReported = 0; // 重置计数器
+            productionSystemsReported = 0; // 重置计数�?
         }
     }
 
     /// <summary>
-    /// 森林产量计算回调（生产 Mat）
+    /// 森林产量计算回调（生�?Mat�?
     /// </summary>
     private void OnForestProductionCalculated(float production)
     {
-        Debug.Log($"[ResourceManagerCalculator] ========== OnForestProductionCalculated 被调用 ==========");
+        Debug.Log($"[ResourceManagerCalculator] ========== OnForestProductionCalculated 被调�?==========");
         Debug.Log($"[ResourceManagerCalculator] 收到森林产量回调: {production}");
-        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否为 null: {ResourceManager.Instance == null}");
+        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否�?null: {ResourceManager.Instance == null}");
         Debug.Log($"[ResourceManagerCalculator] production > 0: {production > 0}");
 
         if (ResourceManager.Instance != null && production > 0)
@@ -698,11 +698,11 @@ public class ResourceManagerCalculator : MonoBehaviour
         }
         else if (ResourceManager.Instance == null)
         {
-            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+            DebugTool.LogError("ResourceCalculator", "[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
         }
         else if (production == 0)
         {
-            Debug.Log("[ResourceManagerCalculator] 森林产量为 0，不添加资源");
+            Debug.Log("[ResourceManagerCalculator] 森林产量�?0，不添加资源");
         }
         OnProductionDataCalculated?.Invoke(0f, 0f, production);
         Debug.Log($"[ResourceManagerCalculator] ========== OnForestProductionCalculated 完成 ==========");
@@ -716,16 +716,16 @@ public class ResourceManagerCalculator : MonoBehaviour
         {
             Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
             CalculateResourceSummary();
-            productionSystemsReported = 0; // 重置计数器
+            productionSystemsReported = 0; // 重置计数�?
         }
     }
 
     /// <summary>
-    /// 森林作物消耗计算回调
+    /// 森林作物消耗计算回�?
     /// </summary>
     private void OnForestCropConsumptionCalculated(float consumption)
     {
-        Debug.Log($"[ResourceManagerCalculator] 森林消耗: {consumption}");
+        Debug.Log($"[ResourceManagerCalculator] 森林消�? {consumption}");
         if (ResourceManager.Instance != null && consumption > 0)
         {
             ResourceManager.Instance.AutoConsumeCrop(consumption);
@@ -734,13 +734,13 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 牧场产量计算回调（生产 Ani）
+    /// 牧场产量计算回调（生�?Ani�?
     /// </summary>
     private void OnRanchProductionCalculated(float production)
     {
-        Debug.Log($"[ResourceManagerCalculator] ========== OnRanchProductionCalculated 被调用 ==========");
+        Debug.Log($"[ResourceManagerCalculator] ========== OnRanchProductionCalculated 被调�?==========");
         Debug.Log($"[ResourceManagerCalculator] 收到牧场产量回调: {production}");
-        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否为 null: {ResourceManager.Instance == null}");
+        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否�?null: {ResourceManager.Instance == null}");
         Debug.Log($"[ResourceManagerCalculator] production > 0: {production > 0}");
 
         if (ResourceManager.Instance != null && production > 0)
@@ -750,11 +750,11 @@ public class ResourceManagerCalculator : MonoBehaviour
         }
         else if (ResourceManager.Instance == null)
         {
-            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+            DebugTool.LogError("ResourceCalculator", "[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
         }
         else if (production == 0)
         {
-            Debug.Log("[ResourceManagerCalculator] 牧场产量为 0，不添加资源");
+            Debug.Log("[ResourceManagerCalculator] 牧场产量�?0，不添加资源");
         }
         OnProductionDataCalculated?.Invoke(0f, production, 0f);
         Debug.Log($"[ResourceManagerCalculator] ========== OnRanchProductionCalculated 完成 ==========");
@@ -768,16 +768,16 @@ public class ResourceManagerCalculator : MonoBehaviour
         {
             Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
             CalculateResourceSummary();
-            productionSystemsReported = 0; // 重置计数器
+            productionSystemsReported = 0; // 重置计数�?
         }
     }
 
     /// <summary>
-    /// 牧场作物消耗计算回调
+    /// 牧场作物消耗计算回�?
     /// </summary>
     private void OnRanchCropConsumptionCalculated(float consumption)
     {
-        Debug.Log($"[ResourceManagerCalculator] 牧场消耗: {consumption}");
+        Debug.Log($"[ResourceManagerCalculator] 牧场消�? {consumption}");
         if (ResourceManager.Instance != null && consumption > 0)
         {
             ResourceManager.Instance.AutoConsumeCrop(consumption);
@@ -786,11 +786,11 @@ public class ResourceManagerCalculator : MonoBehaviour
     }
 
     /// <summary>
-    /// 人口消耗计算回调
+    /// 人口消耗计算回�?
     /// </summary>
     private void OnPopulationConsumptionCalculated(PopulationConsumptionData consumptionData)
     {
-        Debug.Log($"[ResourceManagerCalculator] 人口消耗 - Crop: {consumptionData.cropConsumption}, Ani: {consumptionData.aniConsumption}, Mat: {consumptionData.matConsumption}");
+        Debug.Log($"[ResourceManagerCalculator] 人口消�?- Crop: {consumptionData.cropConsumption}, Ani: {consumptionData.aniConsumption}, Mat: {consumptionData.matConsumption}");
         if (ResourceManager.Instance != null)
         {
             if (consumptionData.cropConsumption > 0)

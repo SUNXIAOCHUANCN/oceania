@@ -1,0 +1,709 @@
+[17:33:28] ========================================
+[17:33:28] 游戏日志 - 2026-01-29 17:33:28
+[17:33:28] ========================================
+
+[17:33:28] [ResourceManager]: Awake() 开始执行
+[17:33:28] [ResourceManager]: ResourceManager 单例已设置
+[17:33:28] [ResourceManager]: 资源初始化完成: Crop=1000, Ani=1000, Mat=1000
+[17:33:28] [ResourceManager]: Awake() 完成
+[17:33:28] [ResourceManager]: OnEnable() 开始执行
+[17:33:28] [ResourceManager]: LoadResources() 开始执行
+[17:33:28] [ResourceManager]: 从存档加载Crop资源: 608.3998
+[17:33:28] [ResourceManager]: 从存档加载Ani资源: 868
+[17:33:28] [ResourceManager]: 从存档加载Mat资源: 868
+[17:33:28] [ResourceManager]: LoadResources() 完成
+[17:33:28] [ResourceManager]: OnEnable() 完成
+[17:33:29] [FarmSystem]: Awake() 开始执行
+[17:33:29] [FarmSystem]: InitializeFields() 开始执行，当前田地数量: 15
+[17:33:29] [FarmSystem]: 田地已存在，跳过初始化
+[17:33:29] [FarmSystem]: InitializeFields() 完成
+[17:33:29] [FarmSystem]: Awake() 完成
+[17:33:29] [FarmSystem]: OnEnable() 开始执行
+[17:33:29] [FarmSystem]: 成功订阅月相变化事件
+[17:33:29] [FarmSystem]: OnEnable() 完成
+[17:33:29] [RanchSystem]: OnEnable() 开始执行
+[17:33:29] [RanchSystem]: 成功订阅月相变化事件
+[17:33:29] [RanchSystem]: OnEnable() 完成
+[17:33:29] [ForestSystem]: OnEnable() 开始执行
+[17:33:29] [ForestSystem]: 成功订阅月相变化事件
+[17:33:29] [ForestSystem]: OnEnable() 完成
+[17:33:29] [ResourceManager]: Start() 开始执行
+[17:33:29] [ResourceManager]: Start() 完成
+[17:33:29] [FarmSystem]: Start() 开始执行
+[17:33:29] [FarmSystem]: 检测到存档文件，开始加载
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: 存档加载完成
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:33:29] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:33:29] [FarmSystem]: UpdateUI() 开始执行
+[17:33:29] [FarmSystem]: UI已更新: 本月产量 0.00, 下月预计 3.00, 管理者 无
+[17:33:29] [FarmSystem]: UpdateUI() 完成
+[17:33:29] [FarmSystem]: Start() 完成
+[17:33:29] [RanchSystem]: Start() 开始执行
+[17:33:29] [RanchSystem]: 在 Start 中成功订阅月相变化事件
+[17:33:29] [RanchSystem]: 存档加载前数据库大小: 0
+[17:33:29] [RanchSystem]: 检测到存档文件，正在加载...
+[17:33:29] [RanchSystem]: LoadRanchDatabaseFromSave() 开始执行，加载 2 个项目
+[17:33:29] [RanchSystem]: 成功找到物种: 鸡
+[17:33:29] [WARNING] [RanchSystem]: 在所有物种中未找到名称为 '棕獠豚' 的物种
+[17:33:29] [WARNING] [RanchSystem]: 无法找到保存的物种: 棕獠豚，跳过加载
+[17:33:29] [RanchSystem]: 从保存数据加载牧场数据库完成，共 1 个项目
+[17:33:29] [RanchSystem]: 存档加载后数据库大小: 1
+[17:33:29] [RanchSystem]: AddAllUnlockedAnimalsToDatabase() 开始执行
+[17:33:29] [RanchSystem]: 发现 1 个解锁的动物物种
+[17:33:29] [RanchSystem]: 物种 鸡 已在数据库中，跳过
+[17:33:29] [RanchSystem]: AddAllUnlockedAnimalsToDatabase 完成，添加了 0 个新物种
+[17:33:29] [RanchSystem]: 调用AddAllUnlockedAnimalsToDatabase后数据库大小: 1
+[17:33:29] [RanchSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [RanchSystem]: 成功找到物种: 鸡
+[17:33:29] [RanchSystem]: 下月原始预计产量: 3
+[17:33:29] [RanchSystem]: 无管理者加成: 0 (倍率=0)
+[17:33:29] [RanchSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:33:29] [RanchSystem]: UpdateTotalAmount() 开始执行
+[17:33:29] [RanchSystem]: 总数量更新: 3/15
+[17:33:29] [RanchSystem]: UpdateTotalAmount() 完成
+[17:33:29] [RanchSystem]: UpdateUI() 开始执行
+[17:33:29] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:33:29] [RanchSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 0, 管理者 无
+[17:33:29] [RanchSystem]: UpdateUI() 完成
+[17:33:29] [RanchSystem]: RanchSystem启动完成，当前数据库状态:
+[17:33:29] [RanchSystem]:   - 数据库大小: 1
+[17:33:29] [RanchSystem]:   - 当前总数量: 3
+[17:33:29] [RanchSystem]:   - 最大总数量: 15
+[17:33:29] [RanchSystem]:   - 物种: 鸡, 数量: 3, 下月产量: 1
+[17:33:29] [RanchSystem]: Start() 完成
+[17:33:29] [ForestSystem]: Start() 开始执行
+[17:33:29] [ForestSystem]: 在 Start 中成功订阅月相变化事件
+[17:33:29] [ForestSystem]: 存档加载前数据库大小: 0
+[17:33:29] [ForestSystem]: 检测到存档文件，正在加载...
+[17:33:29] [ForestSystem]: LoadForestDatabaseFromSave() 开始执行，加载 1 个项目
+[17:33:29] [ForestSystem]: 从存档加载森林数据库完成，共加载 1 个物种
+[17:33:29] [ForestSystem]: 存档加载后数据库大小: 1
+[17:33:29] [ForestSystem]: AddAllUnlockedMaterialsToDatabase() 开始执行
+[17:33:29] [ForestSystem]: 发现 1 个解锁的材料物种
+[17:33:29] [ForestSystem]: 物种 棕榈 已在数据库中，跳过
+[17:33:29] [ForestSystem]: AddAllUnlockedMaterialsToDatabase 完成，添加了 0 个新物种
+[17:33:29] [ForestSystem]: 调用AddAllUnlockedMaterialsToDatabase后数据库大小: 1
+[17:33:29] [ForestSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [ForestSystem]: 成功找到物种: 棕榈
+[17:33:29] [ForestSystem]: 下月原始预计产量: 10.80002
+[17:33:29] [ForestSystem]: 无管理者加成: 0 (倍率=0)
+[17:33:29] [ForestSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:33:29] [ForestSystem]: UpdateTotalAmount() 开始执行
+[17:33:29] [ForestSystem]: 总数量更新: 3/15
+[17:33:29] [ForestSystem]: UpdateTotalAmount() 完成
+[17:33:29] [ForestSystem]: UpdateUI() 开始执行
+[17:33:29] [ForestSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 0, 管理者 无
+[17:33:29] [ForestSystem]: UpdateUI() 完成
+[17:33:29] [ForestSystem]: ForestSystem启动完成，当前数据库状态:
+[17:33:29] [ForestSystem]:   - 数据库大小: 1
+[17:33:29] [ForestSystem]:   - 当前总数量: 3
+[17:33:29] [ForestSystem]:   - 最大总数量: 15
+[17:33:29] [ForestSystem]:   - 物种: 棕榈, 数量: 3, 下月产量: 3.600006
+[17:33:29] [ForestSystem]: Start() 完成
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [ResourceManager]: GetCropAmount() 调用，返回: 608.3998
+[17:33:29] [ResourceManager]: GetAniAmount() 调用，返回: 868
+[17:33:29] [ResourceManager]: GetMatAmount() 调用，返回: 868
+[17:33:29] [FarmSystem]: Start() 开始执行
+[17:33:29] [FarmSystem]: InitializeUI() 开始执行
+[17:33:29] [FarmSystem]: InitializeExistingFieldUIs() 开始执行
+[17:33:29] [FarmSystem]: Field toggle 0 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 1 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 2 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 3 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 4 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 5 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 6 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 7 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 8 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 9 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 10 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 11 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 12 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 13 初始化完成
+[17:33:29] [FarmSystem]: Field toggle 14 初始化完成
+[17:33:29] [FarmSystem]: InitializeExistingFieldUIs() 完成，共初始化 15 个田地
+[17:33:29] [FarmSystem]: InitializeCropChoosePanel() 开始执行，目标田地: null
+[17:33:29] [FarmSystem]: 发现 1 个已解锁的作物
+[17:33:29] [FarmSystem]: InitializeCropChoosePanel() 完成，创建了 1 个作物项
+[17:33:29] [FarmSystem]: InitializeWorkerChoosePanel() 开始执行
+[17:33:29] [FarmSystem]: === 开始调试人员信息 ===
+[17:33:29] [FarmSystem]: 总人员数: 7
+[17:33:29] [FarmSystem]: 索引 0: 人员名称: 艾拉, 已招募: False, 状态: rest, 职业: observer
+[17:33:29] [FarmSystem]: 索引 1: 人员名称: 莉法, 已招募: False, 状态: inranch, 职业: civilian
+[17:33:29] [FarmSystem]: 索引 2: 人员名称: 玛莱, 已招募: False, 状态: rest, 职业: tamer
+[17:33:29] [FarmSystem]: 索引 3: 人员名称: 拉拉, 已招募: False, 状态: inranch, 职业: farmer
+[17:33:29] [FarmSystem]: 索引 4: 人员名称: 莉法, 已招募: False, 状态: rest, 职业: witcher
+[17:33:29] [FarmSystem]: 索引 5: 人员名称: 库拉, 已招募: False, 状态: rest, 职业: sailor
+[17:33:29] [FarmSystem]: 索引 6: 人员名称: 卡诺, 已招募: False, 状态: rest, 职业: tamer
+[17:33:29] [FarmSystem]: === 筛选符合条件的可开垦人员 ===
+[17:33:29] [FarmSystem]: === 可开垦人员筛选完成 ===
+[17:33:29] [FarmSystem]: 符合条件的可开垦人员总数: 0
+[17:33:29] [FarmSystem]: 本次筛选新增人员数: 0
+[17:33:29] [FarmSystem]: 没有符合条件的可开垦人员
+[17:33:29] [FarmSystem]: InitializeUI() 完成
+[17:33:29] [FarmSystem]: ResetManagerButton 已初始化
+[17:33:29] [FarmSystem]: FarmSystem 已找到
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: FarmUIController 已初始化
+[17:33:29] [FarmSystem]: Crop panel active: False
+[17:33:29] [FarmSystem]: Worker panel active: False
+[17:33:29] [FarmSystem]: Field toggles count: 15
+[17:33:29] [FarmSystem]: Start() 完成
+[17:33:29] [RanchSystem]: Start() 开始执行
+[17:33:29] [RanchSystem]: RanchSystem 已找到
+[17:33:29] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: Start() 完成
+[17:33:29] [ForestSystem]: Start() 开始执行
+[17:33:29] [ForestSystem]: ForestSystem 已找到
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [ForestSystem]: Start() 完成
+[17:33:29] [ResourceSummaryUI]: Start() 开始执行
+[17:33:29] [ResourceSummaryUI]: UpdateUI() 更新资源摘要显示
+[17:33:29] [ResourceSummaryUI]: 已订阅资源计算器事件并更新UI
+[17:33:29] [ResourceSummaryUI]: Start() 完成
+[17:33:29] [FarmSystem]: ========================================
+[17:33:29] [FarmSystem]: HandlePhaseChange() 开始执行，月相: DownQuarterMoon, 阶段数: 23
+[17:33:29] [FarmSystem]: 开始遍历 15 个田地
+[17:33:29] [FarmSystem]: 田地产量: 1.00, 累计产量: 1.00
+[17:33:29] [FarmSystem]: 田地产量: 1.00, 累计产量: 2.00
+[17:33:29] [FarmSystem]: 田地产量: 1.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:33:29] [FarmSystem]: 应用加成前: 3.00, 管理者: 无
+[17:33:29] [FarmSystem]: 无管理者加成 1.00, 最终产量: 3.00
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:33:29] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:33:29] [FarmSystem]: UpdateUI() 开始执行
+[17:33:29] [FarmSystem]: UI已更新: 本月产量 3.00, 下月预计 3.00, 管理者 无
+[17:33:29] [FarmSystem]: UpdateUI() 完成
+[17:33:29] [ResourceManager]: AddCrop() 开始执行，添加数量: 3
+[17:33:29] [ResourceManager]: Crop资源增加: +3, 当前数量: 611.3998
+[17:33:29] [ResourceManager]: SaveResources() 开始执行
+[17:33:29] [ResourceManager]: 资源已保存: Crop=611.3998, Ani=868, Mat=868
+[17:33:29] [ResourceManager]: SaveResources() 完成
+[17:33:29] [ResourceManager]: AddCrop() 完成
+[17:33:29] [ResourceManager]: AddCrop() 开始执行，添加数量: 3
+[17:33:29] [ResourceManager]: Crop资源增加: +3, 当前数量: 614.3998
+[17:33:29] [ResourceManager]: SaveResources() 开始执行
+[17:33:29] [ResourceManager]: 资源已保存: Crop=614.3998, Ani=868, Mat=868
+[17:33:29] [ResourceManager]: SaveResources() 完成
+[17:33:29] [ResourceManager]: AddCrop() 完成
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:33:29] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:33:29] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:33:29] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:29] [FarmSystem]: 触发生产事件: 3.00
+[17:33:29] [FarmSystem]: HandlePhaseChange() 完成
+[17:33:29] [RanchSystem]: ========================================
+[17:33:29] [RanchSystem]: HandlePhaseChange() 开始执行，月相: DownQuarterMoon, 阶段数: 23
+[17:33:29] [RanchSystem]: 成功找到物种: 鸡
+[17:33:29] [RanchSystem]: 物种 鸡: nextPhaseYield=1, amount=3, production=3
+[17:33:29] [RanchSystem]: 循环完成: totalProduction=3, totalCropConsumption=9, totalDecay=0.6
+[17:33:29] [RanchSystem]: 应用加成前: finalProduction=3, Manager=无
+[17:33:29] [RanchSystem]: 无管理者加成: finalProduction=0 (倍率=0)
+[17:33:29] [RanchSystem]: CurrentMonthProduction 已设置: 0
+[17:33:29] [RanchSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [RanchSystem]: 成功找到物种: 鸡
+[17:33:29] [RanchSystem]: 下月原始预计产量: 3
+[17:33:29] [RanchSystem]: 无管理者加成: 0 (倍率=0)
+[17:33:29] [RanchSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:33:29] [RanchSystem]: UpdateUI() 开始执行
+[17:33:29] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 9, 管理者 无
+[17:33:29] [RanchSystem]: UpdateUI() 完成
+[17:33:29] [RanchSystem]: 准备触发事件: OnProductionCalculated(0)
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [ResourceManager]: GetCropAmount() 调用，返回: 614.3998
+[17:33:29] [ResourceManager]: GetAniAmount() 调用，返回: 868
+[17:33:29] [ResourceManager]: GetMatAmount() 调用，返回: 868
+[17:33:29] [ResourceSummaryUI]: UpdateUI() 更新资源摘要显示
+[17:33:29] [RanchSystem]: 事件已触发
+[17:33:29] [ResourceManager]: AutoConsumeCrop() 开始执行，消耗数量: 9
+[17:33:29] [ResourceManager]: Crop资源自动消耗: -9, 剩余数量: 605.3998
+[17:33:29] [ResourceManager]: SaveResources() 开始执行
+[17:33:29] [ResourceManager]: 资源已保存: Crop=605.3998, Ani=868, Mat=868
+[17:33:29] [ResourceManager]: SaveResources() 完成
+[17:33:29] [ResourceManager]: AutoConsumeCrop() 完成
+[17:33:29] [ResourceManager]: AutoConsumeCrop() 开始执行，消耗数量: 9
+[17:33:29] [ResourceManager]: Crop资源自动消耗: -9, 剩余数量: 596.3998
+[17:33:29] [ResourceManager]: SaveResources() 开始执行
+[17:33:29] [ResourceManager]: 资源已保存: Crop=596.3998, Ani=868, Mat=868
+[17:33:29] [ResourceManager]: SaveResources() 完成
+[17:33:29] [ResourceManager]: AutoConsumeCrop() 完成
+[17:33:29] [RanchSystem]: 牧场月相变化处理完成: 产量=0, 消耗=9
+[17:33:29] [RanchSystem]: CheckForNewlyUnlockedSpecies() 开始执行
+[17:33:29] [RanchSystem]: CheckForNewlyUnlockedSpecies() 完成
+[17:33:29] [RanchSystem]: HandlePhaseChange() 完成
+[17:33:29] [ForestSystem]: ========================================
+[17:33:29] [ForestSystem]: HandlePhaseChange() 开始执行，月相: DownQuarterMoon, 阶段数: 23
+[17:33:29] [ForestSystem]: 成功找到物种: 棕榈
+[17:33:29] [ForestSystem]: 物种 棕榈: nextPhaseYield=3.600006, amount=3, production=10.80002
+[17:33:29] [ForestSystem]: 循环完成: totalProduction=10.80002, totalCropConsumption=0, totalDecay=0.6
+[17:33:29] [ForestSystem]: 应用加成前: finalProduction=10.80002, Manager=无
+[17:33:29] [ForestSystem]: 无管理者加成: finalProduction=0 (倍率=0)
+[17:33:29] [ForestSystem]: CurrentMonthProduction 已设置: 0
+[17:33:29] [ForestSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:33:29] [ForestSystem]: 成功找到物种: 棕榈
+[17:33:29] [ForestSystem]: 下月原始预计产量: 10.20002
+[17:33:29] [ForestSystem]: 无管理者加成: 0 (倍率=0)
+[17:33:29] [ForestSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:33:29] [ForestSystem]: UpdateUI() 开始执行
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [ForestSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 0, 管理者 无
+[17:33:29] [ForestSystem]: UpdateUI() 完成
+[17:33:29] [ForestSystem]: 准备触发事件: OnProductionCalculated(0)
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:33:29] [ResourceManager]: GetCropAmount() 调用，返回: 596.3998
+[17:33:29] [ResourceManager]: GetAniAmount() 调用，返回: 868
+[17:33:29] [ResourceManager]: GetMatAmount() 调用，返回: 868
+[17:33:29] [ResourceSummaryUI]: UpdateUI() 更新资源摘要显示
+[17:33:29] [ForestSystem]: 事件已触发
+[17:33:29] [ForestSystem]: 森林月相变化处理完成: 产量=0, 消耗=0
+[17:33:29] [ForestSystem]: CheckForNewlyUnlockedSpecies() 开始执行
+[17:33:29] [ForestSystem]: CheckForNewlyUnlockedSpecies() 完成
+[17:33:29] [ForestSystem]: HandlePhaseChange() 完成
+[17:33:31] [ForestSystem]: LoadForestDatabaseFromSave() 开始执行，加载 1 个项目
+[17:33:31] [ForestSystem]: 从存档加载森林数据库完成，共加载 1 个物种
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:33:31] [RanchSystem]: LoadRanchDatabaseFromSave() 开始执行，加载 2 个项目
+[17:33:31] [RanchSystem]: 成功找到物种: 鸡
+[17:33:31] [WARNING] [RanchSystem]: 在所有物种中未找到名称为 '棕獠豚' 的物种
+[17:33:31] [WARNING] [RanchSystem]: 无法找到保存的物种: 棕獠豚，跳过加载
+[17:33:31] [RanchSystem]: 从保存数据加载牧场数据库完成，共 1 个项目
+[17:34:14] [FarmSystem]: ========================================
+[17:34:14] [FarmSystem]: HandlePhaseChange() 开始执行，月相: Crescent, 阶段数: 24
+[17:34:14] [FarmSystem]: 开始遍历 15 个田地
+[17:34:14] [FarmSystem]: 田地产量: 1.00, 累计产量: 1.00
+[17:34:14] [FarmSystem]: 田地产量: 1.00, 累计产量: 2.00
+[17:34:14] [FarmSystem]: 田地产量: 1.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 田地产量: 0.00, 累计产量: 3.00
+[17:34:14] [FarmSystem]: 应用加成前: 3.00, 管理者: 无
+[17:34:14] [FarmSystem]: 无管理者加成 1.00, 最终产量: 3.00
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:34:14] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:34:14] [FarmSystem]: UpdateUI() 开始执行
+[17:34:14] [FarmSystem]: UI已更新: 本月产量 3.00, 下月预计 3.00, 管理者 无
+[17:34:14] [FarmSystem]: UpdateUI() 完成
+[17:34:14] [ResourceManager]: AddCrop() 开始执行，添加数量: 3
+[17:34:14] [ResourceManager]: Crop资源增加: +3, 当前数量: 599.3998
+[17:34:14] [ResourceManager]: SaveResources() 开始执行
+[17:34:14] [ResourceManager]: 资源已保存: Crop=599.3998, Ani=868, Mat=868
+[17:34:14] [ResourceManager]: SaveResources() 完成
+[17:34:14] [ResourceManager]: AddCrop() 完成
+[17:34:14] [ResourceManager]: AddCrop() 开始执行，添加数量: 3
+[17:34:14] [ResourceManager]: Crop资源增加: +3, 当前数量: 602.3998
+[17:34:14] [ResourceManager]: SaveResources() 开始执行
+[17:34:14] [ResourceManager]: 资源已保存: Crop=602.3998, Ani=868, Mat=868
+[17:34:14] [ResourceManager]: SaveResources() 完成
+[17:34:14] [ResourceManager]: AddCrop() 完成
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:34:14] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [FarmSystem]: 下月预计产量计算: 解锁田地 3/15, 生产田地 3, 原始产量 3.00
+[17:34:14] [FarmSystem]: 无管理者加成 1.00, 预计产量: 3.00
+[17:34:14] [FarmSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 3.00
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:14] [FarmSystem]: 触发生产事件: 3.00
+[17:34:14] [FarmSystem]: HandlePhaseChange() 完成
+[17:34:14] [RanchSystem]: ========================================
+[17:34:14] [RanchSystem]: HandlePhaseChange() 开始执行，月相: Crescent, 阶段数: 24
+[17:34:14] [RanchSystem]: 成功找到物种: 鸡
+[17:34:14] [RanchSystem]: 物种 鸡: nextPhaseYield=1, amount=3, production=3
+[17:34:14] [RanchSystem]: 循环完成: totalProduction=3, totalCropConsumption=9, totalDecay=0.6
+[17:34:14] [RanchSystem]: 应用加成前: finalProduction=3, Manager=无
+[17:34:14] [RanchSystem]: 无管理者加成: finalProduction=0 (倍率=0)
+[17:34:14] [RanchSystem]: CurrentMonthProduction 已设置: 0
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [RanchSystem]: 成功找到物种: 鸡
+[17:34:14] [RanchSystem]: 下月原始预计产量: 3
+[17:34:14] [RanchSystem]: 无管理者加成: 0 (倍率=0)
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:34:14] [RanchSystem]: UpdateUI() 开始执行
+[17:34:14] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:34:14] [RanchSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 9, 管理者 无
+[17:34:14] [RanchSystem]: UpdateUI() 完成
+[17:34:14] [RanchSystem]: 准备触发事件: OnProductionCalculated(0)
+[17:34:14] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:14] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 1 个项目
+[17:34:14] [ResourceManager]: GetCropAmount() 调用，返回: 602.3998
+[17:34:14] [ResourceManager]: GetAniAmount() 调用，返回: 868
+[17:34:14] [ResourceManager]: GetMatAmount() 调用，返回: 868
+[17:34:14] [ResourceSummaryUI]: UpdateUI() 更新资源摘要显示
+[17:34:14] [RanchSystem]: 事件已触发
+[17:34:14] [ResourceManager]: AutoConsumeCrop() 开始执行，消耗数量: 9
+[17:34:14] [ResourceManager]: Crop资源自动消耗: -9, 剩余数量: 593.3998
+[17:34:14] [ResourceManager]: SaveResources() 开始执行
+[17:34:14] [ResourceManager]: 资源已保存: Crop=593.3998, Ani=868, Mat=868
+[17:34:14] [ResourceManager]: SaveResources() 完成
+[17:34:14] [ResourceManager]: AutoConsumeCrop() 完成
+[17:34:14] [ResourceManager]: AutoConsumeCrop() 开始执行，消耗数量: 9
+[17:34:14] [ResourceManager]: Crop资源自动消耗: -9, 剩余数量: 584.3998
+[17:34:14] [ResourceManager]: SaveResources() 开始执行
+[17:34:14] [ResourceManager]: 资源已保存: Crop=584.3998, Ani=868, Mat=868
+[17:34:14] [ResourceManager]: SaveResources() 完成
+[17:34:14] [ResourceManager]: AutoConsumeCrop() 完成
+[17:34:14] [RanchSystem]: 牧场月相变化处理完成: 产量=0, 消耗=9
+[17:34:14] [RanchSystem]: CheckForNewlyUnlockedSpecies() 开始执行
+[17:34:14] [RanchSystem]: 发现新解锁的动物物种: 棕獠豚，添加到牧场数据库
+[17:34:14] [RanchSystem]: AddSpeciesToDatabase() 开始执行，物种: 棕獠豚, 数量: 0
+[17:34:14] [RanchSystem]: 添加新物种: 棕獠豚, 数量: 0, 初始产量: 5
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [RanchSystem]: 成功找到物种: 鸡
+[17:34:14] [RanchSystem]: 成功找到物种: 棕獠豚
+[17:34:14] [RanchSystem]: 下月原始预计产量: 3
+[17:34:14] [RanchSystem]: 无管理者加成: 0 (倍率=0)
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:34:14] [RanchSystem]: UpdateUI() 开始执行
+[17:34:14] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [RanchSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 9, 管理者 无
+[17:34:14] [RanchSystem]: UpdateUI() 完成
+[17:34:14] [RanchSystem]: UpdateTotalAmount() 开始执行
+[17:34:14] [RanchSystem]: 总数量更新: 3/15
+[17:34:14] [RanchSystem]: UpdateTotalAmount() 完成
+[17:34:14] [RanchSystem]: AddSpeciesToDatabase 完成: 当前数据库大小=2, 当前总数量=3
+[17:34:14] [RanchSystem]: CheckForNewlyUnlockedSpecies: 添加了 1 个新解锁的动物物种
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [RanchSystem]: 成功找到物种: 鸡
+[17:34:14] [RanchSystem]: 成功找到物种: 棕獠豚
+[17:34:14] [RanchSystem]: 下月原始预计产量: 3
+[17:34:14] [RanchSystem]: 无管理者加成: 0 (倍率=0)
+[17:34:14] [RanchSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:34:14] [RanchSystem]: UpdateUI() 开始执行
+[17:34:14] [RanchSystem]: UpdateRanchInfo() 开始执行
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [RanchSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 9, 管理者 无
+[17:34:14] [RanchSystem]: UpdateUI() 完成
+[17:34:14] [RanchSystem]: CheckForNewlyUnlockedSpecies() 完成
+[17:34:14] [RanchSystem]: HandlePhaseChange() 完成
+[17:34:14] [ForestSystem]: ========================================
+[17:34:14] [ForestSystem]: HandlePhaseChange() 开始执行，月相: Crescent, 阶段数: 24
+[17:34:14] [ForestSystem]: 成功找到物种: 棕榈
+[17:34:14] [ForestSystem]: 物种 棕榈: nextPhaseYield=3.600006, amount=3, production=10.80002
+[17:34:14] [ForestSystem]: 循环完成: totalProduction=10.80002, totalCropConsumption=0, totalDecay=0.6
+[17:34:14] [ForestSystem]: 应用加成前: finalProduction=10.80002, Manager=无
+[17:34:14] [ForestSystem]: 无管理者加成: finalProduction=0 (倍率=0)
+[17:34:14] [ForestSystem]: CurrentMonthProduction 已设置: 0
+[17:34:14] [ForestSystem]: CalculateNextMonthExpectedYield() 开始执行
+[17:34:14] [ForestSystem]: 成功找到物种: 棕榈
+[17:34:14] [ForestSystem]: 下月原始预计产量: 10.20002
+[17:34:14] [ForestSystem]: 无管理者加成: 0 (倍率=0)
+[17:34:14] [ForestSystem]: CalculateNextMonthExpectedYield() 完成，最终预计产量: 0
+[17:34:14] [ForestSystem]: UpdateUI() 开始执行
+[17:34:14] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:14] [ForestSystem]: UI已更新: 本月产量 0, 下月预计 0, 本月消耗 0, 管理者 无
+[17:34:14] [ForestSystem]: UpdateUI() 完成
+[17:34:14] [ForestSystem]: 准备触发事件: OnProductionCalculated(0)
+[17:34:14] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:14] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:14] [ResourceManager]: GetCropAmount() 调用，返回: 584.3998
+[17:34:14] [ResourceManager]: GetAniAmount() 调用，返回: 868
+[17:34:14] [ResourceManager]: GetMatAmount() 调用，返回: 868
+[17:34:14] [ResourceSummaryUI]: UpdateUI() 更新资源摘要显示
+[17:34:14] [ForestSystem]: 事件已触发
+[17:34:14] [ForestSystem]: 森林月相变化处理完成: 产量=0, 消耗=0
+[17:34:14] [ForestSystem]: CheckForNewlyUnlockedSpecies() 开始执行
+[17:34:14] [ForestSystem]: CheckForNewlyUnlockedSpecies() 完成
+[17:34:14] [ForestSystem]: HandlePhaseChange() 完成
+[17:34:27] [ResourceManager]: OnApplicationQuit() 开始执行
+[17:34:27] [ResourceManager]: SaveResources() 开始执行
+[17:34:27] [ResourceManager]: 资源已保存: Crop=584.3998, Ani=868, Mat=868
+[17:34:27] [ResourceManager]: SaveResources() 完成
+[17:34:27] [ResourceManager]: OnApplicationQuit() 完成
+[17:34:27] [RanchSystem]: OnApplicationQuit() 开始执行
+[17:34:27] [RanchSystem]: GetManager() 调用，返回管理者: 无
+[17:34:27] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:27] [RanchSystem]: OnApplicationQuit() 完成
+[17:34:27] [ForestSystem]: OnApplicationQuit() 开始执行
+[17:34:27] [ForestSystem]: GetManager() 调用，返回管理者: 无
+[17:34:27] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:27] [ForestSystem]: OnApplicationQuit() 完成
+[17:34:27] [ForestSystem]: GetManager() 调用，返回管理者: 无
+[17:34:27] [ForestSystem]: GetForestDatabase() 调用，返回 1 个项目
+[17:34:27] [FarmSystem]: GetManager() 调用，返回管理者: 无
+[17:34:27] [FarmSystem]: GetFields() 调用，返回 15 个田地
+[17:34:27] [RanchSystem]: GetManager() 调用，返回管理者: 无
+[17:34:27] [RanchSystem]: GetRanchDatabase() 调用，返回 2 个项目
+[17:34:27] [ResourceManager]: OnDisable() 开始执行
+[17:34:27] [ResourceManager]: SaveResources() 开始执行
+[17:34:27] [ResourceManager]: 资源已保存: Crop=584.3998, Ani=868, Mat=868
+[17:34:27] [ResourceManager]: SaveResources() 完成
+[17:34:27] [ResourceManager]: OnDisable() 完成
+[17:34:27] [ResourceSummaryUI]: OnDestroy() 开始执行
+[17:34:27] [ResourceSummaryUI]: 已取消订阅资源计算器事件
+[17:34:27] [ResourceSummaryUI]: OnDestroy() 完成
+[17:34:27] [RanchSystem]: OnDisable() 开始执行
+[17:34:27] [RanchSystem]: 成功取消订阅月相变化事件
+[17:34:27] [RanchSystem]: OnDisable() 完成
+[17:34:27] [ForestSystem]: OnDisable() 开始执行
+[17:34:27] [ForestSystem]: 成功取消订阅月相变化事件
+[17:34:27] [ForestSystem]: OnDisable() 完成
+[17:34:27] [FarmSystem]: OnDisable() 开始执行
+[17:34:27] [FarmSystem]: 成功取消订阅月相变化事件
+[17:34:27] [FarmSystem]: OnDisable() 完成
+[17:34:27] [FarmSystem]: OnDestroy() 开始执行
+[17:34:27] [FarmSystem]: OnDestroy() 完成

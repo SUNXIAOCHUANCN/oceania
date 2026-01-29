@@ -147,6 +147,110 @@ public class IslandPageController : MonoBehaviour
             float progress = manager.GetIslandProgress();
             int progressPercent = Mathf.RoundToInt(progress * 100);
             Debug.Log($"[IslandPageController] 岛屿 {manager.GetIslandName()} 未完成，当前进度: {progressPercent}%");
+
+            // 显示具体缺少的内容
+            ShowMissingItems();
+
         }
+    }
+
+    /// <summary>
+    /// 显示岛屿缺少的内容
+    /// </summary>
+    private void ShowMissingItems()
+    {
+        Debug.Log("[IslandPageController] ShowMissingItems 开始执行");
+
+        if (manager == null)
+        {
+            Debug.LogError("[IslandPageController] 缺少进度表管理器！");
+            return;
+        }
+
+        Debug.Log("[IslandPageController] manager 不为空，继续检查");
+
+        List<string> missingItems = new List<string>();
+
+        // 检查未解锁的物种
+        var speciesList = manager.GetBoundSpecies();
+        Debug.Log($"[IslandPageController] speciesList = {(speciesList == null ? "null" : speciesList.Count.ToString())}");
+
+        if (speciesList != null && speciesList.Count > 0)
+        {
+            Debug.Log($"[IslandPageController] 开始检查 {speciesList.Count} 个物种");
+            List<string> lockedSpecies = new List<string>();
+            foreach (var species in speciesList)
+            {
+                bool isUnlocked = manager.IsSpeciesUnlocked(species.speciesName);
+                Debug.Log($"[IslandPageController] 物种 {species.speciesName}: {(isUnlocked ? "已解锁" : "未解锁")}");
+                if (!isUnlocked)
+                {
+                    lockedSpecies.Add(species.speciesName);
+                }
+            }
+            Debug.Log($"[IslandPageController] 未解锁物种数量: {lockedSpecies.Count}");
+
+            if (lockedSpecies.Count > 0)
+            {
+                Debug.Log($"[IslandPageController] 缺少物种: {string.Join(", ", lockedSpecies)}");
+                missingItems.Add($"未解锁物种({lockedSpecies.Count}/{speciesList.Count}): {string.Join(", ", lockedSpecies)}");
+            }
+        }
+        else
+        {
+            Debug.Log("[IslandPageController] speciesList 为 null 或数量为 0，跳过物种检查");
+        }
+
+        // 检查线索是否解锁
+        var cluesList = manager.GetBoundClues();
+        Debug.Log($"[IslandPageController] cluesList = {(cluesList == null ? "null" : cluesList.Count.ToString())}");
+
+        if (cluesList != null && cluesList.Count > 0)
+        {
+            Debug.Log($"[IslandPageController] 开始检查 {cluesList.Count} 个线索");
+            List<string> lockedClues = new List<string>();
+            foreach (var clue in cluesList)
+            {
+                bool isUnlocked = manager.IsClueUnlocked(clue.clueName);
+                Debug.Log($"[IslandPageController] 线索 {clue.clueName}: {(isUnlocked ? "已解锁" : "未解锁")}");
+                if (!isUnlocked)
+                {
+                    lockedClues.Add(clue.clueName);
+                }
+            }
+            Debug.Log($"[IslandPageController] 未解锁线索数量: {lockedClues.Count}");
+
+            if (lockedClues.Count > 0)
+            {
+                Debug.Log($"[IslandPageController] 缺少线索: {string.Join(", ", lockedClues)}");
+                missingItems.Add($"未解锁线索({lockedClues.Count}/{cluesList.Count}): {string.Join(", ", lockedClues)}");
+            }
+        }
+        else
+        {
+            Debug.Log("[IslandPageController] cluesList 为 null 或数量为 0，跳过线索检查");
+        }
+
+        // 检查秘密是否解锁
+        bool secretUnlocked = manager.IsSecretUnlocked();
+        Debug.Log($"[IslandPageController] 秘密解锁状态: {secretUnlocked}");
+        if (!secretUnlocked)
+        {
+            Debug.Log("[IslandPageController] 秘密未解锁，添加到缺少列表");
+            missingItems.Add("未解锁秘密");
+        }
+
+        // 输出缺少的内容
+        Debug.Log($"[IslandPageController] missingItems.Count = {missingItems.Count}");
+        if (missingItems.Count > 0)
+        {
+            Debug.Log($"[IslandPageController] 缺少内容:\n{string.Join("\n", missingItems)}");
+        }
+        else
+        {
+            Debug.Log("[IslandPageController] 所有内容都已完成！");
+        }
+
+        Debug.Log("[IslandPageController] ShowMissingItems 执行结束");
     }
 }

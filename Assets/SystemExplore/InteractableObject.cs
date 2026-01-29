@@ -102,43 +102,49 @@ public class InteractableObject : MonoBehaviour
     /// </summary>
     public void OnInteract()
     {
-        if (isPickedUp)
-        {
-            Debug.LogWarning($"物体 {objectName} 已经被捡起，无法重复交互");
-            return;
-        }
-
         if (!isManagerCached || targetManager == null)
         {
             Debug.LogError($"物体 {objectName} 无法交互：未找到ProgressTableManager");
             return;
         }
 
-        // 执行解锁
-        bool unlockSuccess = PerformUnlock();
-
-        if (unlockSuccess)
+        // 线索可以重复查看
+        if (objectCategory == ObjectCategory.Clue)
         {
-            // 标记为已捡起
-            isPickedUp = true;
-
-            // 播放音效
-            PlayPickupSound();
-
-            // 显示UI
+            // 总是显示线索内容
             ShowPickupUI();
 
-            // 处理物体状态
-            HandlePostPickup();
-
-            // 获取解锁目标的名称用于日志
-            string targetNameForLog = GetTargetDisplayName();
-            Debug.Log($"成功捡起物体 {objectName}，解锁了：{targetNameForLog}");
+            // 如果还没解锁，则解锁并标记
+            if (!isPickedUp)
+            {
+                bool unlockSuccess = PerformUnlock();
+                if (unlockSuccess)
+                {
+                    isPickedUp = true;
+                    PlayPickupSound();
+                    HandlePostPickup();
+                    Debug.Log($"首次解锁线索：{clueTarget.clueName}");
+                }
+            }
         }
+        // 物种只能捡起一次
         else
         {
-            string targetNameForLog = GetTargetDisplayName();
-            Debug.LogWarning($"捡起物体 {objectName} 但解锁失败，目标：{targetNameForLog}");
+            if (isPickedUp)
+            {
+                Debug.LogWarning($"物体 {objectName} 已经被捡起，无法重复交互");
+                return;
+            }
+
+            bool unlockSuccess = PerformUnlock();
+            if (unlockSuccess)
+            {
+                isPickedUp = true;
+                PlayPickupSound();
+                ShowPickupUI();
+                HandlePostPickup();
+                Debug.Log($"成功捡起物体：{objectName}");
+            }
         }
     }
 

@@ -34,84 +34,92 @@ public class RanchUIController : CanvasController
     private void Start()
     {
         base.Start();
+        DebugTool.LogRanch("Start() 开始执行");
+
         // 获取RanchSystem引用
         ranchSystem = FindObjectOfType<RanchSystem>();
         if (ranchSystem == null)
         {
-            Debug.LogError("找不到RanchSystem实例！");
+            DebugTool.LogError("RanchUIController", "找不到RanchSystem实例！");
         }
-        
+        else
+        {
+            DebugTool.LogRanch("RanchSystem 已找到");
+        }
+
         // 加载Animal.prefab
         animalPrefab = Resources.Load<GameObject>(ANIMAL_PREFAB_PATH);
         if (animalPrefab == null)
         {
-            Debug.LogError($"无法加载Animal预制体: {ANIMAL_PREFAB_PATH}");
+            DebugTool.LogError("RanchUIController", "无法加载Animal预制体: {0}", ANIMAL_PREFAB_PATH);
         }
-        
+
         // 初始化管理员面板
         if (adminManagerPanel != null) adminManagerPanel.SetActive(false);
         if (resetManagerButton != null) resetManagerButton.onClick.AddListener(OnResetManagerButtonClicked);
-        
+
         // 初始化关闭按钮
         if (closeRanchButton != null) closeRanchButton.onClick.AddListener(OnCloseRanchButtonClicked);
-        
+
         // 初始化UI
         UpdateRanchInfo(0f, 0f, 0f, null);
+
+        DebugTool.LogRanch("Start() 完成");
     }
     
     /// <summary>
     /// 更新牧场信息（由RanchSystem调用）
     /// </summary>
-    public void UpdateRanchInfo(float currentProduction, float nextMonthExpectedYield, 
+    public void UpdateRanchInfo(float currentProduction, float nextMonthExpectedYield,
                                float cropConsumption, PersonScriptableObject manager)
     {
+        DebugTool.LogRanch("UpdateRanchInfo() 开始执行");
+
         // 更新产量信息
         if (currentProductionText != null)
             currentProductionText.text = $"{currentProduction:F1}";
-        
+
         if (nextMonthProductionText != null)
             nextMonthProductionText.text = $"{nextMonthExpectedYield:F1}";
-        
+
         if (cropConsumptionText != null)
             cropConsumptionText.text = $"{cropConsumption:F1}";
-        
+
         // 更新管理者信息
         UpdateManagerInfo(manager);
-        
+
         // 更新物种列表
         UpdateSpeciesList();
-        
+
         // 更新动物总数显示
         UpdateAnimalCountDisplay();
     }
-    
+
     /// <summary>
     /// 更新动物总数显示
     /// </summary>
     private void UpdateAnimalCountDisplay()
     {
         if (ranchSystem == null) return;
-        
+
         // 更新动物总数文本：总数量/上限
         if (aniNumbersText != null)
         {
             aniNumbersText.text = $"{ranchSystem.CurrentTotalAmount}/{ranchSystem.MaxTotalAmount}";
         }
-        
 
-        
         // 更新退化总量显示：所有动物减少量相加（decayPerPhase*amount）
         if (aniDecayText != null)
         {
             aniDecayText.text = $"{ranchSystem.CurrentMonthDecay:F1}";
         }
-        
+
         // 根据总数量更新显示的图片（分界值：5,10）
         if (animalsDisplayImage != null && animalCountSprites != null && animalCountSprites.Length >= 3)
         {
             int totalAmount = ranchSystem.CurrentTotalAmount;
             int spriteIndex = 0; // 默认显示less-animals
-            
+
             if (totalAmount >= 10)
             {
                 spriteIndex = 2; // more_animals
@@ -121,7 +129,7 @@ public class RanchUIController : CanvasController
                 spriteIndex = 1; // medium_animals
             }
             // 否则使用默认的less-animals (spriteIndex = 0)
-            
+
             animalsDisplayImage.sprite = animalCountSprites[spriteIndex];
         }
         else if (animalsDisplayImage != null && animalCountSprites != null && animalCountSprites.Length > 0)
@@ -132,7 +140,7 @@ public class RanchUIController : CanvasController
             animalsDisplayImage.sprite = animalCountSprites[spriteIndex];
         }
     }
-    
+
     /// <summary>
     /// 更新管理者信息
     /// </summary>
@@ -142,7 +150,7 @@ public class RanchUIController : CanvasController
         {
             if (managerNameText != null)
                 managerNameText.text = manager.personName;
-            
+
             if (managerIcon != null)
             {
                 managerIcon.sprite = manager.avatar;
@@ -153,7 +161,7 @@ public class RanchUIController : CanvasController
         {
             if (managerNameText != null)
                 managerNameText.text = "无管理者";
-            
+
             if (managerIcon != null)
                 managerIcon.gameObject.SetActive(false);
         }
@@ -173,12 +181,12 @@ public class RanchUIController : CanvasController
             Destroy(child.gameObject);
         }
         
-        // 获取所有已解锁的动物物种（根据你的描述，UI应该显示所有解锁的物种）
+        // 获取所有已解锁的动物物种（根据你的描述，UI应该显示所有解锁的物种�?
         List<SpeciesScriptableObject> unlockedAnis = SpeciesLoader.Instance?.GetUnlockedAniSpecies();
         if (unlockedAnis == null || unlockedAnis.Count == 0)
             return;
         
-        // 为每个解锁的物种创建UI项
+        // 为每个解锁的物种创建UI�?
         foreach (SpeciesScriptableObject species in unlockedAnis)
         {
             // 实例化Animal.prefab
@@ -186,11 +194,11 @@ public class RanchUIController : CanvasController
             if (animalItem == null)
                 continue;
             
-            // 从牧场数据库中获取该物种的数据
+            // 从牧场数据库中获取该物种的数�?
             List<RanchSpeciesData> ranchDatabase = ranchSystem.GetRanchDatabase();
             RanchSpeciesData speciesData = ranchDatabase.Find(data => data.speciesName == species.speciesName);
             
-            // 如果数据库中没有该物种的数据，创建一个默认数据（amount=0）
+            // 如果数据库中没有该物种的数据，创建一个默认数据（amount=0�?
             if (speciesData == null)
             {
                 speciesData = new RanchSpeciesData(species.speciesName, 0f, species.initialYield);
@@ -276,27 +284,37 @@ public class RanchUIController : CanvasController
     /// </summary>
     private void OnAddAniButtonClick(string speciesName)
     {
+        DebugTool.LogRanch("OnAddAniButtonClick() 增加动物: {0}", speciesName);
         if (ranchSystem != null)
         {
             bool success = ranchSystem.IncrementSpeciesAmount(speciesName);
             if (!success)
             {
-                Debug.LogWarning($"增加物种数量失败: {speciesName}");
+                DebugTool.LogWarning("RanchUIController", "增加物种数量失败: {0}", speciesName);
+            }
+            else
+            {
+                DebugTool.LogRanch("成功增加物种数量: {0}", speciesName);
             }
         }
     }
-    
+
     /// <summary>
     /// 处理减少物种数量按钮点击
     /// </summary>
     private void OnCutAniButtonClick(string speciesName)
     {
+        DebugTool.LogRanch("OnCutAniButtonClick() 减少动物: {0}", speciesName);
         if (ranchSystem != null)
         {
             bool success = ranchSystem.DecrementSpeciesAmount(speciesName);
             if (!success)
             {
-                Debug.LogWarning($"减少物种数量失败: {speciesName}");
+                DebugTool.LogWarning("RanchUIController", "减少物种数量失败: {0}", speciesName);
+            }
+            else
+            {
+                DebugTool.LogRanch("成功减少物种数量: {0}", speciesName);
             }
         }
     }
@@ -311,7 +329,7 @@ public class RanchUIController : CanvasController
     }
     
     /// <summary>
-    /// 重置管理者按钮点击事件
+    /// 重置管理者按钮点击事�?
     /// </summary>
     private void OnResetManagerButtonClicked()
     {
@@ -319,12 +337,12 @@ public class RanchUIController : CanvasController
         {
             // 显示管理者选择面板
             adminManagerPanel.SetActive(true);
-            // 初始化管理者名单
+            // 初始化管理者名�?
             InitializeAdminManagerPanel();
         }
         else
         {
-            Debug.LogError("adminManagerPanel is not assigned!");
+            DebugTool.LogError("RanchUIController", "adminManagerPanel is not assigned!");
         }
     }
     
@@ -333,24 +351,24 @@ public class RanchUIController : CanvasController
     /// </summary>
     private void InitializeAdminManagerPanel()
     {
-        // 清除现有管理者列表
+        // 清除现有管理者列�?
         foreach (Transform child in managerList)
         {
             Destroy(child.gameObject);
         }
         
-        // 加载Admin预制体
+        // 加载Admin预制�?
         GameObject adminPrefab = Resources.Load<GameObject>(ADMIN_PREFAB_PATH);
         if (adminPrefab == null)
         {
-            Debug.LogError($"无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
+            DebugTool.LogError("RanchUIController", $"无法加载管理者预制体: {ADMIN_PREFAB_PATH}");
             return;
         }
         
         // 检查RanchSystem实例
         if (ranchSystem == null)
         {
-            Debug.LogError("RanchSystem实例未找到");
+            DebugTool.LogError("RanchUIController", "RanchSystem实例未找到");
             return;
         }
         
@@ -358,30 +376,30 @@ public class RanchUIController : CanvasController
         List<PersonScriptableObject> allPersons = ranchSystem.GetAllRecruitedPersons();
         List<PersonScriptableObject> eligiblePersons = new List<PersonScriptableObject>();
         
-        Debug.Log($"=== 开始调试管理者信息 ===");
+        Debug.Log($"=== 开始调试管理者信�?===");
         Debug.Log($"总人员数: {allPersons.Count}");
         
         // 输出所有人员的详细信息
         for (int i = 0; i < allPersons.Count; i++)
         {
             var person = allPersons[i];
-            Debug.Log($"索引 {i}: 人员名称: {person.personName}, 已招募: {person.recruited}, 状态: {person.status}, 职业: {person.profession}");
+            Debug.Log($"索引 {i}: 人员名称: {person.personName}, 已招�? {person.recruited}, 状�? {person.status}, 职业: {person.profession}");
         }
         
-        Debug.Log($"=== 筛选符合条件的管理者 ===");
+        Debug.Log($"=== 筛选符合条件的管理�?===");
         int addedCount = 0;
         foreach (PersonScriptableObject person in allPersons)
         {
-            // 条件：已招募且不在onsea状态
+            // 条件：已招募且不在onsea状�?
             if (person.recruited && person.status != PersonStatus.onsea)
             {
-                Debug.Log($"检查人员: {person.personName}, 状态: {person.status}, 已招募: {person.recruited}");
-                // 检查是否已经添加过该人员（避免重复）
+                Debug.Log($"检查人�? {person.personName}, 状�? {person.status}, 已招�? {person.recruited}");
+                // 检查是否已经添加过该人员（避免重复�?
                 if (!eligiblePersons.Contains(person))
                 {
                     eligiblePersons.Add(person);
                     addedCount++;
-                    Debug.Log($"添加管理者: {person.personName}, 状态: {person.status}");
+                    Debug.Log($"添加管理�? {person.personName}, 状�? {person.status}");
                 }
                 else
                 {
@@ -390,7 +408,7 @@ public class RanchUIController : CanvasController
             }
         }
         
-        Debug.Log($"=== 管理者筛选完成 ===");
+        Debug.Log($"=== 管理者筛选完�?===");
         Debug.Log($"符合条件的管理者总数: {eligiblePersons.Count}");
         Debug.Log($"本次筛选新增人员数: {addedCount}");
         
@@ -400,8 +418,8 @@ public class RanchUIController : CanvasController
             return;
         }
         
-        // 创建管理者选择项
-        Debug.Log($"开始创建 {eligiblePersons.Count} 个管理者UI元素");
+        // 创建管理者选择�?
+        Debug.Log($"开始创�?{eligiblePersons.Count} 个管理者UI元素");
         foreach (PersonScriptableObject person in eligiblePersons)
         {
             Debug.Log($"正在创建管理者UI: {person.personName}");
@@ -409,35 +427,35 @@ public class RanchUIController : CanvasController
             adminItem.name = person.personName;
             
             // 填充管理者信息（按照用户指定的映射关系）
-            // touxiang → Avatar
+            // touxiang �?Avatar
             Transform avatarTransform = adminItem.transform.Find("touxiang");
             if (avatarTransform != null && avatarTransform.TryGetComponent<Image>(out Image avatar))
             {
                 avatar.sprite = person.avatar;
             }
             
-            // name → Person Name
+            // name �?Person Name
             Transform nameTransform = adminItem.transform.Find("name");
             if (nameTransform != null && nameTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI nameText))
             {
                 nameText.text = person.personName;
             }
             
-            // job → Profession
+            // job �?Profession
             Transform jobTransform = adminItem.transform.Find("job");
             if (jobTransform != null && jobTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI jobText))
             {
                 jobText.text = person.profession.ToString();
             }
             
-            // effect → Profession Description
+            // effect �?Profession Description
             Transform effectTransform = adminItem.transform.Find("effect");
             if (effectTransform != null && effectTransform.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI effectText))
             {
                 effectText.text = person.professionDescription;
             }
             
-            // 获取按钮并添加点击事件
+            // 获取按钮并添加点击事�?
             Transform adminButton = adminItem.transform.Find("adminButton");
             if (adminButton != null && adminButton.TryGetComponent<Button>(out Button button))
             {
@@ -455,7 +473,7 @@ public class RanchUIController : CanvasController
         }
         Debug.Log($"完成创建管理者UI，共创建 {eligiblePersons.Count} 个元素");
         
-        Debug.Log($"已加载 {eligiblePersons.Count} 个管理者到UI");
+        Debug.Log($"已加�?{eligiblePersons.Count} 个管理者到UI");
     }
     
     /// <summary>
@@ -465,15 +483,15 @@ public class RanchUIController : CanvasController
     {
         if (ranchSystem == null)
         {
-            Debug.LogError("RanchSystem未找到");
+            DebugTool.LogError("RanchUIController", "RanchSystem未找到");
             return;
         }
         
-        // 设置新的管理者
+        // 设置新的管理�?
         bool success = ranchSystem.SetManager(admin);
         if (success)
         {
-            Debug.Log($"成功设置管理者: {admin.personName}");
+            Debug.Log($"成功设置管理�? {admin.personName}");
             
             // 隐藏管理者选择面板
             if (adminManagerPanel != null)
@@ -486,7 +504,7 @@ public class RanchUIController : CanvasController
         }
         else
         {
-            Debug.Log($"设置管理者失败: {admin.personName}");
+            Debug.Log($"设置管理者失�? {admin.personName}");
         }
     }
     

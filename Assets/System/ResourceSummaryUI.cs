@@ -28,6 +28,8 @@ public class ResourceSummaryUI : MonoBehaviour
 
     private void Start()
     {
+        DebugTool.LogResourceSummary("Start() 开始执行");
+
         // 订阅资源计算器事件
         if (ResourceManagerCalculator.Instance != null)
         {
@@ -35,20 +37,28 @@ public class ResourceSummaryUI : MonoBehaviour
 
             // 立即更新一次UI
             UpdateUI(ResourceManagerCalculator.Instance.CurrentSummary);
+            DebugTool.LogResourceSummary("已订阅资源计算器事件并更新UI");
         }
         else
         {
-            Debug.LogWarning("[ResourceSummaryUI] ResourceManagerCalculator.Instance 为 null");
+            DebugTool.LogWarning("ResourceSummaryUI", "ResourceManagerCalculator.Instance 为 null");
         }
+
+        DebugTool.LogResourceSummary("Start() 完成");
     }
 
     private void OnDestroy()
     {
+        DebugTool.LogResourceSummary("OnDestroy() 开始执行");
+
         // 取消订阅
         if (ResourceManagerCalculator.Instance != null)
         {
             ResourceManagerCalculator.Instance.OnResourceSummaryUpdated -= UpdateUI;
+            DebugTool.LogResourceSummary("已取消订阅资源计算器事件");
         }
+
+        DebugTool.LogResourceSummary("OnDestroy() 完成");
     }
 
     /// <summary>
@@ -58,9 +68,11 @@ public class ResourceSummaryUI : MonoBehaviour
     {
         if (summary == null)
         {
-            Debug.LogWarning("[ResourceSummaryUI] 资源摘要为 null");
+            DebugTool.LogWarning("ResourceSummaryUI", "资源摘要为 null");
             return;
         }
+
+        DebugTool.LogResourceSummary("UpdateUI() 更新资源摘要显示");
 
         // 更新当前资源
         UpdateResourceText(currentCropText, summary.currentResources.crop, isAbsolute: true);
@@ -116,9 +128,11 @@ public class ResourceSummaryUI : MonoBehaviour
     /// </summary>
     public void RefreshUI()
     {
+        DebugTool.LogResourceSummary("RefreshUI() 手动刷新UI");
         if (ResourceManagerCalculator.Instance != null)
         {
             ResourceManagerCalculator.Instance.CalculateResourceSummary();
+            DebugTool.LogResourceSummary("已触发资源摘要计算");
         }
     }
 }
