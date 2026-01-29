@@ -34,6 +34,10 @@ public class TempClearSaves : EditorWindow
         // 清除PlayerPrefs
         PlayerPrefs.DeleteKey("GlobalTimeSystem_TotalElapsedTime");
         PlayerPrefs.DeleteKey("GlobalTimeSystem_FirstStart");
+        // 清除资源相关的PlayerPrefs
+        PlayerPrefs.DeleteKey("CropAmount");
+        PlayerPrefs.DeleteKey("AniAmount");
+        PlayerPrefs.DeleteKey("MatAmount");
         PlayerPrefs.Save();
         
         EditorUtility.DisplayDialog("完成", $"已删除 {deletedCount} 个存档文件", "确定");

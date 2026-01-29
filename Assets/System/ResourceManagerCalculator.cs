@@ -104,36 +104,22 @@ public class ResourceManagerCalculator : MonoBehaviour
     {
         // 初始化时计算一次
         CalculateResourceSummary();
+        SubscribeToProductionEvents();
     }
+
+    private int productionSystemsReported = 0; // 追踪已报告的生产系统数量
+    private const int EXPECTED_PRODUCTION_SYSTEMS = 3; // 期望的生产系统数量（农场、森林、牧场）
 
     private void OnEnable()
     {
-        // 订阅月相变化事件
-        if (GlobalTimeSystem.Instance != null)
-        {
-            GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += OnPhaseChanged;
-        }
-
         // 订阅生产系统事件
         SubscribeToProductionEvents();
     }
 
     private void OnDisable()
     {
-        // 取消订阅
-        if (GlobalTimeSystem.Instance != null)
-        {
-            GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= OnPhaseChanged;
-        }
-
         // 取消订阅生产系统事件
         UnsubscribeFromProductionEvents();
-    }
-
-    private void OnPhaseChanged(GlobalTimeSystem.MoonPhase phase, int phaseCount)
-    {
-        // 每个月相变化时重新计算
-        CalculateResourceSummary();
     }
 
     /// <summary>
@@ -668,12 +654,31 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// </summary>
     private void OnFarmProductionCalculated(float production)
     {
-        Debug.Log($"[ResourceManagerCalculator] 农场产量: {production}");
-        if (ResourceManager.Instance != null && production > 0)
+        Debug.Log($"[ResourceManagerCalculator] 收到农场产量回调: {production}");
+
+        if (ResourceManager.Instance != null && production != 0) // 改为 !=0 而不是 >0，允许负数
         {
             ResourceManager.Instance.AddCrop(production);
+            Debug.Log($"[ResourceManagerCalculator] 已向 ResourceManager 添加 Crop: {production}");
         }
+        else if (ResourceManager.Instance == null)
+        {
+            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+        }
+
         OnProductionDataCalculated?.Invoke(production, 0f, 0f);
+
+        // 追踪生产系统报告
+        productionSystemsReported++;
+        Debug.Log($"[ResourceManagerCalculator] 生产系统报告进度: {productionSystemsReported}/{EXPECTED_PRODUCTION_SYSTEMS}");
+
+        // 当所有生产系统都报告后，计算资源摘要
+        if (productionSystemsReported >= EXPECTED_PRODUCTION_SYSTEMS)
+        {
+            Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
+            CalculateResourceSummary();
+            productionSystemsReported = 0; // 重置计数器
+        }
     }
 
     /// <summary>
@@ -681,12 +686,38 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// </summary>
     private void OnForestProductionCalculated(float production)
     {
-        Debug.Log($"[ResourceManagerCalculator] 森林产量: {production}");
+        Debug.Log($"[ResourceManagerCalculator] ========== OnForestProductionCalculated 被调用 ==========");
+        Debug.Log($"[ResourceManagerCalculator] 收到森林产量回调: {production}");
+        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否为 null: {ResourceManager.Instance == null}");
+        Debug.Log($"[ResourceManagerCalculator] production > 0: {production > 0}");
+
         if (ResourceManager.Instance != null && production > 0)
         {
             ResourceManager.Instance.AddMat(production);
+            Debug.Log($"[ResourceManagerCalculator] 已向 ResourceManager 添加 Mat: {production}");
+        }
+        else if (ResourceManager.Instance == null)
+        {
+            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+        }
+        else if (production == 0)
+        {
+            Debug.Log("[ResourceManagerCalculator] 森林产量为 0，不添加资源");
         }
         OnProductionDataCalculated?.Invoke(0f, 0f, production);
+        Debug.Log($"[ResourceManagerCalculator] ========== OnForestProductionCalculated 完成 ==========");
+
+        // 追踪生产系统报告
+        productionSystemsReported++;
+        Debug.Log($"[ResourceManagerCalculator] 生产系统报告进度: {productionSystemsReported}/{EXPECTED_PRODUCTION_SYSTEMS}");
+
+        // 当所有生产系统都报告后，计算资源摘要
+        if (productionSystemsReported >= EXPECTED_PRODUCTION_SYSTEMS)
+        {
+            Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
+            CalculateResourceSummary();
+            productionSystemsReported = 0; // 重置计数器
+        }
     }
 
     /// <summary>
@@ -707,12 +738,38 @@ public class ResourceManagerCalculator : MonoBehaviour
     /// </summary>
     private void OnRanchProductionCalculated(float production)
     {
-        Debug.Log($"[ResourceManagerCalculator] 牧场产量: {production}");
+        Debug.Log($"[ResourceManagerCalculator] ========== OnRanchProductionCalculated 被调用 ==========");
+        Debug.Log($"[ResourceManagerCalculator] 收到牧场产量回调: {production}");
+        Debug.Log($"[ResourceManagerCalculator] ResourceManager.Instance 是否为 null: {ResourceManager.Instance == null}");
+        Debug.Log($"[ResourceManagerCalculator] production > 0: {production > 0}");
+
         if (ResourceManager.Instance != null && production > 0)
         {
             ResourceManager.Instance.AddAni(production);
+            Debug.Log($"[ResourceManagerCalculator] 已向 ResourceManager 添加 Ani: {production}");
+        }
+        else if (ResourceManager.Instance == null)
+        {
+            Debug.LogError("[ResourceManagerCalculator] ResourceManager.Instance 为 NULL！无法添加资源");
+        }
+        else if (production == 0)
+        {
+            Debug.Log("[ResourceManagerCalculator] 牧场产量为 0，不添加资源");
         }
         OnProductionDataCalculated?.Invoke(0f, production, 0f);
+        Debug.Log($"[ResourceManagerCalculator] ========== OnRanchProductionCalculated 完成 ==========");
+
+        // 追踪生产系统报告
+        productionSystemsReported++;
+        Debug.Log($"[ResourceManagerCalculator] 生产系统报告进度: {productionSystemsReported}/{EXPECTED_PRODUCTION_SYSTEMS}");
+
+        // 当所有生产系统都报告后，计算资源摘要
+        if (productionSystemsReported >= EXPECTED_PRODUCTION_SYSTEMS)
+        {
+            Debug.Log($"[ResourceManagerCalculator] 所有生产系统已报告，开始计算资源摘要");
+            CalculateResourceSummary();
+            productionSystemsReported = 0; // 重置计数器
+        }
     }
 
     /// <summary>

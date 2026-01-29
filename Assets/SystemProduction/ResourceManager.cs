@@ -23,10 +23,10 @@ public class ResourceManager : MonoBehaviour
             Instance = this;
         }
 
-        // 初始化三种资源
-        resourceAmounts["Crop"] = 0f;
-        resourceAmounts["Ani"] = 0f;  // Ani 代表 Livestock
-        resourceAmounts["Mat"] = 0f;  // Mat 代表 Material
+        // 初始化三种资源为默认值（新存档时使用）
+        resourceAmounts["Crop"] = 1000f;
+        resourceAmounts["Ani"] = 1000f;  // Ani 代表 Livestock
+        resourceAmounts["Mat"] = 1000f;  // Mat 代表 Material
     }
 
     private void Start()
@@ -231,12 +231,21 @@ public class ResourceManager : MonoBehaviour
     // 从PlayerPrefs加载资源数据
     private void LoadResources()
     {
+        // 如果有保存的数据，使用保存的数据；否则使用默认值1000
         if (PlayerPrefs.HasKey("CropAmount"))
             resourceAmounts["Crop"] = PlayerPrefs.GetFloat("CropAmount");
+        else
+            resourceAmounts["Crop"] = 1000f;
+            
         if (PlayerPrefs.HasKey("AniAmount"))
             resourceAmounts["Ani"] = PlayerPrefs.GetFloat("AniAmount");
+        else
+            resourceAmounts["Ani"] = 1000f;
+            
         if (PlayerPrefs.HasKey("MatAmount"))
             resourceAmounts["Mat"] = PlayerPrefs.GetFloat("MatAmount");
+        else
+            resourceAmounts["Mat"] = 1000f;
     }
 
     // 在游戏开始时加载资源

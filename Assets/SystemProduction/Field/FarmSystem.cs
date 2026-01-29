@@ -7,7 +7,11 @@ public class FarmSystem : MonoBehaviour
     [Header("田地配置")]
     [SerializeField] private List<FieldUnit> fields = new List<FieldUnit>();
     [SerializeField] private int totalFields = 15;
-    
+
+    [Header("生产配置")]
+    [SerializeField] private float farmerBonusMultiplier = 1.2f; // 农民管理者加成倍率
+    [SerializeField] private float noManagerMultiplier = 1f; // 无管理者时的倍率
+
     [Header("UI引用")]
     [SerializeField] private FarmUIController uiController;
     
@@ -89,7 +93,11 @@ public class FarmSystem : MonoBehaviour
         float finalProduction = CurrentMonthProduction;
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
-            finalProduction *= 1.2f;
+            finalProduction *= farmerBonusMultiplier;
+        }
+        else if (Manager == null)
+        {
+            finalProduction *= noManagerMultiplier;
         }
 
         // 第二阶段：获取下月预计产量
@@ -120,7 +128,11 @@ public class FarmSystem : MonoBehaviour
         // 应用管理者加成
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
-            NextMonthExpectedYield *= 1.2f;
+            NextMonthExpectedYield *= farmerBonusMultiplier;
+        }
+        else if (Manager == null)
+        {
+            NextMonthExpectedYield *= noManagerMultiplier;
         }
     }
     

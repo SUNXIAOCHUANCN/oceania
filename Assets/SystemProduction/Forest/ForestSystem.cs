@@ -57,6 +57,22 @@ public class ForestSystem : MonoBehaviour
     
     private void Start()
     {
+        Debug.Log("[ForestSystem] Start 方法开始执行");
+
+        // 确保订阅月相变化事件（作为 OnEnable 的备用）
+        // 先取消订阅以防止重复订阅
+        if (GlobalTimeSystem.Instance != null)
+        {
+            Debug.Log("[ForestSystem] GlobalTimeSystem.Instance 不为 null，准备订阅");
+            GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases -= HandlePhaseChange;
+            GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
+            Debug.Log("[ForestSystem] 在 Start 中成功订阅月相变化事件");
+        }
+        else
+        {
+            Debug.LogError("[ForestSystem] Start 时 GlobalTimeSystem.Instance 仍为 null，无法订阅月相变化事件！");
+        }
+
         Debug.Log($"存档加载前数据库大小: {forestDatabase.Count}");
         // 尝试加载存档
         if (ForestSaveSystem.Instance.SaveExists())
@@ -127,6 +143,10 @@ public class ForestSystem : MonoBehaviour
         {
             GlobalTimeSystem.Instance.OnPhaseChangedWithTotalPhases += HandlePhaseChange;
         }
+        else
+        {
+            Debug.LogWarning("[ForestSystem] OnEnable时 GlobalTimeSystem.Instance 为 null，将在 Start 中重新尝试订阅");
+        }
     }
     
     private void OnDisable()
@@ -192,6 +212,10 @@ public class ForestSystem : MonoBehaviour
     /// </summary>
     private void HandlePhaseChange(GlobalTimeSystem.MoonPhase phase, int phaseCount)
     {
+        Debug.Log($"========================================");
+        Debug.Log($"🚨 [ForestSystem] HandlePhaseChange 被调用!!! phase={phase}, phaseCount={phaseCount}");
+        Debug.Log($"========================================");
+
         float totalProduction = 0f;
         float totalCropConsumption = 0f;
         float totalDecay = 0f; // 所有植物的总退化量
@@ -215,6 +239,7 @@ public class ForestSystem : MonoBehaviour
 
             // 计算产量：nextPhaseYield * amount
             float speciesProduction = speciesData.nextPhaseYield * speciesData.amount;
+            Debug.Log($"[ForestSystem] 物种 {speciesData.speciesName}: nextPhaseYield={speciesData.nextPhaseYield}, amount={speciesData.amount}, production={speciesProduction}");
             totalProduction += speciesProduction;
 
             // 计算消耗：monthlyCropConsumption * amount (仅对材料类型)
@@ -232,21 +257,31 @@ public class ForestSystem : MonoBehaviour
             totalDecay += species.decayPerPhase * speciesData.amount;
         }
 
+        Debug.Log($"[ForestSystem] 循环完成: totalProduction={totalProduction}, totalCropConsumption={totalCropConsumption}, totalDecay={totalDecay}");
+
         // 应用管理者加成
         float finalProduction = totalProduction;
+        Debug.Log($"[ForestSystem] 应用加成前: finalProduction={finalProduction}, Manager={Manager?.personName}");
         if (Manager != null && Manager.profession == PersonProfession.farmer)
         {
             finalProduction *= farmerBonusMultiplier;
+            Debug.Log($"[ForestSystem] 应用农民加成: finalProduction={finalProduction} (倍率={farmerBonusMultiplier})");
         }
         else if (Manager == null)
         {
             finalProduction *= noManagerMultiplier;
+            Debug.Log($"[ForestSystem] 无管理者加成: finalProduction={finalProduction} (倍率={noManagerMultiplier})");
+        }
+        else
+        {
+            Debug.Log($"[ForestSystem] 管理者非农民: {Manager.personName}, profession={Manager.profession}, finalProduction={finalProduction}");
         }
 
         // 保存当前月的生产和消耗数据
         CurrentMonthProduction = finalProduction;
         CurrentMonthCropConsumption = totalCropConsumption;
         CurrentMonthDecay = totalDecay; // 保存本月退化量
+        Debug.Log($"[ForestSystem] CurrentMonthProduction 已设置: {CurrentMonthProduction}");
 
         // 重新计算下月预计产量
         CalculateNextMonthExpectedYield();
@@ -255,7 +290,9 @@ public class ForestSystem : MonoBehaviour
         UpdateUI();
 
         // 触发事件（通知 ResourceManagerCalculator 进行资源修改）
+        Debug.Log($"[ForestSystem] 准备触发事件: OnProductionCalculated({finalProduction})");
         OnProductionCalculated?.Invoke(finalProduction);
+        Debug.Log($"[ForestSystem] 事件已触发");
         OnCropConsumptionCalculated?.Invoke(totalCropConsumption);
 
         Debug.Log($"森林月相变化处理完成: 产量={finalProduction}, 消耗={totalCropConsumption}");
