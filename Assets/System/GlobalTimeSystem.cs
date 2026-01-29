@@ -33,18 +33,23 @@ private const string SAVE_KEY_FIRST_START = "GlobalTimeSystem_FirstStart";
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+        GlobalTimeSystem[] existing = FindObjectsOfType<GlobalTimeSystem>();
+        foreach (var t in existing)
+            if (t != this) DestroyImmediate(t.gameObject);
+#endif
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            LoadSavedTime();
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        LoadSavedTime();
-
-        isPaused = true;   // ⭐ 关键：菜单阶段默认暂停时间
     }
 
     void Update()

@@ -10,6 +10,7 @@ public class SaveButtonUI : MonoBehaviour
     [Header("UI 引用")]
     [SerializeField] private Button saveButton;
     [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private Button quitButton;
     [SerializeField] private float statusDisplayDuration = 2f;
 
     private void Start()
@@ -21,6 +22,9 @@ public class SaveButtonUI : MonoBehaviour
         // 绑定保存按钮事件
         if (saveButton != null)
             saveButton.onClick.AddListener(OnSaveButtonClicked);
+
+        if (quitButton != null)
+            quitButton.onClick.AddListener(OnQuitButtonClicked);
     }
 
     /// <summary>
@@ -74,5 +78,16 @@ public class SaveButtonUI : MonoBehaviour
         // 清理事件监听
         if (saveButton != null)
             saveButton.onClick.RemoveListener(OnSaveButtonClicked);
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        Debug.Log("退出游戏");
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
     }
 }
